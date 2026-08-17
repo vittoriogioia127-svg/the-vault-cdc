@@ -2,6 +2,23 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-17 - Pitch deck delivered and validated (12 pages, bilingual); portable build chartered to Code
+Design completed the 12-page deck with the v1.1 amendment applied. Audit against the contract: the three
+checkpoint fixes verified (slide 10 mandatory closing line verbatim, slide 05 pill whole inside the frame,
+slide 01 footer), FR | EN toggle on every page, all numbers from the allowed list, no demo amounts, two
+black pills total (05 and 12), never two on one slide. Four derived elements endorsed: the slide 02 triad
+and its process-not-people line, the slide 03 amber MANUAL EFFORT tag (label kept over a bare dot: the one
+exception of the slide deserves its name), the slide 10 FLAG and REPORT mono tags, the slide 12 askVariant
+control. Slide 12 stands on variant A (mandate ask) until said otherwise; switching is one constant.
+Rebuild routed to Claude Code per the July precedent (design runtimes are not portable): contract
+VAULT_PITCH_BUILD.md issued for the-vault-pitch.html, a single self-contained file at the repo root. Fixed
+16:9 stage scaled to viewport, ArrowRight and ArrowLeft plus click zones, mono counter, FR | EN toggle
+persisted (EN default), dark toggle token-for-token, ASK_VARIANT constant, 150ms fades with reduced-motion
+cuts, offline file://, no design-tool HTML imported, screenshots not fed to the builder. Sequencing rule
+restated: one Phase B in flight at a time; the pitch build may commit before P3.0 Phase B since P3.0 sits
+at read-only Phase A on a different file.
+Awaiting: pitch build Phase A, P3.0 Phase A report, the Sharizal call outcome.
+
 ## 2026-08-17 - Pitch deck chartered (Design); in-app guided assistance chartered (D-21, P3.3)
 Two workstreams opened after the config gate return, both artifact-first.
 1. Stakeholder pitch deck routed to Claude Design (the app stays single-builder with Code per the 14/07
