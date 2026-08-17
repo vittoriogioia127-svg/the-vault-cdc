@@ -2,6 +2,78 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-17 - Pitch deck chartered (Design); in-app guided assistance chartered (D-21, P3.3)
+Two workstreams opened after the config gate return, both artifact-first.
+1. Stakeholder pitch deck routed to Claude Design (the app stays single-builder with Code per the 14/07
+decision; a full page redo in Design was considered and rejected as a fork). Contract VAULT_PITCH_DECK.md:
+12 slides on the frozen DA, shareable layer only, structural numbers only. New content: slide 10, the data
+horizon, the register as a cost control data foundation (utility invoice variance, duplicate invoices, cost
+per staff outliers, evidence aging, cross-project comparison), framed strictly as future capability enabled
+by the register with a mandatory closing line, never a pilot deliverable; analytics on HR data explicitly
+behind the CDS gate. Candidate D-20: anchor the data horizon in the CDC as a vision section once the slide
+is validated. Handoff prompt issued with a 3-slide checkpoint (01, 05, 10) before the full run.
+2. D-21: in-app guidance is configuration, not hardcoded copy. Three quiet mechanisms on the frozen DA:
+first-run spotlight tour per role (4 to 6 steps, skippable, resumable), an on-demand screen guide panel
+behind a "?" affordance (Where you are, What this shows, What you do here, What happens next, role-scoped),
+and the existing empty-state doctrine. Tour and guide content live in guideConfig, per project, so another
+project onboards its own guidance like its own taxonomy. Contract VAULT_GUIDED_ASSIST.md written with the
+full T1 copy seeded (17 screens) and the sprint scope; sequenced as P3.3 after P3.2 because anchors point
+at final states and motion. Screen map gains checklist items 12 to 14.
+The user-facing requests behind both: a design that respects the rules everywhere, and a tool that explains
+itself page by page. The first is P3.0 to P3.2 on the-vault-app.html; the second is P3.3.
+Awaiting: Design 3-slide checkpoint, P3.0 Phase A output, the Sharizal call outcome.
+
+## 2026-08-17 - Sharizal returned the substantiation matrix: config gate substantially closed; P3 chartered
+Turnaround 48h again (matrix sent 11/08, returned 13/08, Damien in CC on the reply). 40/40 rows verdicted:
+32 corrected, 6 OK as is, 2 to discuss (1.1.2 13th Month, 1.1.3 Performance Bonus: monthly internal
+provision, only justified in the submission letter, contract-team defensibility to confirm, O-9 dependency).
+The Open points tab came back empty, third confirmation of the pattern: pre-filled artifacts return fast,
+open questions return blank. Taxonomy gap closed: 1.3.15 Fringe Benefit Tax, 1.3.17 Transport Taxi; Visa,
+Training, HDMF evidence and the Pension TODO all resolved in the matrix itself.
+Structural findings: D-18 sources are origin-scoped per element with format and multiplicity (1.1.1: Excel
+payroll for Local 2 files per month, COrigin, HBased, plus PDF invoices for Mainby quarterly, VIE, Remote),
+and element applicability is origin-scoped down to named individuals; D-19 cost recognition frequency
+differs from document frequency (accommodation bi-annual invoice costed monthly via subscription form,
+Mainby quarterly, insurance annual), so the completeness engine evaluates evidence coverage over a period,
+not one document per month. Ownership rewritten: Donnarica Dela Paz (Account) primary source depositor,
+Donna Dalida (HR) primary evidence provider, Sharizal owns the computed elements, Jeanette reduced to three
+manual elements. Known evidence hole: 1.3.14 IT software requires a notarised CDS invoice that CDS does not
+issue; the gate will show it blocked by design. 1.1.1 payslip vs payroll record acceptance pending client
+confirmation via the contract team.
+KB: 07_VAULT_SUBSTANTIATION_MATRIX.md created (validated config, verbatim, with D-18, D-19 and the residual
+call points), 06_VAULT_TAXONOMY.md rewritten (18 Fringe named, ownership map, origins and applicability).
+Call with Sharizal set for this afternoon; thank-you mail sent with availability. Working hypotheses H1-H8
+logged to proceed without waiting, all reversible config values: H1 six origins with VIE and Remote invoice
+substantiated; H2 Colasway ID universal and stable with a temp-ID fallback; H3 FX at the incurrence-month
+rate, one canonical source, rate and source stamped per cost; H4 computed elements modeled as returned with
+a defensibility flag; H5 IT software rule kept, gap visible; H6 notarisation limited to 1.1.1 and 1.3.14;
+H7 1.1.1 evidence as returned with payroll record optional pending client; H8 completeness rules are the
+element-level Required sets, no category defaults.
+P3 (living mockup) chartered on the-vault-app.html in three sprints: P3.0 real config seed, P3.1 extraction
+journey alive (simulated engine, honest phasing unchanged), P3.2 states and motion. P3.0 handoff issued
+(VAULT_P3_0_CONFIG_SEED.md, config serialized from the validated return); Phase A includes verifying the
+P2.1 merge state before touching anything, since the P2.1 outcome was never logged.
+Impacts: config gate ~90% closed, the tool's rulebook is authored by the process referent. Gated: Colasway
+ID, FX, origins formalization, notarisation list, provision defensibility (this afternoon's call).
+
+## 2026-08-11 - Substantiation matrix issued to Sharizal; config gate relaunched
+Config mail v2 (9 points, 15/07) went unanswered for four weeks. Diagnosis carried over from the July
+workbook: Sharizal corrects a pre-filled artifact fast (35/40 in 48h) and stalls on open questions (the 8
+open decisions came back empty). An open-question mail was the wrong instrument, twice.
+Deliverable: the-vault-substantiation-matrix-staff-cost.xlsx, 3 tabs. Read me (comes from vs proven by, the
+three proof attributes, colour code, example row); A - Substantiation matrix (40 rows, one per cost element,
+pre-filled with our hypothesis: acquisition mode, source document, depositor, frequency, three proof blocks
+each carrying document, required or optional, per staff or per batch, provider, notarisation, plus his
+verdict and notes columns, dropdown-constrained); Open points (the 8 non-element questions, the two blank
+rows, and three per-category default rules).
+Sent with a relance mail proposing a 30 min call, one subject only: what makes a cost complete. Escalation
+set: direct contact 17/08, sponsor-level mention to Damien 24/08 if still silent.
+Known gap carried: refs 1.3.12 to 1.3.18 were our ordering assumption, two Fringe elements (1.3.15, 1.3.17)
+unnamed in our reference, 06_VAULT_TAXONOMY listing only 10 Fringe against the 18 declared in the CDC. To
+close against the price file.
+Impacts: config gate had a concrete artifact again. Gated at issue time: completeness rules, origins, FX,
+per-staff key.
+
 ## 2026-07-14 - Substantiation matrix chartered (D-15); Sharizal mail reissued as v2
 Clarification forced by Vittorio's own read: source vs evidence was ambiguous. Settled wording: the source is the document the number comes from (feeds the register), the evidence is the document that defends the number (feeds the gate); the same document can play both roles (invoice-based elements), and the two roles can have different owners (Contributions). CDC section 9 rewritten around this.
 D-15: substantiation rules live in one per-project matrix, one row per cost element: acquisition mode, source (types and depositor), evidence list with requirement levels (mandatory, alternative group, bonus), granularity (per staff or per batch), provider, attributes (notarization), optional weights, frequency. The gate derives from the mandatory set; bonus evidence feeds a substantiation strength indicator. Editable in admin, Excel-seedable; every downstream surface (owed list, attach form, validator checklist, gap panel, export block) reads from it. S20 (T2) re-specced as the matrix editor. Nothing is hardcoded: taxonomy, owners, modes, evidence rules, frequencies, notice periods and disclosure profiles are all config.
