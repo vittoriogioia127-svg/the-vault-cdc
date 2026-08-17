@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>The Vault - Cahier des charges v0.3</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;--fill:#F4F4F2;--fill-2:#EEEEEB;--hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);--critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;--pill-bg:#1D1D1F;--pill-ink:#FCFCFB;--sans:'Geist',sans-serif;--mono:'Geist Mono',monospace;}
+[data-theme="dark"]{--base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;--fill:#1B1B1D;--fill-2:#212124;--hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);--critical:#E5675B;--partial:#D9A03C;--success:#41BE73;--pill-bg:#F5F5F7;--pill-ink:#101012;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--base);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.62;transition:background .2s,color .2s;}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+h1,h2,h3{font-weight:600;letter-spacing:-0.015em;line-height:1.2;}
+.topbar{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:16px;padding:14px 28px;border-bottom:1px solid var(--hair);background:var(--base);}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand svg{width:20px;height:20px;color:var(--ink);}
+.brand b{font-size:15px;font-weight:600;}
+.tb-right{margin-left:auto;display:flex;gap:8px;}
+.seg{display:flex;gap:2px;background:var(--fill);border:1px solid var(--hair);border-radius:999px;padding:3px;}
+.seg button{font-family:var(--mono);font-size:11px;color:var(--ink-2);background:transparent;border:none;padding:5px 12px;border-radius:999px;cursor:pointer;}
+.seg button.on{background:var(--pill-bg);color:var(--pill-ink);}
+.wrap{max-width:960px;margin:0 auto;padding:52px 28px 110px;}
+.cover{border-bottom:1px solid var(--hair-strong);padding-bottom:34px;margin-bottom:8px;}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);margin-bottom:14px;}
+.cover h1{font-size:44px;margin-bottom:12px;}
+.cover .lede{font-size:16px;color:var(--ink-2);max-width:580px;}
+.meta{display:flex;gap:30px;flex-wrap:wrap;margin-top:22px;}
+.meta div .k{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:3px;}
+.meta div .v{font-size:13px;font-weight:500;}
+.toc{display:flex;flex-wrap:wrap;gap:6px 18px;margin:24px 0 8px;padding:16px 0;border-bottom:1px solid var(--hair);}
+.toc a{font-size:12px;color:var(--ink-2);text-decoration:none;}
+.toc a:hover{color:var(--ink);}
+.toc a span{font-family:var(--mono);color:var(--ink-3);margin-right:5px;}
+.callout{border:1px solid var(--hair);border-left:3px solid var(--ink);border-radius:0 10px 10px 0;background:var(--fill);padding:16px 22px;margin:28px 0;}
+.callout .l{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px;}
+.callout p{font-size:15px;}
+section{margin:44px 0;scroll-margin-top:70px;}
+.sh{display:flex;align-items:baseline;gap:13px;border-bottom:1px solid var(--hair);padding-bottom:11px;margin-bottom:18px;}
+.sn{font-family:var(--mono);font-size:12px;color:var(--ink-3);}
+.sh h2{font-size:20px;}
+p.b{max-width:700px;margin-bottom:12px;}
+p.b.mut{color:var(--ink-2);}
+table{width:100%;border-collapse:collapse;font-size:13px;margin:8px 0 12px;border:1px solid var(--hair);border-radius:10px;overflow:hidden;}
+th{text-align:left;font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-2);font-weight:500;background:var(--fill);padding:9px 12px;border-bottom:1px solid var(--hair);}
+td{padding:9px 12px;border-bottom:1px solid var(--hair-soft);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+td.m{font-family:var(--mono);font-size:11px;color:var(--ink-2);white-space:nowrap;}
+.st{font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;color:var(--success);}
+.st.prop{color:var(--partial);}
+.pipe{display:flex;border:1px solid var(--hair);border-radius:12px;overflow:hidden;margin:16px 0;}
+.pstep{flex:1;padding:15px;border-right:1px solid var(--hair);}
+.pstep:last-child{border-right:none;}
+.pstep.gate{background:var(--fill);}
+.pstep .n{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);margin-bottom:6px;}
+.pstep b{font-size:14px;display:block;margin-bottom:3px;}
+.pstep span{font-size:12px;color:var(--ink-2);}
+ul.c{list-style:none;max-width:700px;}
+ul.c li{padding:9px 0;border-bottom:1px solid var(--hair-soft);color:var(--ink-2);font-size:13.5px;}
+ul.c li:last-child{border-bottom:none;}
+ul.c li b{color:var(--ink);font-weight:600;}
+.chip{display:inline-flex;align-items:center;font-family:var(--mono);font-size:9.5px;font-weight:500;letter-spacing:.04em;text-transform:uppercase;padding:3px 9px;border-radius:999px;background:var(--fill);color:var(--ink-2);}
+.chip.now{background:var(--pill-bg);color:var(--pill-ink);}
+.dot{display:inline-block;width:6px;height:6px;border-radius:50%;margin-right:6px;vertical-align:1px;}
+.wf{border:1px solid var(--hair);border-radius:12px;padding:18px 20px;margin-bottom:12px;}
+.wf .wt{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);margin-bottom:6px;}
+.wf b{font-size:14px;}
+.wf p{font-size:13px;color:var(--ink-2);margin-top:4px;max-width:660px;}
+footer{margin-top:56px;border-top:1px solid var(--hair);padding-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+[hidden]{display:none;}
+@media(max-width:720px){.pipe{flex-direction:column;}.meta{gap:16px;}}
+@media print{.topbar{position:static;}.seg,.toc{display:none;}section{break-inside:avoid;}}
+
+/* --- injected visual layer --- */
+/* ==================== v0.3 visual layer ==================== */
+/* graceful degradation: reveal only hides when JS is present */
+html.js .reveal{opacity:0;transform:translateY(10px);transition:opacity .6s cubic-bezier(.22,1,.36,1),transform .6s cubic-bezier(.22,1,.36,1);}
+html.js .reveal.in{opacity:1;transform:none;}
+
+/* hero stats band */
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--hair);border:1px solid var(--hair);border-radius:14px;overflow:hidden;margin:30px 0 6px;}
+.stat{background:var(--base);padding:22px 20px;}
+.stat .num{font-family:var(--sans);font-weight:200;font-size:42px;line-height:1;letter-spacing:-.025em;font-variant-numeric:tabular-nums;}
+.stat .lab{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-top:12px;}
+.stat .sub{font-size:11.5px;color:var(--ink-3);margin-top:3px;line-height:1.35;}
+
+/* figure shell */
+.fig{border:1px solid var(--hair);border-radius:14px;padding:22px;margin:22px 0;}
+.fig .cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.fig .cap::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--ink);}
+.fig .note{font-size:12px;color:var(--ink-2);margin-top:16px;max-width:660px;line-height:1.55;}
+
+/* cost-model cascade */
+.cascade{display:flex;align-items:flex-start;flex-wrap:wrap;gap:12px;}
+.lvl{display:flex;flex-direction:column;gap:6px;min-width:118px;}
+.lk{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-bottom:2px;}
+.node{font-size:12.5px;padding:7px 11px;border:1px solid var(--hair-strong);border-radius:8px;background:var(--fill);white-space:nowrap;}
+.node.hd{background:var(--pill-bg);color:var(--pill-ink);border-color:transparent;font-weight:500;}
+.node.q{color:var(--ink-2);}
+.node.dim{font-family:var(--mono);font-size:11px;color:var(--ink-2);background:transparent;}
+.sib{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.04em;padding-left:2px;}
+.arw{align-self:center;color:var(--ink-3);font-size:20px;line-height:1;padding-top:16px;}
+
+/* completeness gate */
+.gaterow{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+.conds{display:flex;flex-direction:column;gap:8px;flex:1;min-width:230px;}
+.gate-cond{display:flex;align-items:center;gap:11px;padding:11px 14px;border:1px solid var(--hair-strong);border-radius:9px;background:var(--fill);font-size:13px;}
+.gate-cond .gk{font-family:var(--mono);font-size:10px;color:var(--ink-3);}
+.garw{color:var(--ink-3);font-size:22px;line-height:1;}
+.gate-door{display:flex;align-items:center;gap:9px;padding:15px 24px;border-radius:11px;background:var(--pill-bg);color:var(--pill-ink);font-weight:500;font-size:14px;white-space:nowrap;}
+.gate-door .gdot{width:7px;height:7px;border-radius:50%;background:var(--pill-ink);opacity:.55;}
+/* gate check sequence (JS present only) */
+html.js .gate-cond{opacity:.4;transition:opacity .5s ease;}
+html.js .gate-door{opacity:.2;transition:opacity .6s ease;}
+.gatefig.in .gate-cond.c1{opacity:1;transition-delay:.15s;}
+.gatefig.in .gate-cond.c2{opacity:1;transition-delay:.45s;}
+.gatefig.in .gate-cond.c3{opacity:1;transition-delay:.75s;}
+.gatefig.in .gate-door{opacity:1;transition-delay:1.05s;}
+
+/* group engine */
+.engine{display:flex;align-items:center;gap:22px;flex-wrap:wrap;}
+.hub{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;padding:22px 26px;border:1px solid var(--hair-strong);border-radius:14px;background:var(--fill);color:var(--ink);min-width:150px;}
+.hub span{font-weight:600;font-size:14px;}
+.hub small{font-family:var(--mono);font-size:9px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-3);}
+.orbit{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;flex:1;min-width:270px;}
+.proj{padding:12px 14px;border:1px dashed var(--hair-strong);border-radius:10px;background:transparent;color:var(--ink-3);}
+.proj b{display:block;font-size:13px;font-weight:500;margin-bottom:2px;}
+.proj span{font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;text-transform:uppercase;}
+.proj.on{border-style:solid;border-color:var(--ink);background:var(--fill);color:var(--ink);}
+.proj.on b{color:var(--ink);}
+
+/* pipeline sequential emphasis (reuses existing .pipe) */
+html.js .pipe .pstep{opacity:.5;transition:opacity .5s ease;}
+.pipe.in .pstep:nth-child(1){opacity:1;transition-delay:.05s;}
+.pipe.in .pstep:nth-child(2){opacity:1;transition-delay:.22s;}
+.pipe.in .pstep:nth-child(3){opacity:1;transition-delay:.39s;}
+.pipe.in .pstep:nth-child(4){opacity:1;transition-delay:.56s;}
+
+/* reduced motion: everything static */
+@media (prefers-reduced-motion: reduce){
+  html.js .reveal{opacity:1 !important;transform:none !important;transition:none !important;}
+  html.js .pipe .pstep,html.js .gate-cond,html.js .gate-door{opacity:1 !important;transition:none !important;}
+}
+@media(max-width:720px){
+  .stats{grid-template-columns:repeat(2,1fr);}
+  .orbit{grid-template-columns:1fr;}
+}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="brand"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg><b>The Vault</b></div>
+  <div class="tb-right">
+    <div class="seg" id="lang"><button data-l="fr" class="on" onclick="setLang('fr')">FR</button><button data-l="en" onclick="setLang('en')">EN</button></div>
+    <div class="seg" id="th"><button data-t="light" class="on" onclick="setTheme('light')">Light</button><button data-t="dark" onclick="setTheme('dark')">Dark</button></div>
+  </div>
+</div>
+
+<!-- ==================== FR ==================== -->
+<div class="wrap" id="doc-fr">
+  <div class="cover">
+    <div class="kicker">Cahier des charges · v0.3 · Diffusion restreinte</div>
+    <h1>The Vault</h1>
+    <p class="lede">La plateforme qui met fin a la substantiation manuelle des couts EOT. Les departements deposent leurs fichiers, The Vault extrait les couts, les range au bon endroit jusqu'au per-staff, et les prouve. Un outil groupe, configurable projet par projet.</p>
+    <div class="meta">
+      <div><div class="k">Sujet</div><div class="v">Substantiation des couts EOT</div></div>
+      <div><div class="k">Projet de reference</div><div class="v">MMSP EOT001</div></div>
+      <div><div class="k">Version</div><div class="v">v0.3 · 07 juil. 2026</div></div>
+      <div><div class="k">Statut</div><div class="v">Pour validation</div></div>
+    </div>
+  </div>
+  <div class="toc">
+    <a href="#fr01"><span>01</span>Hypotheses & decisions</a>
+    <a href="#fr02"><span>02</span>Contexte</a>
+    <a href="#fr03"><span>03</span>Objectifs</a>
+    <a href="#fr04"><span>04</span>Perimetre</a>
+    <a href="#fr05"><span>05</span>De tracker a moteur</a>
+    <a href="#fr06"><span>06</span>Modele de couts</a>
+    <a href="#fr07"><span>07</span>Ce qui est capture</a>
+    <a href="#fr08"><span>08</span>Flux de travail</a>
+    <a href="#fr09"><span>09</span>Substantiation</a>
+    <a href="#fr10"><span>10</span>Moteur de completude</a>
+    <a href="#fr11"><span>11</span>Parties prenantes</a>
+    <a href="#fr12"><span>12</span>Acces</a>
+    <a href="#fr13"><span>13</span>Integrite des preuves</a>
+    <a href="#fr14"><span>14</span>Restitution & BI</a>
+    <a href="#fr15"><span>15</span>Securite</a>
+    <a href="#fr16"><span>16</span>Plateforme groupe</a>
+    <a href="#fr17"><span>17</span>Contraintes</a>
+    <a href="#fr18"><span>18</span>Feuille de route</a>
+    <a href="#fr19"><span>19</span>Points ouverts</a>
+  </div>
+
+  <div class="callout"><div class="l">L'essentiel en une ligne</div><p>The Vault ne suit pas les preuves, il produit le resultat. Il remplace les fichiers de travail et les extractions manuelles. Le controleur ne consolide plus a la main, il valide et il assemble.</p></div>
+  <div class="stats reveal">
+    <div class="stat"><div class="num"><span class="n" data-count="7">0</span></div><div class="lab">Tetes de couts (A-G)</div><div class="sub">Structure reelle du price file</div></div>
+    <div class="stat"><div class="num"><span class="n" data-count="40">0</span></div><div class="lab">Elements de cout</div><div class="sub">Rien que sur le Staff Cost</div></div>
+    <div class="stat"><div class="num"><span class="n" data-count="3">0</span></div><div class="lab">Conditions pour le vert</div><div class="sub">Source + preuve + validation</div></div>
+    <div class="stat"><div class="num"><span class="n" data-count="1">0</span></div><div class="lab">Moteur, N projets</div><div class="sub">Onboarding par configuration</div></div>
+  </div>
+
+  <section id="fr01"><div class="sh"><span class="sn">01</span><h2>Hypotheses et decisions</h2></div>
+    <p class="b mut">Chaque choix structurant est trace ici. Les elements valides ont ete confirmes ; les elements proposes restent a valider avant construction.</p>
+    <table>
+      <tr><th>Ref</th><th>Decision</th><th>Statut</th></tr>
+      <tr><td class="m">D-1</td><td>Source de verite = un moteur d'extraction. The Vault remplace les fichiers de travail et les requetes manuelles. Les departements deposent leurs sources, l'outil extrait et range les couts.</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-2</td><td>La maille de suivi est le cost element, jusqu'au per-staff. Chaque fiche de paie se range a la bonne personne et au bon element.</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-3</td><td>La taxonomie est la structure reelle du price file : Cost Head A-G, categorie, cost element (ex A > 1.1 Salary > 1.1.1 Basic Salary).</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-4</td><td>La porte du vert = Source deposee ET Evidence en place ET validation par le validateur de departement contre la preuve. Deux niveaux : validateur departement, puis consolidateur.</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-5</td><td>Multi-devise (PHP, EUR, USD) avec taux et source FX documentes, tous les montants aussi stockes en PHP.</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-6</td><td>Les sources acceptees par cost element sont configurables et editables. Un cout peut etre prouve par plusieurs sources. The Vault montre par quoi chaque cout est justifie.</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-7</td><td>The Vault est une plateforme groupe, parametrable projet par projet. Configuration plutot que specification. A-G est le premier projet charge, pas un codage en dur.</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-8</td><td>Direction visuelle figee (design premium minimal, muted = complete, light et dark).</td><td><span class="st">Valide</span></td></tr>
+      <tr><td class="m">D-9</td><td>Bureau uniquement, optimise pour grand ecran et gros volumes.</td><td><span class="st">Valide</span></td></tr>
+    </table>
+  </section>
+
+  <section id="fr02"><div class="sh"><span class="sn">02</span><h2>Contexte et problematique</h2></div>
+    <p class="b">Colas Rail doit justifier les couts lies aux claims EOT sur ses contrats ferroviaires. Les tetes de couts recouvrables sont definies par le contrat et organisees en cost heads (A Staff Cost, B Site Establishment, C Transport, D Plant and Equipment, E Contractual Cost, F Warranty and Hedging, G Head Office Overhead). Aujourd'hui la donnee est fragmentee : chaque departement tient son propre registre, dans son format, et le controleur extrait les couts a la main avec des fichiers de travail et Power Query.</p>
+    <p class="b mut">Quand un evenement contractuel survient et qu'un claim doit etre monte, les couts et leurs preuves sont reassembles dans l'urgence, et les manques apparaissent trop tard. Le resultat est un travail lent, non traceable, et un risque financier sur des claims qui pesent des centaines de millions de PHP.</p>
+  </section>
+
+  <section id="fr03"><div class="sh"><span class="sn">03</span><h2>Objectifs et criteres de succes</h2></div>
+    <p class="b"><b>Objectifs.</b> Absorber le depot des fichiers sources par departement et en extraire les couts automatiquement, jusqu'au per-staff. Ranger chaque cout sous le bon cost head, la bonne categorie et le bon element. Relier chaque cout a ses preuves et le faire valider par le departement. Garder le registre neutre pour tester n'importe quel evenement contractuel et isoler les lignes claimables. Proteger les donnees RH derriere un acces strict par role. Rendre tout explorable, filtrable et exportable, avec un acces en lecture seule pour le decisionnel.</p>
+    <p class="b"><b>Criteres de succes du pilote.</b> Une periode complete collectee de bout en bout sur le Staff Cost, avec extraction et rangement automatiques, preuves liees, validation departement, remontee de completude sans trou, et un dossier de claim assemble puis scelle.</p>
+  </section>
+
+  <section id="fr04"><div class="sh"><span class="sn">04</span><h2>Perimetre</h2></div>
+    <table>
+      <tr><th>Dans le perimetre</th><th>Reporte</th><th>Hors perimetre</th></tr>
+      <tr>
+        <td>Depot des sources par departement. Extraction et rangement des couts (Staff Cost prioritaire), jusqu'au per-staff. Substantiation configurable. Validation departement puis consolidation. Moteur de completude. Assemblage des dossiers de claim et scellement. Acces par role et isolation RH. Export filtre et acces BI. Modele de configuration groupe.</td>
+        <td>Extraction automatique des PDF et OCR (factures, fiches de paie moins structurees). Cost heads B a G au-dela de la structure. Tableaux de bord decisionnels avances. Agent d'interrogation en langage naturel.</td>
+        <td>Remplacer la comptabilite ou l'ERP. Construire l'analyse d'ecart de planning (fournie par l'equipe claim). Usage mobile. Integration directe avec les systemes de l'Ingenieur.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="fr05"><div class="sh"><span class="sn">05</span><h2>De tracker a moteur</h2></div>
+    <p class="b">La version precedente etait une couche de reconciliation posee au-dessus des registres. Celle-ci les remplace. Les fichiers de travail et le pipeline manuel disparaissent dans l'outil. Le systeme separe toujours deux objets, mais il produit desormais le contenu au lieu de seulement le suivre.</p>
+    <table>
+      <tr><th>Objet</th><th>Role</th><th>Nature</th></tr>
+      <tr><td>Registre des couts</td><td>Enregistre tout en continu, extrait des sources deposees, range par cost head, categorie, element et personne, avec periode, montant et preuves.</td><td>La source de verite exhaustive</td></tr>
+      <tr><td>Evenement de claim</td><td>Selectionne dans le registre les lignes claimables pour un evenement contractuel donne, chacune avec sa base d'eligibilite.</td><td>Un dossier assemble par-dessus</td></tr>
+    </table>
+    <p class="b mut">Cette separation donne un registre permanent et la logique par evenement, sans construire de comptabilite parallele.</p>
+  </section>
+  <section id="fr06"><div class="sh"><span class="sn">06</span><h2>Le modele de couts</h2></div>
+    <p class="b">La taxonomie est la structure reelle du price file, pas une hypothese. Quatre niveaux, quatre dimensions sur le Staff Cost.</p>
+    <table>
+      <tr><th>Niveau</th><th>Exemple</th><th>Note</th></tr>
+      <tr><td>Cost Head</td><td class="m">A · Staff Cost</td><td>A a G. A entierement modelise, B a G suivent</td></tr>
+      <tr><td>Categorie</td><td class="m">1.1 · Salary</td><td>Salary, Contribution, Fringe Benefit</td></tr>
+      <tr><td>Cost Element</td><td class="m">1.1.1 · Basic Salary</td><td>L'unite de completude</td></tr>
+      <tr><td>Dimensions</td><td class="m">Staff × Origin × Currency × Month</td><td>Local, HBased, COrigin, Mainby · PHP/EUR/USD · mensuel</td></tr>
+    </table>
+    <p class="b mut">The Vault descend jusqu'au per-staff. Le detail par personne qui vit aujourd'hui dans les fichiers Power Query vit demain dans The Vault.</p>
+    <div class="fig reveal">
+      <div class="cap">Modele de couts &middot; granularite</div>
+      <div class="cascade">
+        <div class="lvl"><span class="lk">Cost Head</span><span class="node hd">A &middot; Staff Cost</span><span class="sib">B &middot; C &middot; D &middot; E &middot; F &middot; G</span></div>
+        <span class="arw">&rsaquo;</span>
+        <div class="lvl"><span class="lk">Categorie</span><span class="node">1.1 Salary</span><span class="node q">1.2 Contribution</span><span class="node q">1.3 Fringe Benefit</span></div>
+        <span class="arw">&rsaquo;</span>
+        <div class="lvl"><span class="lk">Cost Element</span><span class="node">1.1.1 Basic Salary</span><span class="sib">+31 autres</span></div>
+        <span class="arw">&rsaquo;</span>
+        <div class="lvl"><span class="lk">Par staff</span><span class="node dim">&times; Staff</span><span class="node dim">&times; Origin</span><span class="node dim">&times; Devise</span><span class="node dim">&times; Mois</span></div>
+      </div>
+      <div class="note">Une fiche de paie se resout a une personne, un element, un mois, une devise. 4 origines (Local, HBased, COrigin, Mainby), 3 devises (PHP, EUR, USD), cycle mensuel.</div>
+    </div>
+  </section>
+
+  <section id="fr07"><div class="sh"><span class="sn">07</span><h2>Ce que la solution capture</h2></div>
+    <ul class="c">
+      <li><b>Couts.</b> Chaque cout extrait d'une source, avec son cost head, sa categorie, son element, sa periode, sa devise et son montant.</li>
+      <li><b>Preuves.</b> Un ou plusieurs documents qui prouvent chaque cout, selon la liste de sources acceptees.</li>
+      <li><b>Personnes.</b> Le personnel suivi individuellement, pour attribuer les couts par personne et gerer l'eligibilite nominative.</li>
+      <li><b>Periodes.</b> Le cycle mensuel. Une periode se cloture une fois revue, puis se scelle.</li>
+      <li><b>Evenements contractuels.</b> Les evenements qui selectionnent dans le registre les lignes claimables.</li>
+      <li><b>Historique.</b> Une trace inalterable de chaque depot, extraction, modification et validation.</li>
+    </ul>
+  </section>
+
+  <section id="fr08"><div class="sh"><span class="sn">08</span><h2>Flux de travail</h2></div>
+    <p class="b">Le geste central est le depot. Autour, le pipeline se lit en quatre temps.</p>
+    <div class="pipe">
+      <div class="pstep"><div class="n">Depot</div><b>Source deposee</b><span>Le departement glisse son fichier dans son espace</span></div>
+      <div class="pstep"><div class="n">Extraction</div><b>Range tout seul</b><span>Couts lus et places, par element, par staff</span></div>
+      <div class="pstep"><div class="n">Substantiation</div><b>Preuve liee</b><span>Chaque cout montre par quoi il est prouve</span></div>
+      <div class="pstep gate"><div class="n">Validation · gate</div><b>Passe au vert</b><span>Le validateur confirme le cout extrait vs la preuve</span></div>
+    </div>
+    <div class="wf"><div class="wt">W1 · Depot et extraction</div><b>Le contributeur depose ses sources</b><p>Un contributeur ouvre la periode courante et depose ses fichiers dans les categories dont il a la charge. The Vault extrait les couts, les range par element et par personne, et signale ce qui reste a fournir. L'import en masse (Excel, CSV) est possible.</p></div>
+    <div class="wf"><div class="wt">W2 · Validation a deux niveaux</div><b>Le departement valide, le consolidateur confirme</b><p>Le validateur de departement confirme les couts extraits contre la preuve : c'est la porte du vert. Le consolidateur revoit, valide ou rejette avec motif. A la validation l'entree se verrouille et l'action est tracee. La periode se verrouille apres sa revue mensuelle.</p></div>
+    <div class="wf"><div class="wt">W3 · Assemblage du claim</div><b>Le consolidateur monte le dossier</b><p>Le consolidateur cree un evenement de claim (fenetre, sections impactees, references planning). Il selectionne les lignes eligibles, chacune avec sa base d'eligibilite. Une ligne sans preuve bloque l'export : un claim ne part pas avec un trou.</p></div>
+  </section>
+
+  <section id="fr09"><div class="sh"><span class="sn">09</span><h2>La substantiation est configurable</h2></div>
+    <p class="b">Un cout peut etre prouve par plusieurs documents. Chaque cost element porte une liste de sources acceptees, definie et editable. The Vault montre, pour chaque cout, exactement par quoi il est justifie, et refuse une source qui n'est pas sur la liste.</p>
+    <table>
+      <tr><th>Cost element</th><th>Sources acceptees (editables)</th><th>Preuve type</th></tr>
+      <tr><td class="m">1.1.1 Basic Salary</td><td>Fichier de paie audite (Local, HBased, COrigin)</td><td>Bulletin, registre de paie notarie</td></tr>
+      <tr><td class="m">1.2.6 Withholding Tax</td><td>Fichier de paie audite, formulaire fiscal</td><td>BIR Form 1601-C, reference de depot</td></tr>
+      <tr><td class="m">1.3.6 Accommodation Rental</td><td>Fichier de travail Admin, bail</td><td>Contrat de bail, facture</td></tr>
+    </table>
+  </section>
+
+  <section id="fr10"><div class="sh"><span class="sn">10</span><h2>Le moteur de completude</h2></div>
+    <p class="b">C'est le vrai produit. Le moteur calcule une matrice categorie par periode par responsable et applique des regles. La lisibilite suit une loi : ce qui est complet reste silencieux, la couleur ne marque que l'exception.</p>
+    <p class="b"><b>Un cout est complet</b> seulement quand les trois conditions sont vraies : la source deposee, la preuve en place selon la regle de la categorie, et la validation departement signee. Il declenche une alerte s'il manque une condition, si une empreinte de document a change, ou si une saisie reste non validee au-dela du delai.</p>
+    <div class="fig reveal gatefig">
+      <div class="cap">La porte du vert</div>
+      <div class="gaterow">
+        <div class="conds">
+          <div class="gate-cond c1"><span class="gk">01</span><span>Source deposee</span></div>
+          <div class="gate-cond c2"><span class="gk">02</span><span>Preuve en place</span></div>
+          <div class="gate-cond c3"><span class="gk">03</span><span>Validation departement</span></div>
+        </div>
+        <span class="garw">&rarr;</span>
+        <div class="gate-door"><span class="gdot"></span>Complet</div>
+      </div>
+      <div class="note">Trois conditions, une porte. Complet est un fait, pas un comptage de documents. Ce qui est complet reste silencieux : la couleur ne marque que l'exception.</div>
+    </div>
+    <table>
+      <tr><th>Etat</th><th>Signification</th></tr>
+      <tr><td><span class="chip"><span class="dot" style="background:var(--ink-3)"></span>Complet</span></td><td>Source, preuve et validation reunies. Silencieux.</td></tr>
+      <tr><td><span class="chip"><span class="dot" style="background:var(--partial)"></span>Partiel</span></td><td>Une condition manque, un document attendu absent.</td></tr>
+      <tr><td><span class="chip"><span class="dot" style="background:var(--critical)"></span>Critique</span></td><td>Aucune preuve, ou integrite compromise.</td></tr>
+    </table>
+    <p class="b mut">Les regles d'exhaustivite par categorie (documents minimum pour complet) sont des objets de configuration, editables par l'administrateur du projet, pas du code.</p>
+  </section>
+
+  <section id="fr11"><div class="sh"><span class="sn">11</span><h2>Parties prenantes et roles</h2></div>
+    <table>
+      <tr><th>Partie prenante</th><th>Responsabilite</th></tr>
+      <tr><td>Nicolas Durame, Directeur Contract Management</td><td>Porte la strategie de claim EOT, decide ce qui est claimable, definit les evenements contractuels. Proprietaire metier.</td></tr>
+      <tr><td>Damien Prost, CFO Asie</td><td>Sponsor finance, budget, confidentialite des donnees, voie de validation siege et cyber.</td></tr>
+      <tr><td>Mohd Sharizal Isa, Cost Controller</td><td>Pilote aujourd'hui la collecte des couts EOT. Referent du sujet, des regles d'exhaustivite et de la liste des couts. Passe d'extracteur manuel a validateur et assembleur.</td></tr>
+      <tr><td>Departements contributeurs</td><td>Account, Human Resource, Cost Control, Admin. Deposent les sources de leur perimetre.</td></tr>
+      <tr><td>Validateurs</td><td>Racim et Simon, validation des couts et des ressources.</td></tr>
+    </table>
+  </section>
+
+  <section id="fr12"><div class="sh"><span class="sn">12</span><h2>Acces et confidentialite</h2></div>
+    <p class="b">Acces par role. Les donnees nominatives de paie et de personnel sont restreintes aux roles autorises, isolees au niveau de la donnee et pas seulement de l'ecran.</p>
+    <table>
+      <tr><th>Role</th><th>Voit</th><th>Peut faire</th></tr>
+      <tr><td>Admin</td><td>Tout, plus la configuration du projet</td><td>Gere utilisateurs, categories, sources acceptees, regles, periodes. Ne modifie pas l'historique d'audit.</td></tr>
+      <tr><td>Contributeur</td><td>Ses categories, son detail nominatif s'il est RH</td><td>Depose ses sources, joint des preuves, soumet.</td></tr>
+      <tr><td>Validateur departement</td><td>Les couts extraits de son departement et leurs preuves</td><td>Valide ou rejette les couts extraits contre la preuve.</td></tr>
+      <tr><td>Consolidateur</td><td>Toutes categories, tout le detail nominatif</td><td>Valide, verrouille les periodes, assemble les claims, scelle.</td></tr>
+      <tr><td>Auditeur</td><td>Toutes les entrees et preuves, detail nominatif</td><td>Lecture seule. Revue mensuelle.</td></tr>
+      <tr><td>Lecteur</td><td>Agregats uniquement, pas de detail nominatif</td><td>Lecture des agregats et tableaux de bord.</td></tr>
+    </table>
+  </section>
+  <section id="fr13"><div class="sh"><span class="sn">13</span><h2>Integrite des preuves</h2></div>
+    <p class="b">Chaque document recoit une empreinte a l'upload. Toute modification ulterieure est detectable. La conservation est en ecriture unique : une correction ajoute une nouvelle version, elle n'ecrase jamais. Une empreinte recalculee qui ne correspond plus declenche une alerte d'integrite.</p>
+    <p class="b mut">Pourquoi ca compte : beaucoup de contrats exigent des records contemporains, parfois tenus dans une forme agreee avec l'Ingenieur. L'historique complet permet de prouver, en cas de litige, qu'aucun document n'a ete altere ou antidate.</p>
+  </section>
+
+  <section id="fr14"><div class="sh"><span class="sn">14</span><h2>Restitution, export et decisionnel</h2></div>
+    <ul class="c">
+      <li><b>Tableau de bord operationnel.</b> Completude par etat, totaux a date par categorie et periode, responsables en retard, couverture du claim.</li>
+      <li><b>Export filtre.</b> Selection sur n'importe quelle metadonnee (categorie, periode, contributeur, source, type de document, tranche de montant, statut) puis export CSV ou Excel.</li>
+      <li><b>Acces decisionnel.</b> Un acces en lecture seule controle alimente le decisionnel, a l'ecart des donnees nominatives brutes sauf autorisation, avec des vues pre-construites pour les coupes frequentes.</li>
+    </ul>
+  </section>
+
+  <section id="fr15"><div class="sh"><span class="sn">15</span><h2>Securite et gouvernance</h2></div>
+    <p class="b">La conformite avance en chantier parallele pour ne pas bloquer la conception. Isolation RH par role, historique d'acces inalterable, moindre privilege. La region d'hebergement est a confirmer avec la cyber (une region europeenne est l'option probable).</p>
+    <p class="b mut">La mise en production avec de vraies donnees RH est conditionnee a l'accord cyber. Le pilote peut tourner sur des donnees de test jusque-la. La liste des couts et des ressources est validee par le referent process et les validateurs.</p>
+  </section>
+
+  <section id="fr16"><div class="sh"><span class="sn">16</span><h2>Une plateforme groupe</h2></div>
+    <p class="b">The Vault n'est pas un outil MMSP. C'est un outil groupe Colas. N'importe quel projet dans le monde, avec sa propre organisation de couts, onboarde en chargeant sa configuration et commence a suivre.</p>
+    <div class="fig reveal">
+      <div class="cap">Un moteur, plusieurs claims</div>
+      <div class="engine">
+        <div class="hub"><svg viewBox="0 0 96 96" width="22" height="22"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg><span>Un moteur</span><small>Extraction &middot; pipeline &middot; assemblage</small></div>
+        <div class="orbit">
+          <div class="proj on"><b>MMSP EOT001</b><span>Premier projet charge</span></div>
+          <div class="proj"><b>Projet &middot; config</b><span>Onboarding par config</span></div>
+          <div class="proj"><b>Projet &middot; config</b><span>Onboarding par config</span></div>
+          <div class="proj"><b>Projet &middot; config</b><span>Onboarding par config</span></div>
+        </div>
+      </div>
+      <div class="note">Meme extraction, meme pipeline, meme assemblage. Seule la configuration change. A-G est le premier projet charge, pas un codage en dur.</div>
+    </div>
+    <ul class="c">
+      <li><b>Configuration plutot que specification.</b> Taxonomie, sources acceptees, regles de completude et roles sont des objets de configuration, edites dans l'outil, pas dans du code.</li>
+      <li><b>Onboarding par config.</b> Un nouveau projet definit ses cost heads et ses regles une fois, et le meme moteur le sert.</li>
+      <li><b>Un moteur, plusieurs claims.</b> L'extraction, le pipeline et l'assemblage sont partages. Seule la configuration change. A-G est le premier projet charge.</li>
+    </ul>
+  </section>
+
+  <section id="fr17"><div class="sh"><span class="sn">17</span><h2>Contraintes</h2></div>
+    <ul class="c">
+      <li><b>Bureau uniquement</b>, optimise pour grand ecran. Des milliers de lignes : l'outil reste performant a ce volume.</li>
+      <li><b>Import en masse</b> Excel ou CSV pour les entrees, avec un apercu de validation avant integration.</li>
+      <li><b>Multi-devise</b> avec taux et source FX documentes, tous les montants aussi stockes en PHP.</li>
+      <li><b>Accessibilite</b> : accessible au clavier, focus visible, mouvement reduit respecte.</li>
+    </ul>
+  </section>
+
+  <section id="fr18"><div class="sh"><span class="sn">18</span><h2>Feuille de route</h2></div>
+    <table>
+      <tr><th>Phase</th><th>Contenu</th><th>Jalon</th></tr>
+      <tr><td class="m">P0</td><td>Verrouillage de la taxonomie, des sources acceptees, des regles d'exhaustivite et du RACI.</td><td>Referent process + parties prenantes</td></tr>
+      <tr><td class="m">P1</td><td>Prototype visuel valide, support de presentation interne.</td><td>Validation Vittorio</td></tr>
+      <tr><td class="m">P2</td><td>Depot, extraction et registre des couts.</td><td>Un depot range de bout en bout</td></tr>
+      <tr><td class="m">P3</td><td>Fondation securisee et controle d'acces.</td><td>Test d'integrite</td></tr>
+      <tr><td class="m">P4</td><td>Validation departement et consolidation, import en masse.</td><td>La porte a trois conditions</td></tr>
+      <tr><td class="m">P5</td><td>Moteur de completude et tableau de bord.</td><td>Un trou detecte</td></tr>
+      <tr><td class="m">P6</td><td>Assemblage des dossiers de claim et scellement.</td><td>Un dossier assemble et scelle</td></tr>
+      <tr><td class="m">P7</td><td>Extraction structuree (Excel), puis assistee, puis documents.</td><td>Une source extraite sans intervention</td></tr>
+      <tr><td class="m">P8</td><td>Pilote sur une tete de cout, donnees de test.</td><td>Boucle complete validee</td></tr>
+      <tr><td class="m">P9</td><td>Plateforme groupe, onboarding d'un second projet par configuration.</td><td>Un projet ajoute sans code</td></tr>
+    </table>
+  </section>
+
+  <section id="fr19"><div class="sh"><span class="sn">19</span><h2>Points ouverts et dependances</h2></div>
+    <table>
+      <tr><th>Ref</th><th>Question</th><th>Responsable</th></tr>
+      <tr><td class="m">O-1</td><td>Calendrier de validation cyber et region d'hebergement. Le pilote peut-il tourner sur de vraies donnees ou d'abord sur des donnees de test.</td><td>Damien, cyber</td></tr>
+      <tr><td class="m">O-2</td><td>Valider la liste complete des couts et ressources contre le contrat, confirmer la taxonomie A-G.</td><td>Nicolas, Sharizal, Racim, Simon</td></tr>
+      <tr><td class="m">O-3</td><td>Confirmer les regles d'exhaustivite et les sources acceptees par element.</td><td>Sharizal, Racim</td></tr>
+      <tr><td class="m">O-4</td><td>Source unique du taux FX et sa documentation.</td><td>Finance</td></tr>
+      <tr><td class="m">O-5</td><td>Qui est l'auditeur mensuel dedie.</td><td>Nicolas, Damien</td></tr>
+      <tr><td class="m">O-6</td><td>Source et format de l'analyse planning de reference vs impacte qui alimente les evenements de claim.</td><td>Equipe claim, Racim</td></tr>
+    </table>
+  </section>
+
+  <footer><span>The Vault · Cahier des charges · v0.3</span><span>Confidentiel · Diffusion restreinte</span></footer>
+</div>
+<!-- ==================== EN ==================== -->
+<div class="wrap" id="doc-en" hidden>
+  <div class="cover">
+    <div class="kicker">Specification · v0.3 · Restricted</div>
+    <h1>The Vault</h1>
+    <p class="lede">The platform that ends manual EOT cost substantiation. Departments drop their files, The Vault extracts the costs, files them in the right place down to per-staff, and proves them. A group tool, configurable project by project.</p>
+    <div class="meta">
+      <div><div class="k">Subject</div><div class="v">EOT cost substantiation</div></div>
+      <div><div class="k">Reference project</div><div class="v">MMSP EOT001</div></div>
+      <div><div class="k">Version</div><div class="v">v0.3 · 07 Jul 2026</div></div>
+      <div><div class="k">Status</div><div class="v">For validation</div></div>
+    </div>
+  </div>
+  <div class="toc">
+    <a href="#en01"><span>01</span>Assumptions & decisions</a>
+    <a href="#en02"><span>02</span>Context</a>
+    <a href="#en03"><span>03</span>Objectives</a>
+    <a href="#en04"><span>04</span>Scope</a>
+    <a href="#en05"><span>05</span>Tracker to engine</a>
+    <a href="#en06"><span>06</span>Cost model</a>
+    <a href="#en07"><span>07</span>What is captured</a>
+    <a href="#en08"><span>08</span>Workflows</a>
+    <a href="#en09"><span>09</span>Substantiation</a>
+    <a href="#en10"><span>10</span>Completeness engine</a>
+    <a href="#en11"><span>11</span>Stakeholders</a>
+    <a href="#en12"><span>12</span>Access</a>
+    <a href="#en13"><span>13</span>Evidence integrity</a>
+    <a href="#en14"><span>14</span>Reporting & BI</a>
+    <a href="#en15"><span>15</span>Security</a>
+    <a href="#en16"><span>16</span>Group platform</a>
+    <a href="#en17"><span>17</span>Constraints</a>
+    <a href="#en18"><span>18</span>Roadmap</a>
+    <a href="#en19"><span>19</span>Open points</a>
+  </div>
+
+  <div class="callout"><div class="l">The point, in one line</div><p>The Vault does not track evidence, it produces the outcome. It replaces the working files and the manual extraction. The controller stops consolidating by hand; he validates and assembles.</p></div>
+  <div class="stats reveal">
+    <div class="stat"><div class="num"><span class="n" data-count="7">0</span></div><div class="lab">Cost heads (A-G)</div><div class="sub">Real price file structure</div></div>
+    <div class="stat"><div class="num"><span class="n" data-count="40">0</span></div><div class="lab">Cost elements</div><div class="sub">Staff Cost alone</div></div>
+    <div class="stat"><div class="num"><span class="n" data-count="3">0</span></div><div class="lab">Conditions to complete</div><div class="sub">Source + evidence + sign-off</div></div>
+    <div class="stat"><div class="num"><span class="n" data-count="1">0</span></div><div class="lab">Engine, N projects</div><div class="sub">Onboard by configuration</div></div>
+  </div>
+
+  <section id="en01"><div class="sh"><span class="sn">01</span><h2>Assumptions and decisions</h2></div>
+    <p class="b mut">Every structuring choice is traced here. Validated items are confirmed; proposed items remain to be validated before build.</p>
+    <table>
+      <tr><th>Ref</th><th>Decision</th><th>Status</th></tr>
+      <tr><td class="m">D-1</td><td>Source of truth = an extraction engine. The Vault replaces the working files and the manual queries. Departments drop their sources, the tool extracts and files the costs.</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-2</td><td>The unit of tracking is the cost element, down to per-staff. Each payslip files itself to the right person and element.</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-3</td><td>The taxonomy is the real price file structure: Cost Head A-G, category, cost element (e.g. A > 1.1 Salary > 1.1.1 Basic Salary).</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-4</td><td>The green gate = Source deposited AND Evidence on file AND department validator sign-off against the proof. Two levels: department validator, then consolidator.</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-5</td><td>Multi-currency (PHP, EUR, USD) with FX rate and source documented, all amounts also stored in PHP.</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-6</td><td>Accepted sources per cost element are configurable and editable. A cost can be proven by several sources. The Vault shows what each cost is proven by.</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-7</td><td>The Vault is a group platform, configurable per project. Configuration over specification. A-G is the first project loaded, not a hardcode.</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-8</td><td>Visual direction frozen (premium minimal, muted = complete, light and dark).</td><td><span class="st">Valid</span></td></tr>
+      <tr><td class="m">D-9</td><td>Desktop only, optimized for a wide screen and high volume.</td><td><span class="st">Valid</span></td></tr>
+    </table>
+  </section>
+
+  <section id="en02"><div class="sh"><span class="sn">02</span><h2>Context and problem</h2></div>
+    <p class="b">Colas Rail must substantiate the costs of EOT claims on its railway contracts. Recoverable cost heads are defined by the contract and organized as cost heads (A Staff Cost, B Site Establishment, C Transport, D Plant and Equipment, E Contractual Cost, F Warranty and Hedging, G Head Office Overhead). Today the data is fragmented: each department keeps its own register, in its own format, and the controller extracts the costs by hand with working files and Power Query.</p>
+    <p class="b mut">When a contractual event occurs and a claim must be built, the costs and their evidence are reassembled in a rush, and gaps surface too late. The result is slow, untraceable work and a financial risk on claims worth hundreds of millions of PHP.</p>
+  </section>
+
+  <section id="en03"><div class="sh"><span class="sn">03</span><h2>Objectives and success criteria</h2></div>
+    <p class="b"><b>Objectives.</b> Absorb the deposit of source files by department and extract their costs automatically, down to per-staff. File each cost under the right cost head, category and element. Tie each cost to its evidence and have the department validate it. Keep the register neutral to test any contractual event and isolate claimable lines. Protect HR data behind strict role-based access. Make everything explorable, filterable and exportable, with a read-only access for reporting.</p>
+    <p class="b"><b>Pilot success criteria.</b> One full period collected end to end on Staff Cost, with automatic extraction and filing, linked evidence, department validation, completeness roll-up with no holes, and a claim dossier assembled then sealed.</p>
+  </section>
+
+  <section id="en04"><div class="sh"><span class="sn">04</span><h2>Scope</h2></div>
+    <table>
+      <tr><th>In scope</th><th>Deferred</th><th>Out of scope</th></tr>
+      <tr>
+        <td>Source deposit by department. Extraction and filing of costs (Staff Cost first), down to per-staff. Configurable substantiation. Department validation then consolidation. Completeness engine. Claim assembly and sealing. Role-based access and HR isolation. Filtered export and BI access. Group configuration model.</td>
+        <td>Automatic PDF and OCR extraction (invoices, less structured payslips). Cost heads B to G beyond structure. Advanced BI dashboards. Natural-language query agent.</td>
+        <td>Replace accounting or the ERP. Build the planning variance analysis (provided by the claim team). Mobile use. Direct integration with the Engineer's systems.</td>
+      </tr>
+    </table>
+  </section>
+
+  <section id="en05"><div class="sh"><span class="sn">05</span><h2>Tracker to engine</h2></div>
+    <p class="b">The previous version was a reconciliation layer over the registers. This one replaces them. The working files and the manual pipeline disappear into the tool. The system still separates two objects, but it now produces the content instead of only tracking it.</p>
+    <table>
+      <tr><th>Object</th><th>Role</th><th>Nature</th></tr>
+      <tr><td>Cost register</td><td>Records everything continuously, extracted from deposited sources, filed by cost head, category, element and person, with period, amount and evidence.</td><td>The exhaustive source of truth</td></tr>
+      <tr><td>Claim event</td><td>Selects from the register the claimable lines for a given contractual event, each with its eligibility basis.</td><td>A dossier assembled on top</td></tr>
+    </table>
+    <p class="b mut">This separation gives a permanent register and the per-event logic, without building a parallel accounting.</p>
+  </section>
+
+  <section id="en06"><div class="sh"><span class="sn">06</span><h2>The cost model</h2></div>
+    <p class="b">The taxonomy is the real price file structure, not an assumption. Four levels, four dimensions on Staff Cost.</p>
+    <table>
+      <tr><th>Level</th><th>Example</th><th>Note</th></tr>
+      <tr><td>Cost Head</td><td class="m">A · Staff Cost</td><td>A to G. A fully modeled, B to G follow</td></tr>
+      <tr><td>Category</td><td class="m">1.1 · Salary</td><td>Salary, Contribution, Fringe Benefit</td></tr>
+      <tr><td>Cost Element</td><td class="m">1.1.1 · Basic Salary</td><td>The unit of completeness</td></tr>
+      <tr><td>Dimensions</td><td class="m">Staff × Origin × Currency × Month</td><td>Local, HBased, COrigin, Mainby · PHP/EUR/USD · monthly</td></tr>
+    </table>
+    <p class="b mut">The Vault descends to per-staff. The per-person detail that lives in Power Query files today lives in The Vault tomorrow.</p>
+    <div class="fig reveal">
+      <div class="cap">Cost model &middot; granularity</div>
+      <div class="cascade">
+        <div class="lvl"><span class="lk">Cost Head</span><span class="node hd">A &middot; Staff Cost</span><span class="sib">B &middot; C &middot; D &middot; E &middot; F &middot; G</span></div>
+        <span class="arw">&rsaquo;</span>
+        <div class="lvl"><span class="lk">Category</span><span class="node">1.1 Salary</span><span class="node q">1.2 Contribution</span><span class="node q">1.3 Fringe Benefit</span></div>
+        <span class="arw">&rsaquo;</span>
+        <div class="lvl"><span class="lk">Cost Element</span><span class="node">1.1.1 Basic Salary</span><span class="sib">+31 more</span></div>
+        <span class="arw">&rsaquo;</span>
+        <div class="lvl"><span class="lk">Per staff</span><span class="node dim">&times; Staff</span><span class="node dim">&times; Origin</span><span class="node dim">&times; Currency</span><span class="node dim">&times; Month</span></div>
+      </div>
+      <div class="note">One payslip resolves to one person, one element, one month, one currency. 4 origins (Local, HBased, COrigin, Mainby), 3 currencies (PHP, EUR, USD), monthly cycle.</div>
+    </div>
+  </section>
+
+  <section id="en07"><div class="sh"><span class="sn">07</span><h2>What the solution captures</h2></div>
+    <ul class="c">
+      <li><b>Costs.</b> Each cost extracted from a source, with its cost head, category, element, period, currency and amount.</li>
+      <li><b>Evidence.</b> One or more documents that prove each cost, per the accepted-source list.</li>
+      <li><b>People.</b> Staff tracked individually, to attribute costs per person and manage nominative eligibility.</li>
+      <li><b>Periods.</b> The monthly cycle. A period closes once reviewed, then seals.</li>
+      <li><b>Contractual events.</b> The events that select claimable lines from the register.</li>
+      <li><b>History.</b> An unalterable trace of every deposit, extraction, edit and validation.</li>
+    </ul>
+  </section>
+
+  <section id="en08"><div class="sh"><span class="sn">08</span><h2>Workflows</h2></div>
+    <p class="b">The central gesture is the drop. Around it, the pipeline reads in four stages.</p>
+    <div class="pipe">
+      <div class="pstep"><div class="n">Drop</div><b>Source in</b><span>Department drags its file into its space</span></div>
+      <div class="pstep"><div class="n">Extract</div><b>Auto-filed</b><span>Costs read and placed, per element, per staff</span></div>
+      <div class="pstep"><div class="n">Substantiate</div><b>Evidence linked</b><span>Each cost shows what it is proven by</span></div>
+      <div class="pstep gate"><div class="n">Validate · gate</div><b>Turns complete</b><span>Validator confirms extracted cost vs evidence</span></div>
+    </div>
+    <div class="wf"><div class="wt">W1 · Drop and extract</div><b>The contributor deposits its sources</b><p>A contributor opens the current period and drops its files in the categories it owns. The Vault extracts the costs, files them per element and per person, and flags what is still owed. Bulk import (Excel, CSV) is available.</p></div>
+    <div class="wf"><div class="wt">W2 · Two-level validation</div><b>The department validates, the consolidator confirms</b><p>The department validator confirms the extracted costs against the evidence: this is the green gate. The consolidator reviews, validates or rejects with a reason. On validation the entry locks and the action is traced. The period locks after its monthly review.</p></div>
+    <div class="wf"><div class="wt">W3 · Claim assembly</div><b>The consolidator builds the dossier</b><p>The consolidator creates a claim event (window, impacted sections, planning references). He selects the eligible lines, each with its eligibility basis. A line without proof blocks the export: a claim cannot ship with a hole.</p></div>
+  </section>
+
+  <section id="en09"><div class="sh"><span class="sn">09</span><h2>Substantiation is configurable</h2></div>
+    <p class="b">A cost can be proven by more than one document. Each cost element carries a defined, editable list of accepted sources. The Vault shows, for every cost, exactly what it is proven by, and refuses a source that is not on the list.</p>
+    <table>
+      <tr><th>Cost element</th><th>Accepted sources (editable)</th><th>Typical proof</th></tr>
+      <tr><td class="m">1.1.1 Basic Salary</td><td>Audited payroll file (Local, HBased, COrigin)</td><td>Payslip, notarized payroll record</td></tr>
+      <tr><td class="m">1.2.6 Withholding Tax</td><td>Audited payroll file, tax form</td><td>BIR Form 1601-C, filing reference</td></tr>
+      <tr><td class="m">1.3.6 Accommodation Rental</td><td>Admin working file, lease</td><td>Lease agreement, invoice</td></tr>
+    </table>
+  </section>
+
+  <section id="en10"><div class="sh"><span class="sn">10</span><h2>The completeness engine</h2></div>
+    <p class="b">This is the real product. The engine computes a category by period by owner matrix and applies rules. Readability follows a law: what is complete stays quiet, colour marks only the exception.</p>
+    <p class="b"><b>A cost is complete</b> only when the three conditions are true: the source deposited, the evidence on file per the category rule, and the department validation signed. It raises an alert if a condition is missing, if a document fingerprint changed, or if an entry stays unvalidated past the deadline.</p>
+    <div class="fig reveal gatefig">
+      <div class="cap">The completeness gate</div>
+      <div class="gaterow">
+        <div class="conds">
+          <div class="gate-cond c1"><span class="gk">01</span><span>Source deposited</span></div>
+          <div class="gate-cond c2"><span class="gk">02</span><span>Evidence on file</span></div>
+          <div class="gate-cond c3"><span class="gk">03</span><span>Validator sign-off</span></div>
+        </div>
+        <span class="garw">&rarr;</span>
+        <div class="gate-door"><span class="gdot"></span>Complete</div>
+      </div>
+      <div class="note">Three conditions, one door. Complete is a fact, not a document count. What is complete stays silent: colour marks only the exception.</div>
+    </div>
+    <table>
+      <tr><th>State</th><th>Meaning</th></tr>
+      <tr><td><span class="chip"><span class="dot" style="background:var(--ink-3)"></span>Complete</span></td><td>Source, evidence and validation in place. Quiet.</td></tr>
+      <tr><td><span class="chip"><span class="dot" style="background:var(--partial)"></span>Partial</span></td><td>A condition missing, an expected document absent.</td></tr>
+      <tr><td><span class="chip"><span class="dot" style="background:var(--critical)"></span>Critical</span></td><td>No evidence, or integrity compromised.</td></tr>
+    </table>
+    <p class="b mut">Completeness rules per category (minimum documents for complete) are configuration objects, edited by the project admin, not code.</p>
+  </section>
+
+  <section id="en11"><div class="sh"><span class="sn">11</span><h2>Stakeholders and roles</h2></div>
+    <table>
+      <tr><th>Stakeholder</th><th>Responsibility</th></tr>
+      <tr><td>Nicolas Durame, Director Contract Management</td><td>Owns the EOT claim strategy, decides what is claimable, defines the contractual events. Business owner.</td></tr>
+      <tr><td>Damien Prost, CFO Asia</td><td>Finance sponsor, budget, data confidentiality, headquarters and cyber validation path.</td></tr>
+      <tr><td>Mohd Sharizal Isa, Cost Controller</td><td>Runs the EOT cost collection today. Referent for the subject, the completeness rules and the cost list. Moves from manual extractor to validator and assembler.</td></tr>
+      <tr><td>Contributor departments</td><td>Account, Human Resource, Cost Control, Admin. Deposit the sources in their scope.</td></tr>
+      <tr><td>Validators</td><td>Racim and Simon, validation of costs and resources.</td></tr>
+    </table>
+  </section>
+
+  <section id="en12"><div class="sh"><span class="sn">12</span><h2>Access and confidentiality</h2></div>
+    <p class="b">Role-based access. Nominative payroll and staff data are restricted to authorized roles, isolated at the data level and not only the screen.</p>
+    <table>
+      <tr><th>Role</th><th>Sees</th><th>Can do</th></tr>
+      <tr><td>Admin</td><td>Everything, plus the project configuration</td><td>Manages users, categories, accepted sources, rules, periods. Does not edit the audit history.</td></tr>
+      <tr><td>Contributor</td><td>Its categories, its nominative detail if HR</td><td>Deposits sources, attaches evidence, submits.</td></tr>
+      <tr><td>Department validator</td><td>The extracted costs of its department and their evidence</td><td>Validates or rejects extracted costs against the proof.</td></tr>
+      <tr><td>Consolidator</td><td>All categories, all nominative detail</td><td>Validates, locks periods, assembles claims, seals.</td></tr>
+      <tr><td>Auditor</td><td>All entries and evidence, nominative detail</td><td>Read only. Monthly review.</td></tr>
+      <tr><td>Reader</td><td>Aggregates only, no nominative detail</td><td>Reads aggregates and dashboards.</td></tr>
+    </table>
+  </section>
+
+  <section id="en13"><div class="sh"><span class="sn">13</span><h2>Evidence integrity</h2></div>
+    <p class="b">Each document receives a fingerprint on upload. Any later change is detectable. Retention is write-once: a correction adds a new version, it never overwrites. A recomputed fingerprint that no longer matches raises an integrity alert.</p>
+    <p class="b mut">Why it matters: many contracts require contemporaneous records, sometimes kept in a form agreed with the Engineer. The full history proves, in a dispute, that no document was altered or backdated.</p>
+  </section>
+
+  <section id="en14"><div class="sh"><span class="sn">14</span><h2>Reporting, export and BI</h2></div>
+    <ul class="c">
+      <li><b>Operational dashboard.</b> Completeness by state, running totals by category and period, late owners, claim coverage.</li>
+      <li><b>Filtered export.</b> Selection on any metadata (category, period, contributor, source, document type, amount range, status) then CSV or Excel export.</li>
+      <li><b>BI access.</b> A controlled read-only access feeds reporting, away from raw nominative data unless authorized, with pre-built views for frequent cuts.</li>
+    </ul>
+  </section>
+
+  <section id="en15"><div class="sh"><span class="sn">15</span><h2>Security and governance</h2></div>
+    <p class="b">Compliance runs as a parallel workstream so it does not block design. HR isolation by role, unalterable access history, least privilege. The hosting region is to be confirmed with cyber (a European region is the likely option).</p>
+    <p class="b mut">Production with real HR data is gated on cyber sign-off. The pilot can run on test data until then. The cost and resource list is validated by the process referent and the validators.</p>
+  </section>
+
+  <section id="en16"><div class="sh"><span class="sn">16</span><h2>A group platform</h2></div>
+    <p class="b">The Vault is not an MMSP tool. It is a Colas group tool. Any project in the world, with its own cost organization, onboards by loading its configuration and starts tracking.</p>
+    <div class="fig reveal">
+      <div class="cap">One engine, many claims</div>
+      <div class="engine">
+        <div class="hub"><svg viewBox="0 0 96 96" width="22" height="22"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg><span>One engine</span><small>Extraction &middot; pipeline &middot; assembly</small></div>
+        <div class="orbit">
+          <div class="proj on"><b>MMSP EOT001</b><span>First project loaded</span></div>
+          <div class="proj"><b>Project &middot; config</b><span>Onboard by config</span></div>
+          <div class="proj"><b>Project &middot; config</b><span>Onboard by config</span></div>
+          <div class="proj"><b>Project &middot; config</b><span>Onboard by config</span></div>
+        </div>
+      </div>
+      <div class="note">Same extraction, same pipeline, same assembly. Only the configuration differs. A-G is the first project loaded, not a hardcode.</div>
+    </div>
+    <ul class="c">
+      <li><b>Configuration over specification.</b> Taxonomy, accepted sources, completeness rules and roles are config objects, edited in the tool, not in code.</li>
+      <li><b>Onboard by config.</b> A new project defines its cost heads and its rules once, and the same engine serves it.</li>
+      <li><b>One engine, many claims.</b> The extraction, the pipeline and the assembly are shared. Only the configuration differs. A-G is the first project loaded.</li>
+    </ul>
+  </section>
+
+  <section id="en17"><div class="sh"><span class="sn">17</span><h2>Constraints</h2></div>
+    <ul class="c">
+      <li><b>Desktop only</b>, optimized for a wide screen. Thousands of lines: the tool stays performant at that volume.</li>
+      <li><b>Bulk import</b> Excel or CSV for entries, with a validation preview before integration.</li>
+      <li><b>Multi-currency</b> with FX rate and source documented, all amounts also stored in PHP.</li>
+      <li><b>Accessibility</b>: keyboard accessible, visible focus, reduced motion respected.</li>
+    </ul>
+  </section>
+
+  <section id="en18"><div class="sh"><span class="sn">18</span><h2>Roadmap</h2></div>
+    <table>
+      <tr><th>Phase</th><th>Content</th><th>Milestone</th></tr>
+      <tr><td class="m">P0</td><td>Lock the taxonomy, accepted sources, completeness rules and RACI.</td><td>Process referent + stakeholders</td></tr>
+      <tr><td class="m">P1</td><td>Validated visual prototype, internal presentation support.</td><td>Vittorio validation</td></tr>
+      <tr><td class="m">P2</td><td>Drop, extraction and cost register.</td><td>One deposit filed end to end</td></tr>
+      <tr><td class="m">P3</td><td>Secure foundation and access control.</td><td>Integrity test</td></tr>
+      <tr><td class="m">P4</td><td>Department validation and consolidation, bulk import.</td><td>The three-condition gate</td></tr>
+      <tr><td class="m">P5</td><td>Completeness engine and dashboard.</td><td>One hole detected</td></tr>
+      <tr><td class="m">P6</td><td>Claim assembly and sealing.</td><td>One dossier assembled and sealed</td></tr>
+      <tr><td class="m">P7</td><td>Structured extraction (Excel), then assisted, then documents.</td><td>One source extracted with no intervention</td></tr>
+      <tr><td class="m">P8</td><td>Pilot on one cost head, test data.</td><td>Full loop validated</td></tr>
+      <tr><td class="m">P9</td><td>Group platform, onboard a second project by configuration.</td><td>A project added with no code</td></tr>
+    </table>
+  </section>
+
+  <section id="en19"><div class="sh"><span class="sn">19</span><h2>Open points and dependencies</h2></div>
+    <table>
+      <tr><th>Ref</th><th>Question</th><th>Owner</th></tr>
+      <tr><td class="m">O-1</td><td>Cyber validation timing and hosting region. Can the pilot run on real data or must it use test data first.</td><td>Damien, cyber</td></tr>
+      <tr><td class="m">O-2</td><td>Validate the full cost and resource list against the contract, confirm the A-G taxonomy.</td><td>Nicolas, Sharizal, Racim, Simon</td></tr>
+      <tr><td class="m">O-3</td><td>Confirm the completeness rules and the accepted sources per element.</td><td>Sharizal, Racim</td></tr>
+      <tr><td class="m">O-4</td><td>Single source of the FX rate and its documentation.</td><td>Finance</td></tr>
+      <tr><td class="m">O-5</td><td>Who is the dedicated monthly auditor.</td><td>Nicolas, Damien</td></tr>
+      <tr><td class="m">O-6</td><td>Source and format of the baseline vs impacted planning analysis that feeds the claim events.</td><td>Claim team, Racim</td></tr>
+    </table>
+  </section>
+
+  <footer><span>The Vault · Specification · v0.3</span><span>Confidential · Restricted distribution</span></footer>
+</div>
+
+<script>
+var LS={g:function(k){try{return localStorage.getItem(k)}catch(e){return null}},s:function(k,v){try{localStorage.setItem(k,v)}catch(e){}}};
+function setLang(l){document.getElementById('doc-fr').hidden=(l!=='fr');document.getElementById('doc-en').hidden=(l!=='en');document.documentElement.lang=l;document.querySelectorAll('#lang button').forEach(function(b){b.classList.toggle('on',b.dataset.l===l)});LS.s('vault-cdc-lang',l);}
+function setTheme(t){document.documentElement.dataset.theme=t;document.querySelectorAll('#th button').forEach(function(b){b.classList.toggle('on',b.dataset.t===t)});LS.s('vault-cdc-theme',t);}
+(function(){setLang(LS.g('vault-cdc-lang')||'fr');setTheme(LS.g('vault-cdc-theme')||'light');
+var reduce=window.matchMedia&&window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+function ease(p){return 1-Math.pow(1-p,3);}
+function count(el){var t=+el.getAttribute('data-count');if(reduce){el.textContent=t;return;}var d=1000,s=null;function f(ts){if(!s)s=ts;var p=Math.min((ts-s)/d,1);el.textContent=Math.round(ease(p)*t);if(p<1)requestAnimationFrame(f);}requestAnimationFrame(f);}
+function fire(el){el.classList.add('in');if(el.classList.contains('stats')){el.querySelectorAll('.n').forEach(count);}}
+if('IntersectionObserver' in window){var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){fire(e.target);io.unobserve(e.target);}});},{threshold:.15});document.querySelectorAll('.reveal,.pipe,.stats').forEach(function(el){io.observe(el);});}
+else{document.querySelectorAll('.reveal,.pipe,.stats').forEach(fire);}
+})();
+</script>
+</body>
+</html>

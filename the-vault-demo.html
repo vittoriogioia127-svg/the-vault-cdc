@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Vault · GO-gate demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+--base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;
+--fill:#F4F4F2;--fill-2:#EEEEEB;
+--hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);
+--critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;
+--pill-bg:#1D1D1F;--pill-ink:#FCFCFB;
+}
+[data-theme="dark"]{
+--base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;
+--fill:#1B1B1D;--fill-2:#212124;
+--hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);
+--critical:#E5675B;--partial:#D9A03C;--success:#41BE73;
+--pill-bg:#F5F5F7;--pill-ink:#101012;
+}
+html,body{margin:0;padding:0;background:var(--base);overflow:hidden}
+*{box-sizing:border-box}
+::selection{background:var(--hair-strong)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-3)}
+*{scrollbar-width:thin;scrollbar-color:var(--hair-strong) transparent}
+.screen{opacity:0;visibility:hidden;transition:opacity .15s ease,visibility .15s ease}
+.screen.on{opacity:1;visibility:visible}
+#scr-home[data-state="pre"] .post-only{display:none}
+#scr-home[data-state="post"] .pre-only{display:none}
+#scr-ckpt .mx-main{transition:opacity .15s ease}
+#scr-ckpt[data-state="gap"] .mx-main{opacity:.35}
+#scr-ckpt .gap-panel{opacity:0;visibility:hidden;transition:opacity .15s ease,visibility .15s ease}
+#scr-ckpt[data-state="gap"] .gap-panel{opacity:1;visibility:visible}
+#toggles{position:fixed;top:12px;right:16px;z-index:100;display:flex;gap:8px}
+.seg{display:flex;gap:2px;background:var(--fill);border:1px solid var(--hair);border-radius:999px;padding:3px}
+.seg button{font:500 11px 'Geist Mono',monospace;letter-spacing:.04em;color:var(--ink-2);background:transparent;border:none;padding:5px 12px;border-radius:999px;cursor:pointer}
+.seg button.on{background:var(--pill-bg);color:var(--pill-ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+
+<div style="position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--base);color:var(--ink);font-family:'Geist',sans-serif">
+<div id="stage" style="position:absolute;left:50%;top:50%;width:1440px;height:900px;transform:translate(-50%,-50%)">
+
+<div id="scr-01" class="screen on" data-steps="1" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:40px;padding-bottom:40px;text-align:center">
+<svg width="40" height="40" viewBox="0 0 96 96" style="color:var(--ink);display:block" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span data-i18n="s1-main" style="font:200 54px/1.15 'Geist',sans-serif;letter-spacing:-.02em;max-width:900px;text-wrap:balance">A claim worth hundreds of millions of pesos.</span>
+<span data-i18n="s1-sub" style="font:400 17px 'Geist',sans-serif;color:var(--ink-2)">Substantiated by hand, across scattered files.</span>
+</div>
+</div>
+
+<div id="scr-02" class="screen" data-steps="2" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:44px;padding-bottom:40px;text-align:center">
+<div style="display:flex;align-items:flex-end;gap:38px;height:84px">
+<div style="width:46px;height:58px;border:1px solid var(--ink-3);border-radius:8px;opacity:.55;transform:rotate(-9deg) translateY(4px);padding:10px 8px;display:flex;flex-direction:column;gap:5px"><span style="height:2px;width:70%;background:var(--hair-strong)"></span><span style="height:2px;width:90%;background:var(--hair-strong)"></span><span style="height:2px;width:55%;background:var(--hair-strong)"></span></div>
+<div style="width:46px;height:58px;border:1px solid var(--ink-3);border-radius:8px;opacity:.38;transform:translateY(-8px);padding:10px 8px;display:flex;flex-direction:column;gap:5px"><span style="height:2px;width:85%;background:var(--hair-strong)"></span><span style="height:2px;width:60%;background:var(--hair-strong)"></span><span style="height:2px;width:78%;background:var(--hair-strong)"></span></div>
+<div style="width:46px;height:58px;border:1px solid var(--ink-3);border-radius:8px;opacity:.24;transform:rotate(10deg) translateY(10px);padding:10px 8px;display:flex;flex-direction:column;gap:5px"><span style="height:2px;width:60%;background:var(--hair-strong)"></span><span style="height:2px;width:88%;background:var(--hair-strong)"></span><span style="height:2px;width:48%;background:var(--hair-strong)"></span></div>
+</div>
+<span data-i18n="s2-main" style="font:200 50px/1.15 'Geist',sans-serif;letter-spacing:-.02em;max-width:940px;text-wrap:balance">Today, the evidence is chased after the fact.</span>
+<span data-i18n="s2-sub" style="font:400 15.5px/1.65 'Geist',sans-serif;color:var(--ink-2);max-width:640px">Each department keeps its own register. One person consolidates everything by hand. Gaps surface when it is too late.</span>
+</div>
+</div>
+
+<div id="scr-03" class="screen" data-steps="3" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:36px;padding-bottom:40px;text-align:center">
+<span data-i18n="s3-main" data-i18n-html style="font:200 52px/1.2 'Geist',sans-serif;letter-spacing:-.02em;max-width:980px;text-wrap:balance">The Vault does not track evidence.<br>It produces the outcome.</span>
+<span data-i18n="s3-sub" style="font:400 16px 'Geist',sans-serif;color:var(--ink-2);max-width:660px">Departments drop their sources. The engine extracts, files and substantiates every cost.</span>
+</div>
+</div>
+
+<div id="scr-04" class="screen" data-steps="4" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:64px;padding-bottom:40px;text-align:center">
+<span data-i18n="s4-main" style="font:200 52px/1.15 'Geist',sans-serif;letter-spacing:-.02em">Four steps. One gate.</span>
+<div style="display:flex;align-items:flex-start;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:150px"><span style="width:42px;height:42px;border:1px solid var(--hair-strong);border-radius:999px;display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:var(--ink-3)"></span></span><span data-i18n="s4-n1" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2)">DROP</span></div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:20px"><span style="width:58px;height:1px;background:var(--hair-strong)"></span><span style="width:0;height:0;border-top:3px solid transparent;border-bottom:3px solid transparent;border-left:5px solid var(--ink-3)"></span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:150px"><span style="width:42px;height:42px;border:1px solid var(--hair-strong);border-radius:999px;display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:var(--ink-3)"></span></span><span data-i18n="s4-n2" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2)">EXTRACT</span></div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:20px"><span style="width:58px;height:1px;background:var(--hair-strong)"></span><span style="width:0;height:0;border-top:3px solid transparent;border-bottom:3px solid transparent;border-left:5px solid var(--ink-3)"></span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:170px"><span style="width:42px;height:42px;border:1px solid var(--hair-strong);border-radius:999px;display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:var(--ink-3)"></span></span><span data-i18n="s4-n3" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2)">SUBSTANTIATE</span></div>
+<div style="display:flex;align-items:center;gap:6px;margin-top:20px"><span style="width:58px;height:1px;background:var(--hair-strong)"></span><span style="width:0;height:0;border-top:3px solid transparent;border-bottom:3px solid transparent;border-left:5px solid var(--ink-3)"></span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:14px;width:150px"><span style="width:42px;height:42px;border:1px solid var(--ink);border-radius:999px;display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:var(--ink)"></span></span><span data-i18n="s4-n4" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2)">VALIDATE</span><span data-i18n="s4-gate" style="font:500 10.5px 'Geist Mono',monospace;letter-spacing:.12em;background:var(--pill-bg);color:var(--pill-ink);padding:4px 12px;border-radius:999px">gate</span></div>
+</div>
+</div>
+</div>
+
+<div id="scr-home" class="screen" data-steps="5 6" data-state="pre" style="position:absolute;top:36px;left:0;right:0;bottom:0;background:var(--base);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Home · Period 2026-06</span>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink)">A. Cruz</span><span style="font:400 10.5px 'Geist',sans-serif;color:var(--ink-2)">Contributor · Account</span></div>
+<div style="width:26px;height:26px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">AC</div>
+</div>
+<div style="flex:1;min-height:0">
+<div style="max-width:900px;margin:0 auto;padding:22px 32px 0">
+<div style="display:flex;align-items:flex-start;gap:40px">
+<div style="display:flex;flex-direction:column;gap:10px;flex:1">
+<span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase">My monthly close</span>
+<span style="font:600 28px/1.1 'Geist',sans-serif;letter-spacing:-.02em">Period 2026-06</span>
+<span style="font:400 13px 'Geist',sans-serif;color:var(--ink-2)">A. Cruz · Account · open and in progress</span>
+</div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding-top:2px">
+<span style="font:200 50px/1 'Geist',sans-serif;letter-spacing:-.03em">3</span>
+<span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">days before close</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">closes 08 Jul 2026</span>
+</div>
+</div>
+<div style="margin-top:12px;display:flex;align-items:center;gap:14px">
+<div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:50%;height:100%;background:var(--ink-3)"></div></div>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">2 of 4 items complete</span>
+<span style="width:4px;height:4px;border-radius:999px;background:var(--ink-3)"></span>
+<span class="pre-only" style="font:400 12px 'Geist',sans-serif;color:var(--partial)">2 owed this period</span>
+<span class="post-only" style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">2 extracted · awaiting validation</span>
+</div>
+<div style="margin-top:20px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:14px">
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em">Your categories</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:var(--ink-3)">Muted is complete. Colour marks what is owed.</span>
+</div>
+<div style="margin-top:4px;display:flex;flex-direction:column">
+<div class="pre-only">
+<div style="display:flex;align-items:center;gap:16px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:transparent;border:1.5px solid var(--partial)"></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">1.1 Salary</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">audited payroll file · 2026-06</span>
+</div>
+<span style="width:190px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)"></span>
+<span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<span style="width:6px;height:6px;border-radius:999px;background:var(--partial);flex:none"></span>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--partial)">owed</span>
+</span>
+</div>
+<div style="display:flex;align-items:center;gap:16px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:transparent;border:1.5px solid var(--partial)"></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">1.2 Contribution</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">SSS · PHIC · HDMF · Withholding Tax · 2026-06</span>
+</div>
+<span style="width:190px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)"></span>
+<span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<span style="width:6px;height:6px;border-radius:999px;background:var(--partial);flex:none"></span>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--partial)">owed</span>
+</span>
+</div>
+</div>
+<div class="post-only">
+<div style="display:flex;align-items:center;gap:16px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--hair-strong)"></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">1.1 Salary</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">audited payroll file · 2026-06</span>
+</div>
+<span style="width:190px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">PHP 9,988,140.62</span>
+<span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-2)">extracted · awaiting validation</span>
+</span>
+</div>
+<div style="display:flex;align-items:center;gap:16px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:transparent;border:1px solid var(--hair-strong)"></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">1.2 Contribution</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">SSS · PHIC · HDMF · Withholding Tax · 2026-06</span>
+</div>
+<span style="width:190px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">PHP 1,854,159.52</span>
+<span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-2)">extracted · awaiting validation</span>
+</span>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:16px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--fill-2);border:1px solid var(--hair)"><svg width="11" height="11" viewBox="0 0 12 12" style="display:block"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">1.1 Salary</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">audited payroll file · 2026-05</span>
+</div>
+<span style="width:190px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">PHP 9,912,884.10</span>
+<span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-3)">Complete</span>
+</span>
+</div>
+<div style="display:flex;align-items:center;gap:16px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;background:var(--fill-2);border:1px solid var(--hair)"><svg width="11" height="11" viewBox="0 0 12 12" style="display:block"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">1.2 Contribution</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">SSS · PHIC · HDMF · Withholding Tax · 2026-05</span>
+</div>
+<span style="width:190px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">PHP 1,833,092.71</span>
+<span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-3)">Complete</span>
+</span>
+</div>
+</div>
+
+<div class="pre-only" style="margin-top:22px;display:flex;align-items:center;gap:14px;padding:22px 24px;border:1.5px dashed var(--hair-strong);border-radius:18px">
+<div style="width:36px;height:36px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="display:block"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 19 H20" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+<div style="display:flex;flex-direction:column;gap:3px;flex:1">
+<span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">Drop source files</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2)">registered, hashed and filed automatically</span>
+</div>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">XLSX, PDF, images</span>
+</div>
+
+<div class="post-only">
+<div style="margin-top:14px;display:flex;align-items:center;gap:14px;padding:12px 18px;background:var(--fill);border-radius:12px">
+<div style="width:30px;height:38px;border:1px solid var(--hair-strong);border-radius:4px;background:var(--base);flex:none;padding:7px 5px;display:flex;flex-direction:column;gap:4px"><span style="height:2px;width:80%;background:var(--hair-strong)"></span><span style="height:2px;width:60%;background:var(--hair-strong)"></span><span style="height:2px;width:70%;background:var(--hair-strong)"></span></div>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 13px 'Geist',sans-serif;color:var(--ink)">CRPH_Payroll_Local_2026-06.xlsx</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2)">registered · fingerprint 8f3a...c41d</span>
+</div>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2);flex:none">registered</span>
+</div>
+<div style="margin-top:10px;display:flex;align-items:center;gap:10px;padding:0 4px">
+<span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3);flex:none"></span>
+<span style="font:400 12.5px 'Geist Mono',monospace;color:var(--ink);white-space:nowrap">612 cost lines filed · 58 staff · PHP 11,842,300.14 · June 2026</span>
+</div>
+<div style="margin-top:14px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:12px">
+<span style="font:600 13.5px 'Geist',sans-serif;letter-spacing:-.01em;white-space:nowrap">Extracted preview</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">5 of 612 lines</span>
+</div>
+<div style="margin-top:8px;display:flex;align-items:center;gap:12px;padding:6px 4px;border-bottom:1px solid var(--hair)">
+<span style="width:70px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">STAFF</span>
+<span style="flex:1;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">ELEMENT</span>
+<span style="width:100px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">ORIGIN</span>
+<span style="width:150px;flex:none;text-align:right;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">AMOUNT · PHP</span>
+<span style="width:120px;flex:none;text-align:right;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">STATUS</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--hair-soft)"><span style="width:70px;flex:none;font:500 12px 'Geist Mono',monospace;color:var(--ink)">E.R.</span><span style="flex:1;font:400 12.5px 'Geist',sans-serif;color:var(--ink)">1.1.1 Basic Salary</span><span style="width:100px;flex:none;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">Local</span><span style="width:150px;flex:none;text-align:right;font:500 12px 'Geist Mono',monospace;color:var(--ink)">84,120.00</span><span style="width:120px;flex:none;text-align:right;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">extracted</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--hair-soft)"><span style="width:70px;flex:none;font:500 12px 'Geist Mono',monospace;color:var(--ink)">J.D.</span><span style="flex:1;font:400 12.5px 'Geist',sans-serif;color:var(--ink)">1.1.1 Basic Salary</span><span style="width:100px;flex:none;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">Local</span><span style="width:150px;flex:none;text-align:right;font:500 12px 'Geist Mono',monospace;color:var(--ink)">61,480.00</span><span style="width:120px;flex:none;text-align:right;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">extracted</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--hair-soft)"><span style="width:70px;flex:none;font:500 12px 'Geist Mono',monospace;color:var(--ink)">M.T.</span><span style="flex:1;font:400 12.5px 'Geist',sans-serif;color:var(--ink)">1.1.2 13th Month</span><span style="width:100px;flex:none;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">Local</span><span style="width:150px;flex:none;text-align:right;font:500 12px 'Geist Mono',monospace;color:var(--ink)">7,010.00</span><span style="width:120px;flex:none;text-align:right;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">extracted</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--hair-soft)"><span style="width:70px;flex:none;font:500 12px 'Geist Mono',monospace;color:var(--ink)">S.L.</span><span style="flex:1;font:400 12.5px 'Geist',sans-serif;color:var(--ink)">1.2.1 SSS</span><span style="width:100px;flex:none;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">Local</span><span style="width:150px;flex:none;text-align:right;font:500 12px 'Geist Mono',monospace;color:var(--ink)">2,880.00</span><span style="width:120px;flex:none;text-align:right;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">extracted</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:8px 4px"><span style="width:70px;flex:none;font:500 12px 'Geist Mono',monospace;color:var(--ink)">K.B.</span><span style="flex:1;font:400 12.5px 'Geist',sans-serif;color:var(--ink)">1.1.1 Basic Salary</span><span style="width:100px;flex:none;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">Local</span><span style="width:150px;flex:none;text-align:right;font:500 12px 'Geist Mono',monospace;color:var(--ink)">96,340.00</span><span style="width:120px;flex:none;text-align:right;font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">extracted</span></div>
+</div>
+</div>
+</div>
+</div>
+
+<div id="scr-gate" class="screen" data-steps="7" style="position:absolute;top:36px;left:0;right:0;bottom:0;background:var(--base);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Validation queue · A - Staff Cost</span>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink)">R. Santos</span><span style="font:400 10.5px 'Geist',sans-serif;color:var(--ink-2)">Department validator</span></div>
+<div style="width:26px;height:26px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">RS</div>
+</div>
+<div style="flex:1;min-height:0;max-width:1180px;width:100%;margin:0 auto;padding:34px 32px 0;display:flex;flex-direction:column">
+<div style="display:flex;align-items:flex-start;gap:40px;flex:none">
+<div style="display:flex;flex-direction:column;gap:10px;flex:1">
+<span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase">The gate</span>
+<span style="font:600 28px/1.1 'Geist',sans-serif;letter-spacing:-.02em">Validate against evidence</span>
+<span style="font:400 13px 'Geist',sans-serif;color:var(--ink-2)">Every extracted cost faces its source before it counts.</span>
+</div>
+<div style="display:flex;align-items:flex-start;gap:14px">
+<span style="font:200 50px/1 'Geist',sans-serif;letter-spacing:-.03em">14</span>
+<div style="display:flex;flex-direction:column;gap:3px;padding-top:6px"><span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">pending</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">PHP 18.9M awaiting countersign</span></div>
+</div>
+</div>
+<div style="margin-top:24px;display:flex;gap:24px;flex:none">
+<div style="flex:1;border:1px solid var(--hair);border-radius:16px;padding:22px 26px;display:flex;flex-direction:column">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-3)">EXTRACTED COST</span>
+<span style="font:600 19px 'Geist',sans-serif;letter-spacing:-.01em;margin-top:12px">1.1.1 Basic Salary</span>
+<span style="font:200 40px/1 'Geist',sans-serif;letter-spacing:-.02em;margin-top:14px;font-variant-numeric:tabular-nums">PHP 84,120.00</span>
+<div style="margin-top:20px;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--hair)"><span style="width:110px;flex:none;font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">Staff</span><span style="font:500 12.5px 'Geist',sans-serif;color:var(--ink)">E. Ramos</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--hair)"><span style="width:110px;flex:none;font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">Origin</span><span style="font:400 12px 'Geist Mono',monospace;color:var(--ink)">Local</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--hair)"><span style="width:110px;flex:none;font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">Period</span><span style="font:400 12px 'Geist Mono',monospace;color:var(--ink)">2026-06</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--hair)"><span style="width:110px;flex:none;font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">Source</span><span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink);flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">CRPH_Payroll_Local_2026-06.xlsx · line 214</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--hair)"><span style="width:110px;flex:none;font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">Fingerprint</span><span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">8f3a...c41d</span></div>
+</div>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:14px;padding-top:18px">
+<span style="display:flex;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;background:var(--pill-bg);color:var(--pill-ink);font:500 13px 'Geist',sans-serif">Validate against evidence</span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:var(--ink-3)">countersign locks this line to its proof</span>
+</div>
+</div>
+<div style="width:430px;flex:none;border:1px solid var(--hair);border-radius:16px;padding:22px 26px;display:flex;flex-direction:column;background:var(--fill)">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-3)">EVIDENCE</span>
+<div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px 0 10px">
+<div style="width:230px;height:296px;background:var(--base);border:1px solid var(--hair-strong);border-radius:4px;padding:20px 18px;display:flex;flex-direction:column;gap:9px">
+<span style="height:7px;width:44%;background:var(--fill-2)"></span>
+<span style="height:4px;width:70%;background:var(--fill-2);margin-top:4px"></span>
+<span style="height:4px;width:58%;background:var(--fill-2)"></span>
+<span style="height:1px;width:100%;background:var(--hair);margin-top:8px"></span>
+<div style="display:flex;justify-content:space-between;margin-top:4px"><span style="height:4px;width:40%;background:var(--fill-2)"></span><span style="height:4px;width:18%;background:var(--fill-2)"></span></div>
+<div style="display:flex;justify-content:space-between"><span style="height:4px;width:52%;background:var(--fill-2)"></span><span style="height:4px;width:14%;background:var(--fill-2)"></span></div>
+<div style="display:flex;justify-content:space-between"><span style="height:4px;width:34%;background:var(--fill-2)"></span><span style="height:4px;width:20%;background:var(--fill-2)"></span></div>
+<div style="display:flex;justify-content:space-between"><span style="height:4px;width:46%;background:var(--fill-2)"></span><span style="height:4px;width:16%;background:var(--fill-2)"></span></div>
+<span style="flex:1"></span>
+<span style="height:1px;width:100%;background:var(--hair)"></span>
+<div style="display:flex;justify-content:space-between;align-items:center"><span style="height:4px;width:30%;background:var(--fill-2)"></span><span style="font:500 11px 'Geist Mono',monospace;color:var(--ink)">84,120.00</span></div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:4px;align-items:center;padding-bottom:4px">
+<span style="font:500 12px 'Geist Mono',monospace;color:var(--ink)">payslip_ramos_2026-06.pdf</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">sha256 · d41c...9e2b · registered 05 Jul 2026</span>
+</div>
+</div>
+</div>
+<div style="margin-top:22px;flex:none">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-3)">VALIDATED TODAY</span>
+<div style="margin-top:8px;display:flex;align-items:center;gap:14px;padding:11px 4px;border-top:1px solid var(--hair)">
+<span style="width:20px;height:20px;border-radius:6px;background:var(--fill-2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;flex:none"><svg width="10" height="10" viewBox="0 0 12 12" style="display:block"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span>
+<span style="font:400 13px 'Geist',sans-serif;color:var(--ink-2)">1.1.1 Basic Salary · J.D. · Local · 2026-06</span>
+<span style="flex:1"></span>
+<span style="font:500 12px 'Geist Mono',monospace;color:var(--ink-2)">61,480.00</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">validated 09:41 · R. Santos</span>
+</div>
+</div>
+</div>
+</div>
+
+<div id="scr-ckpt" class="screen" data-steps="8 9" data-state="matrix" style="position:absolute;top:36px;left:0;right:0;bottom:0;background:var(--base);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Cockpit · A - Staff Cost · 2026-01 to 2026-06</span>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink)">M. Reyes</span><span style="font:400 10.5px 'Geist',sans-serif;color:var(--ink-2)">Consolidator</span></div>
+<div style="width:26px;height:26px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">MR</div>
+</div>
+<div style="flex:1;min-height:0;position:relative">
+<div class="mx-main" style="height:100%;padding:22px 44px 0;display:flex;flex-direction:column">
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:24px;flex:none;padding-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:5px"><span style="font:500 11.5px 'Geist',sans-serif;color:var(--ink-2)">Open gaps</span><span style="font:200 44px/1 'Geist',sans-serif;letter-spacing:-.03em">24</span><span style="font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">PHP 38.2M blocked · oldest 52 days</span></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span style="font:500 11.5px 'Geist',sans-serif;color:var(--ink-2)">Pending validations</span><span style="font:200 44px/1 'Geist',sans-serif;letter-spacing:-.03em">14</span><span style="font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">PHP 18.9M awaiting countersign</span></div>
+<div style="display:flex;flex-direction:column;gap:5px"><span style="font:500 11.5px 'Geist',sans-serif;color:var(--ink-2)">Periods sealed</span><span style="font:200 44px/1 'Geist',sans-serif;letter-spacing:-.03em">1<span style="font-size:26px;color:var(--ink-3)"> / 6</span></span><span style="font:400 11.5px 'Geist',sans-serif;color:var(--ink-2)">2026-01 · sealed 30 Jun 2026</span></div>
+</div>
+<div style="display:flex;align-items:baseline;gap:12px;flex:none;padding-bottom:10px;border-bottom:1px solid var(--hair)">
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em">Evidence completeness</span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:var(--ink-3)">A - Staff Cost · documents filed vs required</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:var(--ink-3)">Muted = complete</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:var(--ink-2)"><span style="width:6px;height:6px;border-radius:999px;background:var(--partial)"></span>Partial</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:var(--ink-2)"><span style="width:6px;height:6px;border-radius:999px;background:var(--critical)"></span>Critical</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:var(--ink-2)"><span style="width:10px;height:10px;border-radius:3px;background:var(--fill);border:1px solid var(--hair-strong)"></span>Sealed</span>
+</div>
+<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px;flex:none">
+<div style="height:40px;display:flex;align-items:flex-end;padding-bottom:6px"><span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">Element</span></div>
+<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px;background:var(--fill);border-radius:10px 10px 0 0"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">2026-01</span><span style="font:400 9.5px 'Geist',sans-serif;color:var(--ink-2)">Sealed · 30 Jun</span></div>
+<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">2026-02</span><span style="font:400 9.5px 'Geist Mono',monospace;color:var(--ink-3)">32/33</span></div>
+<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">2026-03</span><span style="font:400 9.5px 'Geist Mono',monospace;color:var(--ink-3)">29/33</span></div>
+<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">2026-04</span><span style="font:400 9.5px 'Geist Mono',monospace;color:var(--ink-3)">30/33</span></div>
+<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">2026-05</span><span style="font:400 9.5px 'Geist Mono',monospace;color:var(--ink-3)">27/33</span></div>
+<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">2026-06</span><span style="font:400 9.5px 'Geist Mono',monospace;color:var(--ink-3)">23/33</span></div>
+<div style="height:40px;display:flex;align-items:flex-end;justify-content:flex-end;padding-bottom:6px"><span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">Total · PHP</span></div>
+</div>
+<div id="mx-rows" style="flex:none;display:flex;flex-direction:column"></div>
+<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px;align-items:stretch;border-top:1px solid var(--hair-strong);flex:none">
+<div style="height:32px;display:flex;align-items:center"><span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">Cost head total</span></div>
+<div style="height:32px;background:var(--fill);border-radius:0 0 10px 10px"></div>
+<div></div><div></div><div></div><div></div><div></div>
+<span style="height:32px;display:flex;align-items:center;justify-content:flex-end;font:600 12px 'Geist Mono',monospace;color:var(--ink)">545,571,233.87</span>
+</div>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3);padding-top:12px">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span>
+</div>
+
+<div class="gap-panel" style="position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);padding:28px 30px;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font:500 10.5px 'Geist',sans-serif;color:var(--critical);background:rgba(217,80,63,.1);padding:3px 10px;border-radius:999px">Critical</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">GAP-118</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">open 52 days</span>
+</div>
+<span style="font:600 18px 'Geist',sans-serif;letter-spacing:-.01em;margin-top:16px">1.3.6 Accomodation Rental <span style="font:400 15px 'Geist',sans-serif;color:var(--ink-2)">· 2026-03</span></span>
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-3);margin-top:22px">BLOCKS</span>
+<span style="font:200 32px/1 'Geist',sans-serif;letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums">PHP 4,918,220.13</span>
+<div style="display:flex;flex-direction:column;margin-top:24px">
+<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--critical);flex:none"></span><span style="font:400 13px 'Geist',sans-serif;color:var(--ink);flex:1">Lease Agreement</span><span style="font:500 11.5px 'Geist',sans-serif;color:var(--critical)">Missing</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--critical);flex:none"></span><span style="font:400 13px 'Geist',sans-serif;color:var(--ink);flex:1">Proof of payment</span><span style="font:500 11.5px 'Geist',sans-serif;color:var(--critical)">Missing</span></div>
+<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3);flex:none"></span><span style="font:400 13px 'Geist',sans-serif;color:var(--ink);flex:1">Invoice INV-7741</span><span style="font:500 11.5px 'Geist',sans-serif;color:var(--ink-2)">On file</span></div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:12px 0 18px;border-top:1px solid var(--hair)">
+<div style="width:26px;height:26px;border-radius:999px;background:var(--fill);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2);flex:none">RD</div>
+<span style="font:400 13px 'Geist',sans-serif;color:var(--ink)">R. Dizon <span style="color:var(--ink-2)">· Admin</span></span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:var(--ink-3)">since 12 May 2026</span>
+</div>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:14px">
+<span style="flex:1;height:40px;border-radius:999px;background:var(--pill-bg);color:var(--pill-ink);display:flex;align-items:center;justify-content:center;font:500 13px 'Geist',sans-serif">Request documents</span>
+<span style="font:500 13px 'Geist',sans-serif;color:var(--ink-2)">Escalate</span>
+</div>
+</div>
+</div>
+</div>
+
+<div id="scr-claim" class="screen" data-steps="10" style="position:absolute;top:36px;left:0;right:0;bottom:0;background:var(--base);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Claim assembly · EOT001</span>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink)">Contract Management</span><span style="font:400 10.5px 'Geist',sans-serif;color:var(--ink-2)">Event owner</span></div>
+<div style="width:26px;height:26px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">CM</div>
+</div>
+<div style="flex:none;display:flex;align-items:flex-end;gap:24px;padding:26px 44px 22px;border-bottom:1px solid var(--hair)">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase">Claim assembly</span>
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">EOT001</span>
+<span style="width:4px;height:4px;border-radius:999px;background:var(--ink-3)"></span>
+<span style="font:600 22px 'Geist',sans-serif;letter-spacing:-.01em">ROW-7 access restriction</span>
+</div>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-2)">148 days · window 2026-01 to 2026-06 · eligible cost lines assembled into a defensible dossier</span>
+</div>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.12em;color:var(--ink-2);text-transform:uppercase">Assembled total</span>
+<span style="font:200 38px/1 'Geist',sans-serif;letter-spacing:-.02em;font-variant-numeric:tabular-nums">PHP 421,947,223.90</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">6 selected lines · A - Staff Cost</span>
+</div>
+</div>
+<div style="flex:1;min-height:0;padding:18px 44px 0">
+<div style="display:flex;align-items:center;gap:12px;padding:6px 4px;border-bottom:1px solid var(--hair)">
+<span style="flex:1;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">ELEMENT</span>
+<span style="width:170px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">PERIOD</span>
+<span style="width:250px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">ELIGIBILITY BASIS</span>
+<span style="width:170px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">EVIDENCE</span>
+<span style="width:180px;flex:none;text-align:right;font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-3)">AMOUNT · PHP</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--hair-soft)">
+<span style="flex:1;display:flex;align-items:center;gap:10px;min-width:0"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3);width:44px;flex:none">1.1.1</span><span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">Basic Salary</span></span>
+<span style="width:170px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">2026-01 to 2026-06</span>
+<span style="width:250px;flex:none"><span style="font:400 10.5px 'Geist Mono',monospace;color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap">time-related staff cost</span></span>
+<span style="width:170px;flex:none;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3)"></span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">proof on file</span></span>
+<span style="width:180px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">336,410,556.20</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--hair-soft)">
+<span style="flex:1;display:flex;align-items:center;gap:10px;min-width:0"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3);width:44px;flex:none">1.1.2</span><span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">13th Month</span></span>
+<span style="width:170px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">2026-01 to 2026-06</span>
+<span style="width:250px;flex:none"><span style="font:400 10.5px 'Geist Mono',monospace;color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap">computed accrual</span></span>
+<span style="width:170px;flex:none;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3)"></span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">proof on file</span></span>
+<span style="width:180px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">19,700,879.68</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--hair-soft)">
+<span style="flex:1;display:flex;align-items:center;gap:10px;min-width:0"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3);width:44px;flex:none">1.2.1</span><span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">SSS</span></span>
+<span style="width:170px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">2026-01 to 2026-06</span>
+<span style="width:250px;flex:none"><span style="font:400 10.5px 'Geist Mono',monospace;color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap">statutory add-on</span></span>
+<span style="width:170px;flex:none;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3)"></span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">proof on file</span></span>
+<span style="width:180px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">31,240,118.55</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--hair-soft)">
+<span style="flex:1;display:flex;align-items:center;gap:10px;min-width:0"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3);width:44px;flex:none">1.3.4</span><span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">Medical Insurance</span></span>
+<span style="width:170px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">2026-01 to 2026-06</span>
+<span style="width:250px;flex:none"><span style="font:400 10.5px 'Geist Mono',monospace;color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap">premiums extended by delay</span></span>
+<span style="width:170px;flex:none;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3)"></span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">proof on file</span></span>
+<span style="width:180px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">21,264,545.12</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--hair-soft)">
+<span style="flex:1;display:flex;align-items:center;gap:10px;min-width:0"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3);width:44px;flex:none">1.3.6</span><span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">Accomodation Rental</span></span>
+<span style="width:170px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink)">2026-03</span>
+<span style="width:250px;flex:none"><span style="font:400 10.5px 'Geist Mono',monospace;color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap">lease continued through window</span></span>
+<span style="width:170px;flex:none;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:999px;background:var(--critical)"></span><span style="font:500 12px 'Geist',sans-serif;color:var(--critical)">evidence missing</span></span>
+<span style="width:180px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">4,918,220.13</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;padding:14px 4px;border-bottom:1px solid var(--hair-soft)">
+<span style="flex:1;display:flex;align-items:center;gap:10px;min-width:0"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3);width:44px;flex:none">1.3.13</span><span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">Flight</span></span>
+<span style="width:170px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">2026-02</span>
+<span style="width:250px;flex:none"><span style="font:400 10.5px 'Geist Mono',monospace;color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap">rotation cycle extended</span></span>
+<span style="width:170px;flex:none;display:flex;align-items:center;gap:7px"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3)"></span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">proof on file</span></span>
+<span style="width:180px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">8,412,904.22</span>
+</div>
+</div>
+<div style="flex:none;display:flex;align-items:center;gap:16px;padding:18px 44px 26px;border-top:1px solid var(--hair)">
+<span style="display:flex;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;background:var(--pill-bg);color:var(--pill-ink);font:500 13px 'Geist',sans-serif;opacity:.32">Export dossier</span>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--critical)"><span style="font-weight:600">Export blocked · 1 line without proof.</span> A claim cannot ship with a hole.</span>
+<span style="flex:1"></span>
+</div>
+</div>
+
+<div id="scr-seal" class="screen" data-steps="11" style="position:absolute;top:36px;left:0;right:0;bottom:0;background:var(--base);overflow:hidden;display:flex;flex-direction:column">
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 24px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Period board · 2026-01</span>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink)">M. Reyes</span><span style="font:400 10.5px 'Geist',sans-serif;color:var(--ink-2)">Consolidator</span></div>
+<div style="width:26px;height:26px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">MR</div>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;align-items:center;padding-top:56px">
+<span style="font:200 40px/1.15 'Geist',sans-serif;letter-spacing:-.02em;text-align:center">Sealed. Contemporaneous. Court-ready.</span>
+<div style="width:620px;margin-top:40px;border:1px solid var(--hair-strong);border-radius:16px;padding:26px 30px;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:12px">
+<svg width="18" height="18" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em">Period 2026-01</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2);background:var(--fill);padding:5px 12px;border-radius:999px">Sealed · 30 Jun 2026</span>
+</div>
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-3);margin-top:24px">SEAL FINGERPRINT</span>
+<span style="font:500 14px 'Geist Mono',monospace;color:var(--ink);margin-top:8px;letter-spacing:.02em">sha256 · 4c1f 09ae 77d2 b3e8 512c a9f4</span>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-2);margin-top:12px">Write-once · corrections create versions, never overwrites.</span>
+<div style="display:flex;align-items:center;gap:10px;margin-top:20px;padding-top:16px;border-top:1px solid var(--hair)">
+<div style="width:24px;height:24px;border-radius:999px;background:var(--fill);display:flex;align-items:center;justify-content:center;font:500 9.5px 'Geist Mono',monospace;color:var(--ink-2);flex:none">MR</div>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink)">Countersigned · M. Reyes · Consolidator</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">30 Jun 2026 · 17:26</span>
+</div>
+</div>
+<div style="width:620px;margin-top:30px;display:flex;flex-direction:column">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-3);padding-bottom:6px">PERIOD HISTORY</span>
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3);flex:none"></span><span style="font:500 13px 'Geist',sans-serif;color:var(--ink);width:92px;flex:none">Deposit</span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2);flex:1">CRPH_Payroll_Local_2026-01.xlsx · registered and fingerprinted</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">05 Feb 2026 · 10:12</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3);flex:none"></span><span style="font:500 13px 'Geist',sans-serif;color:var(--ink);width:92px;flex:none">Validation</span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2);flex:1">33 of 33 evidence sets countersigned</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">28 Jun 2026 · 16:05</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--ink-3);flex:none"></span><span style="font:500 13px 'Geist',sans-serif;color:var(--ink);width:92px;flex:none">Seal</span><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2);flex:1">Period locked · fingerprint issued</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">30 Jun 2026 · 17:26</span></div>
+</div>
+</div>
+</div>
+
+<div id="scr-12" class="screen" data-steps="12" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:56px;padding-bottom:36px;text-align:center">
+<span data-i18n="s12-main" style="font:200 46px/1.2 'Geist',sans-serif;letter-spacing:-.02em;max-width:940px;text-wrap:balance">This is not a concept. It is mapped on the real price file.</span>
+<div style="display:flex;align-items:flex-start;gap:88px">
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:220px"><span style="font:200 72px/1 'Geist',sans-serif;letter-spacing:-.03em">40</span><span data-i18n="s12-l1" style="font:400 13px/1.5 'Geist',sans-serif;color:var(--ink-2)">cost elements mapped</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:260px"><span style="font:200 72px/1 'Geist',sans-serif;letter-spacing:-.03em">35</span><span data-i18n="s12-l2" style="font:400 13px/1.5 'Geist',sans-serif;color:var(--ink-2)">confirmed by the process referent in 48 hours</span></div>
+<div style="display:flex;flex-direction:column;align-items:center;gap:10px;width:220px"><span style="font:200 72px/1 'Geist',sans-serif;letter-spacing:-.03em">3</span><span data-i18n="s12-l3" style="font:400 13px/1.5 'Geist',sans-serif;color:var(--ink-2)">acquisition modes identified</span></div>
+</div>
+<span data-i18n="s12-sub" style="font:400 14.5px/1.65 'Geist',sans-serif;color:var(--ink-2);max-width:700px">Extracted from payroll files. Computed, like 13th Month. Manual with evidence, like invoices. The engine handles all three.</span>
+</div>
+</div>
+
+<div id="scr-13" class="screen" data-steps="13" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:56px;padding-bottom:36px;text-align:center">
+<span data-i18n="s13-main" style="font:200 46px/1.2 'Geist',sans-serif;letter-spacing:-.02em;max-width:900px;text-wrap:balance">Not an MMSP tool. A Colas group platform.</span>
+<div style="display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;gap:20px;align-items:flex-end">
+<div style="width:196px;padding:13px 16px;border:1px dashed var(--hair-strong);border-radius:12px;text-align:left"><span data-i18n="s13-proj" style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">Project · config</span></div>
+<div style="width:196px;padding:13px 16px;border:1px dashed var(--hair-strong);border-radius:12px;text-align:left"><span data-i18n="s13-proj" style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">Project · config</span></div>
+</div>
+<span style="width:52px;height:1px;background:var(--hair-strong)"></span>
+<div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+<div style="width:104px;height:104px;border:1px solid var(--hair-strong);border-radius:999px;display:flex;align-items:center;justify-content:center"><svg width="36" height="36" viewBox="0 0 96 96" style="color:var(--ink);display:block"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg></div>
+<span data-i18n="s13-eng" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.14em;color:var(--ink-2)">ONE ENGINE</span>
+</div>
+<span style="width:52px;height:1px;background:var(--hair-strong)"></span>
+<div style="display:flex;flex-direction:column;gap:20px;align-items:flex-start">
+<div style="width:216px;padding:13px 16px;border:1px solid var(--hair-strong);border-radius:12px;background:var(--fill);text-align:left;display:flex;flex-direction:column;gap:3px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">MMSP EOT001</span><span data-i18n="s13-first" style="font:400 11px 'Geist',sans-serif;color:var(--ink-2)">first project loaded</span></div>
+<div style="width:196px;padding:13px 16px;border:1px dashed var(--hair-strong);border-radius:12px;text-align:left"><span data-i18n="s13-proj" style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">Project · config</span></div>
+</div>
+</div>
+<span data-i18n="s13-sub" style="font:400 15px 'Geist',sans-serif;color:var(--ink-2);max-width:640px">Any project onboards by loading its configuration. Same engine. Zero new code.</span>
+</div>
+</div>
+
+<div id="scr-14" class="screen" data-steps="14" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:52px;padding-bottom:36px;text-align:center">
+<span data-i18n="s14-main" style="font:200 46px/1.15 'Geist',sans-serif;letter-spacing:-.02em">Three honest horizons.</span>
+<div style="display:flex;gap:22px">
+<div style="width:300px;border:1px solid var(--hair);border-radius:16px;padding:24px 26px;display:flex;flex-direction:column;gap:10px;text-align:left"><span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.14em;color:var(--ink-3)">H1</span><span data-i18n="s14-h1t" style="font:500 15px 'Geist',sans-serif;color:var(--ink)">The workflow, proven.</span><span data-i18n="s14-h1d" style="font:400 12.5px/1.55 'Geist',sans-serif;color:var(--ink-2)">Drop, validate, roll up, assemble.</span></div>
+<div style="width:300px;border:1px solid var(--hair);border-radius:16px;padding:24px 26px;display:flex;flex-direction:column;gap:10px;text-align:left"><span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.14em;color:var(--ink-3)">H2</span><span data-i18n="s14-h2t" style="font:500 15px 'Geist',sans-serif;color:var(--ink)">Structured extraction.</span><span data-i18n="s14-h2d" style="font:400 12.5px/1.55 'Geist',sans-serif;color:var(--ink-2)">Payroll Excel, template-based.</span></div>
+<div style="width:300px;border:1px solid var(--hair);border-radius:16px;padding:24px 26px;display:flex;flex-direction:column;gap:10px;text-align:left"><span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.14em;color:var(--ink-3)">H3</span><span data-i18n="s14-h3t" style="font:500 15px 'Geist',sans-serif;color:var(--ink)">Documents.</span><span data-i18n="s14-h3d" style="font:400 12.5px/1.55 'Geist',sans-serif;color:var(--ink-2)">Invoices and payslips, PDF grade.</span></div>
+</div>
+<span data-i18n="s14-sub" style="font:400 14px/1.6 'Geist',sans-serif;color:var(--ink-2);max-width:720px">Security runs in parallel: role-based access, HR isolation, evidence integrity, cyber sign-off before real data.</span>
+</div>
+</div>
+
+<div id="scr-15" class="screen" data-steps="15" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;gap:48px;padding-bottom:36px;width:820px">
+<span data-i18n="s15-main" style="font:200 46px/1.15 'Geist',sans-serif;letter-spacing:-.02em;text-align:center">What this needs to become real.</span>
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:24px;padding:22px 4px;border-top:1px solid var(--hair)"><span data-i18n="s15-a1n" style="width:300px;flex:none;font:500 15px 'Geist',sans-serif;color:var(--ink)">Contract Management</span><span data-i18n="s15-a1d" style="font:400 14.5px/1.5 'Geist',sans-serif;color:var(--ink-2)">Own the claim strategy and the contractual events.</span></div>
+<div style="display:flex;align-items:baseline;gap:24px;padding:22px 4px;border-top:1px solid var(--hair)"><span data-i18n="s15-a2n" style="width:300px;flex:none;font:500 15px 'Geist',sans-serif;color:var(--ink)">Finance</span><span data-i18n="s15-a2d" style="font:400 14.5px/1.5 'Geist',sans-serif;color:var(--ink-2)">Sponsor the group platform path and open the cyber lane.</span></div>
+<div style="display:flex;align-items:baseline;gap:24px;padding:22px 4px;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)"><span data-i18n="s15-a3n" style="width:300px;flex:none;font:500 15px 'Geist',sans-serif;color:var(--ink)">Cost Control and departments</span><span data-i18n="s15-a3d" style="font:400 14.5px/1.5 'Geist',sans-serif;color:var(--ink-2)">The pilot: one cost head, one period, test data.</span></div>
+</div>
+</div>
+</div>
+
+<div id="scr-16" class="screen" data-steps="16" style="position:absolute;inset:0;background:var(--base);display:flex;align-items:center;justify-content:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:44px;padding-bottom:40px;text-align:center">
+<svg width="52" height="52" viewBox="0 0 96 96" style="color:var(--ink);display:block" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span data-i18n="s16-main" style="font:200 48px/1.2 'Geist',sans-serif;letter-spacing:-.02em;max-width:920px;text-wrap:balance">The evidence should be ready before we need it.</span>
+</div>
+</div>
+
+<div style="position:absolute;top:13px;left:24px;z-index:60;pointer-events:none"><span id="act-label" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-2)">OPENING</span></div>
+<div style="position:absolute;bottom:18px;right:24px;z-index:60;pointer-events:none"><span id="counter" style="font:500 11px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-2)">01 / 16</span></div>
+
+</div>
+</div>
+
+<div id="toggles">
+<div class="seg" id="seg-lang"><button type="button" data-v="fr">FR</button><button type="button" data-v="en" class="on">EN</button></div>
+<div class="seg" id="seg-theme"><button type="button" data-v="light" class="on">Light</button><button type="button" data-v="dark">Dark</button></div>
+</div>
+
+<script>
+(function () {
+'use strict';
+
+/* ---------- persisted preferences (default light + EN) ---------- */
+var LS_LANG = 'vault-demo-lang', LS_THEME = 'vault-demo-theme';
+var lang = 'en', theme = 'light', step = 1;
+try { var l = localStorage.getItem(LS_LANG); if (l === 'fr' || l === 'en') lang = l; } catch (e) {}
+try { var t = localStorage.getItem(LS_THEME); if (t === 'dark' || t === 'light') theme = t; } catch (e) {}
+
+/* ---------- act labels (all 16 steps, both languages) ---------- */
+var ACTS = {
+en: [
+'OPENING', 'OPENING', 'OPENING', 'OPENING',
+'ACT I - THE DROP · Day 5 - Account contributor',
+'ACT I - THE DROP · Day 5 - Account contributor',
+'ACT II - THE GATE · Day 6 - Staff Cost validator',
+'ACT III - THE COCKPIT · Consolidator - month close',
+'ACT III - THE COCKPIT · Consolidator - month close',
+'ACT IV - THE CLAIM · Contract Management defines the event',
+'ACT IV - THE CLAIM · Consolidator - period seal',
+'PROOF', 'PROOF', 'THE ROAD', 'THE ASK', 'CLOSE'
+],
+fr: [
+'OUVERTURE', 'OUVERTURE', 'OUVERTURE', 'OUVERTURE',
+'ACTE I - LE DÉPÔT · Jour 5 - Contributeur Account',
+'ACTE I - LE DÉPÔT · Jour 5 - Contributeur Account',
+'ACTE II - LA PORTE · Jour 6 - Validateur Staff Cost',
+'ACTE III - LE COCKPIT · Consolidateur - clôture du mois',
+'ACTE III - LE COCKPIT · Consolidateur - clôture du mois',
+'ACTE IV - LA RÉCLAMATION · Contract Management définit l\'événement',
+'ACTE IV - LA RÉCLAMATION · Consolidateur - scellement de la période',
+'PREUVE', 'PREUVE', 'LA ROUTE', 'LA DEMANDE', 'CLÔTURE'
+]
+};
+
+/* ---------- narrative-layer dictionary (steps 01-04, 12-16 only) ---------- */
+var I18N = {
+'s1-main': { en: 'A claim worth hundreds of millions of pesos.', fr: 'Une réclamation qui pèse des centaines de millions de pesos.' },
+'s1-sub': { en: 'Substantiated by hand, across scattered files.', fr: 'Justifiée à la main, à travers des fichiers éparpillés.' },
+'s2-main': { en: 'Today, the evidence is chased after the fact.', fr: 'Aujourd\'hui, on court après les preuves, après coup.' },
+'s2-sub': { en: 'Each department keeps its own register. One person consolidates everything by hand. Gaps surface when it is too late.', fr: 'Chaque département tient son propre registre. Une seule personne consolide tout à la main. Les trous apparaissent quand il est trop tard.' },
+'s3-main': { en: 'The Vault does not track evidence.<br>It produces the outcome.', fr: 'The Vault ne suit pas les preuves.<br>Il produit le résultat.' },
+'s3-sub': { en: 'Departments drop their sources. The engine extracts, files and substantiates every cost.', fr: 'Les départements déposent leurs sources. Le moteur extrait, classe et justifie chaque coût.' },
+'s4-main': { en: 'Four steps. One gate.', fr: 'Quatre étapes. Une porte.' },
+'s4-n1': { en: 'DROP', fr: 'DÉPÔT' },
+'s4-n2': { en: 'EXTRACT', fr: 'EXTRACTION' },
+'s4-n3': { en: 'SUBSTANTIATE', fr: 'JUSTIFICATION' },
+'s4-n4': { en: 'VALIDATE', fr: 'VALIDATION' },
+'s4-gate': { en: 'gate', fr: 'porte' },
+'s12-main': { en: 'This is not a concept. It is mapped on the real price file.', fr: 'Ce n\'est pas un concept. C\'est cartographié sur le vrai fichier de prix.' },
+'s12-l1': { en: 'cost elements mapped', fr: 'éléments de coût cartographiés' },
+'s12-l2': { en: 'confirmed by the process referent in 48 hours', fr: 'confirmés par le référent process en 48 heures' },
+'s12-l3': { en: 'acquisition modes identified', fr: 'modes d\'acquisition identifiés' },
+'s12-sub': { en: 'Extracted from payroll files. Computed, like 13th Month. Manual with evidence, like invoices. The engine handles all three.', fr: 'Extraits des fichiers de paie. Calculés, comme le 13e mois. Manuels avec preuve, comme les factures. Le moteur gère les trois.' },
+'s13-main': { en: 'Not an MMSP tool. A Colas group platform.', fr: 'Pas un outil MMSP. Une plateforme du groupe Colas.' },
+'s13-eng': { en: 'ONE ENGINE', fr: 'UN SEUL MOTEUR' },
+'s13-first': { en: 'first project loaded', fr: 'premier projet chargé' },
+'s13-proj': { en: 'Project · config', fr: 'Projet · config' },
+'s13-sub': { en: 'Any project onboards by loading its configuration. Same engine. Zero new code.', fr: 'N\'importe quel projet embarque en chargeant sa configuration. Même moteur. Zéro nouveau code.' },
+'s14-main': { en: 'Three honest horizons.', fr: 'Trois horizons honnêtes.' },
+'s14-h1t': { en: 'The workflow, proven.', fr: 'Le workflow, prouvé.' },
+'s14-h1d': { en: 'Drop, validate, roll up, assemble.', fr: 'Déposer, valider, consolider, assembler.' },
+'s14-h2t': { en: 'Structured extraction.', fr: 'Extraction structurée.' },
+'s14-h2d': { en: 'Payroll Excel, template-based.', fr: 'Excel de paie, sur gabarit.' },
+'s14-h3t': { en: 'Documents.', fr: 'Documents.' },
+'s14-h3d': { en: 'Invoices and payslips, PDF grade.', fr: 'Factures et bulletins de paie, niveau PDF.' },
+'s14-sub': { en: 'Security runs in parallel: role-based access, HR isolation, evidence integrity, cyber sign-off before real data.', fr: 'La sécurité avance en parallèle : accès par rôles, isolation RH, intégrité des preuves, feu vert cyber avant les données réelles.' },
+'s15-main': { en: 'What this needs to become real.', fr: 'Ce qu\'il faut pour que ça devienne réel.' },
+'s15-a1n': { en: 'Contract Management', fr: 'Contract Management' },
+'s15-a1d': { en: 'Own the claim strategy and the contractual events.', fr: 'Porter la stratégie de réclamation et les événements contractuels.' },
+'s15-a2n': { en: 'Finance', fr: 'Finance' },
+'s15-a2d': { en: 'Sponsor the group platform path and open the cyber lane.', fr: 'Sponsoriser la voie plateforme groupe et ouvrir le couloir cyber.' },
+'s15-a3n': { en: 'Cost Control and departments', fr: 'Cost Control et les départements' },
+'s15-a3d': { en: 'The pilot: one cost head, one period, test data.', fr: 'Le pilote : une rubrique de coût, une période, des données de test.' },
+'s16-main': { en: 'The evidence should be ready before we need it.', fr: 'La preuve devrait être prête avant qu\'on en ait besoin.' }
+};
+
+/* ---------- cockpit matrix (real taxonomy; totals reconcile to the KPIs) ---------- */
+(function buildMatrix() {
+var G = [
+['1.1', 'Salary', '370,224,245.88', [
+['1.1.1', 'Basic Salary', 3, '336,410,556.20'],
+['1.1.2', '13th Month', 1, '19,700,879.68'],
+['1.1.4', 'Per Diem Allowance', 2, '12,844,410.00'],
+['1.1.10', 'Phone Allowance', 1, '1,268,400.00']
+]],
+['1.2', 'Contribution', '89,696,484.16', [
+['1.2.1', 'SSS', 2, '31,240,118.55'],
+['1.2.3', 'PHIC', 2, '6,412,850.25'],
+['1.2.5', 'HDMF', 2, '3,820,600.00'],
+['1.2.6', 'Withholding Tax', 2, '48,222,915.36']
+]],
+['1.3', 'Fringe Benefit', '85,650,503.83', [
+['1.3.1', 'Phone Bill', 2, '934,280.10'],
+['1.3.4', 'Medical Insurance', 2, '21,264,545.12'],
+['1.3.6', 'Accomodation Rental', 3, '29,509,320.78'],
+['1.3.10', 'School Fees', 2, '5,610,000.00'],
+['1.3.13', 'Flight', 2, '14,530,220.40'],
+['1.3.14', 'Expenses Claim', 3, '7,481,006.44'],
+['1.3.17', 'IT Cost (softwares)', 2, '4,102,730.99'],
+['1.3.18', 'Training', 2, '2,218,400.00']
+]]
+];
+/* missing documents per element per month; sums to 24 open gaps,
+   month columns reconcile to 32/33 29/33 30/33 27/33 23/33 */
+var MISS = {
+'1.3.14': { 2: 1, 3: 1, 6: 2 }, '1.3.6': { 3: 2, 6: 1 }, '1.2.6': { 3: 1 },
+'1.3.1': { 4: 1 }, '1.3.10': { 4: 1, 6: 1 }, '1.1.4': { 4: 1 },
+'1.3.13': { 5: 2, 6: 1 }, '1.3.4': { 5: 1, 6: 1 }, '1.2.3': { 5: 1 }, '1.3.17': { 5: 1 }, '1.1.10': { 5: 1 },
+'1.1.1': { 6: 1 }, '1.2.1': { 6: 1 }, '1.2.5': { 6: 1 }, '1.3.18': { 6: 1 }
+};
+var CRIT = { '1.3.6': 3, '1.3.13': 5 };
+var mono = "'Geist Mono',monospace";
+var grid = 'display:grid;grid-template-columns:216px repeat(6,1fr) 136px;align-items:stretch;';
+var cell = 'display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:0 14px;';
+var html = '';
+G.forEach(function (g) {
+html += '<div style="' + grid + 'border-top:1px solid var(--hair-strong);height:30px">'
++ '<div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px">'
++ '<span style="font:500 11px ' + mono + ';color:var(--ink);width:46px;flex:none">' + g[0] + '</span>'
++ '<span style="font:600 12.5px \'Geist\',sans-serif;color:var(--ink);white-space:nowrap">' + g[1] + '</span></div>';
+for (var gm = 1; gm <= 6; gm++) html += '<div style="' + cell + (gm === 1 ? 'background:var(--fill)' : '') + '"></div>';
+html += '<span style="font:500 11.5px ' + mono + ';color:var(--ink);display:flex;align-items:center;justify-content:flex-end">' + g[2] + '</span></div>';
+g[3].forEach(function (el) {
+var code = el[0], name = el[1], req = el[2], total = el[3];
+html += '<div style="' + grid + 'border-top:1px solid var(--hair-soft);height:26px">'
++ '<div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px">'
++ '<span style="font:400 10.5px ' + mono + ';color:var(--ink-3);width:46px;flex:none">' + code + '</span>'
++ '<span style="font:400 12px \'Geist\',sans-serif;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + name + '</span></div>';
+for (var m = 1; m <= 6; m++) {
+var miss = (MISS[code] && MISS[code][m]) || 0;
+var filed = req - miss;
+var crit = CRIT[code] === m;
+var txtSt, dot = '';
+if (miss === 0) { txtSt = 'font:400 11.5px ' + mono + ';color:var(--ink-3)'; }
+else {
+txtSt = 'font:500 11.5px ' + mono + ';color:var(--ink)';
+dot = '<span style="width:5px;height:5px;border-radius:999px;flex:none;background:var(--' + (crit ? 'critical' : 'partial') + ')"></span>';
+}
+html += '<div style="' + cell + (m === 1 ? 'background:var(--fill)' : '') + '"><span style="' + txtSt + '">' + filed + '/' + req + '</span>' + dot + '</div>';
+}
+html += '<span style="font:400 11.5px ' + mono + ';color:var(--ink-2);display:flex;align-items:center;justify-content:flex-end;font-variant-numeric:tabular-nums">' + total + '</span></div>';
+});
+});
+document.getElementById('mx-rows').innerHTML = html;
+})();
+
+/* ---------- step engine ---------- */
+var screens = [].slice.call(document.querySelectorAll('.screen'));
+var actEl = document.getElementById('act-label');
+var ctrEl = document.getElementById('counter');
+var homeEl = document.getElementById('scr-home');
+var ckptEl = document.getElementById('scr-ckpt');
+
+function pad(n) { return (n < 10 ? '0' : '') + n; }
+function show(n) {
+step = n;
+screens.forEach(function (s) {
+var on = s.getAttribute('data-steps').split(' ').indexOf(String(n)) >= 0;
+s.classList.toggle('on', on);
+});
+homeEl.setAttribute('data-state', n >= 6 ? 'post' : 'pre');
+ckptEl.setAttribute('data-state', n === 9 ? 'gap' : 'matrix');
+actEl.textContent = ACTS[lang][n - 1];
+ctrEl.textContent = pad(n) + ' / 16';
+}
+function go(d) { show(Math.max(1, Math.min(16, step + d))); }
+
+/* ---------- input: arrows, page keys, 0 = home, click right third ---------- */
+window.addEventListener('keydown', function (e) {
+if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); go(1); }
+else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); go(-1); }
+else if (e.key === '0') { show(1); }
+});
+document.addEventListener('click', function (e) {
+if (e.clientX >= window.innerWidth * (2 / 3)) go(1);
+});
+
+/* ---------- stage scaling: 1440x900 composition fit to viewport ---------- */
+var stage = document.getElementById('stage');
+function fit() {
+var s = Math.min(window.innerWidth / 1440, window.innerHeight / 900);
+stage.style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+}
+window.addEventListener('resize', fit);
+
+/* ---------- language + theme toggles ---------- */
+function mark(id, val) {
+[].forEach.call(document.getElementById(id).querySelectorAll('button'), function (b) {
+b.classList.toggle('on', b.getAttribute('data-v') === val);
+});
+}
+function applyLang() {
+document.documentElement.lang = lang;
+[].forEach.call(document.querySelectorAll('[data-i18n]'), function (el) {
+var entry = I18N[el.getAttribute('data-i18n')];
+if (!entry) return;
+if (el.hasAttribute('data-i18n-html')) el.innerHTML = entry[lang];
+else el.textContent = entry[lang];
+});
+actEl.textContent = ACTS[lang][step - 1];
+mark('seg-lang', lang);
+}
+function applyTheme() {
+document.documentElement.setAttribute('data-theme', theme);
+mark('seg-theme', theme);
+}
+var toggles = document.getElementById('toggles');
+toggles.addEventListener('click', function (e) {
+e.stopPropagation();
+var b = e.target && e.target.closest ? e.target.closest('button') : null;
+if (!b) return;
+var v = b.getAttribute('data-v');
+if (b.parentNode.id === 'seg-lang') {
+lang = v;
+try { localStorage.setItem(LS_LANG, v); } catch (err) {}
+applyLang();
+} else {
+theme = v;
+try { localStorage.setItem(LS_THEME, v); } catch (err) {}
+applyTheme();
+}
+});
+
+/* ---------- boot ---------- */
+applyTheme();
+applyLang();
+fit();
+show(1);
+})();
+</script>
+</body>
+</html>

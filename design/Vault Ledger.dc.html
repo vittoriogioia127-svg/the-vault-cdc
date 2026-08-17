@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>The Vault — Cost ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+--base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;
+--fill:#F4F4F2;--fill-2:#EEEEEB;
+--hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);
+--critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;
+--pill-bg:#1D1D1F;--pill-ink:#FCFCFB;
+--focus:0 0 0 3px rgba(29,29,31,.12);
+}
+[data-theme="dark"]{
+--base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;
+--fill:#1B1B1D;--fill-2:#212124;
+--hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);
+--critical:#E5675B;--partial:#D9A03C;--success:#41BE73;
+--pill-bg:#F5F5F7;--pill-ink:#101012;
+--focus:0 0 0 3px rgba(245,245,247,.14);
+}
+html,body{margin:0;padding:0;background:#FCFCFB}
+*{box-sizing:border-box}
+input,select,textarea{font-family:'Geist',sans-serif;outline:none;color:inherit}
+input::placeholder,textarea::placeholder{color:var(--ink-3)}
+::selection{background:var(--hair-strong)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-3)}
+*{scrollbar-width:thin;scrollbar-color:var(--hair-strong) transparent}
+@keyframes vpulse{0%,100%{opacity:.5}50%{opacity:1}}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" data-screen-label="Cost ledger" style="min-width:1280px;min-height:100vh;background:var(--base);color:var(--ink);font-family:'Geist',sans-serif;display:flex;flex-direction:column">
+
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--hair);background:var(--base)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Cost ledger</span>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--hair-strong);border-radius:999px">
+<span onClick="{{ setLight }}" style="{{ segLight }}">Light</span>
+<span onClick="{{ setDark }}" style="{{ segDark }}">Dark</span>
+</div>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">M. Reyes</span>
+<div style="width:24px;height:24px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">MR</div>
+</div>
+
+<div style="flex:1;display:flex;min-height:0">
+
+<div style="width:248px;flex:none;border-right:1px solid var(--hair);display:flex;flex-direction:column;min-height:0">
+<div style="height:52px;flex:none;display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid var(--hair)">
+<span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Filters</span>
+<span style="flex:1"></span>
+<sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}">
+<span onClick="{{ clearFilters }}" style="cursor:pointer;font:400 11px 'Geist Mono',monospace;color:var(--ink-2)" style-hover="color:var(--ink)">Clear {{ activeCount }}</span>
+</sc-if>
+</div>
+<div style="flex:1;overflow-y:auto;padding:8px 0">
+<sc-for list="{{ filterGroups }}" as="g" hint-placeholder-count="5">
+<div style="padding:0 12px">
+<div onClick="{{ g.toggleCol }}" style="display:flex;align-items:center;gap:8px;padding:9px 8px;cursor:pointer;border-radius:8px" style-hover="background:var(--hair-soft)">
+<span style="font:500 11px 'Geist',sans-serif;letter-spacing:.02em;color:var(--ink);text-transform:uppercase">{{ g.label }}</span>
+<sc-if value="{{ g.active }}" hint-placeholder-val="{{ 0 }}"><span style="font:500 9px 'Geist Mono',monospace;color:var(--base);background:var(--ink);border-radius:999px;padding:1px 6px">{{ g.active }}</span></sc-if>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ g.chev }}</span>
+</div>
+<sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;padding:2px 0 10px">
+<sc-for list="{{ g.items }}" as="it" hint-placeholder-count="4">
+<div onClick="{{ it.toggle }}" style="display:flex;align-items:center;gap:9px;padding:6px 8px;cursor:pointer;border-radius:6px" style-hover="background:var(--hair-soft)">
+<span style="{{ it.box }}"><sc-if value="{{ it.checked }}" hint-placeholder-val="{{ false }}"><svg width="9" height="9" viewBox="0 0 12 12" style="display:block"><path d="M2 6.5 L5 9 L10 3.2" fill="none" stroke="var(--base)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></span>
+<sc-if value="{{ it.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:999px;background:{{ it.dotColor }};flex:none"></span></sc-if>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2);flex:none">{{ it.label }}</span>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ it.sub }}</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<div style="height:1px;background:var(--hair);margin:2px 8px"></div>
+</div>
+</sc-for>
+</div>
+</div>
+
+<div style="flex:1;display:flex;flex-direction:column;min-width:0;min-height:0">
+
+<div style="flex:none;display:flex;align-items:flex-end;gap:20px;padding:22px 28px 18px;border-bottom:1px solid var(--hair)">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em">Cost ledger</span>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">{{ count }} entries shown · window 2026-01 to 2026-06 · claim event CE-02</span>
+</div>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-2);text-transform:uppercase">Assembled</span>
+<span style="font:200 34px/1 'Geist',sans-serif;letter-spacing:-.02em">{{ totalShort }}</span>
+</div>
+<div onClick="{{ openCapture }}" tabindex="0" style="cursor:pointer;display:flex;align-items:center;gap:8px;height:36px;padding:0 16px;background:var(--pill-bg);color:var(--pill-ink);border-radius:999px;font:500 13px 'Geist',sans-serif" style-hover="opacity:.9" style-focus="box-shadow:var(--focus)">
+<span style="font:400 15px 'Geist Mono',monospace;line-height:1">+</span><span>New&nbsp;entry</span>
+</div>
+</div>
+
+<div style="flex:none;display:flex;align-items:center;gap:16px;padding:0 28px;height:34px;border-bottom:1px solid var(--hair);background:var(--fill)">
+<span style="width:120px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Reference</span>
+<span style="flex:1;min-width:0;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Description</span>
+<span style="width:112px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Code / Period</span>
+<span style="width:120px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Persons</span>
+<span style="width:132px;flex:none;text-align:right;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Amount PHP</span>
+<span style="width:56px;flex:none;text-align:center;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Evid</span>
+<span style="width:104px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Status</span>
+</div>
+
+<div style="flex:1;overflow-y:auto">
+<sc-for list="{{ entries }}" as="e" hint-placeholder-count="11">
+<div onClick="{{ e.open }}" style="{{ e.rowStyle }}" style-hover="background:var(--hair-soft)">
+<span style="width:120px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">{{ e.ref }}</span>
+<span style="flex:1;min-width:0;font:400 13px 'Geist',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.desc }}</span>
+<span style="width:112px;flex:none;display:flex;flex-direction:column;gap:2px"><span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">{{ e.code }}</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ e.period }}</span></span>
+<span style="width:120px;flex:none;font:400 12px 'Geist',sans-serif;color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ e.persons }}</span>
+<span style="width:132px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">{{ e.amount }}</span>
+<span style="width:56px;flex:none;text-align:center;font:400 12px 'Geist Mono',monospace;color:{{ e.eviColor }}">{{ e.eviLabel }}</span>
+<span style="width:104px;flex:none;display:flex;align-items:center;gap:7px">
+<sc-if value="{{ e.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:999px;background:{{ e.statusColor }};flex:none"></span></sc-if>
+<span style="font:400 12px 'Geist',sans-serif;color:{{ e.statusColor }}">{{ e.statusLabel }}</span>
+</span>
+</div>
+</sc-for>
+<div style="height:40px"></div>
+</div>
+
+</div>
+</div>
+
+<sc-if value="{{ drawerOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeDrawer }}" style="position:fixed;inset:0;background:rgba(0,0,0,.14);z-index:20"></div>
+<div style="position:fixed;top:0;right:0;bottom:0;width:472px;z-index:21;background:var(--base);border-left:1px solid var(--hair-strong);display:flex;flex-direction:column" data-theme="{{ theme }}">
+<div style="flex:none;display:flex;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid var(--hair)">
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">{{ sel.ref }}</span>
+<span style="flex:1"></span>
+<span onClick="{{ closeDrawer }}" tabindex="0" style="cursor:pointer;width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;font:400 15px 'Geist',sans-serif;color:var(--ink-2)" style-hover="background:var(--fill)" style-focus="box-shadow:var(--focus)">✕</span>
+</div>
+<div style="flex:1;overflow-y:auto;padding:24px">
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;display:block">{{ sel.desc }}</span>
+<div style="display:flex;align-items:center;gap:10px;margin-top:10px">
+<span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">{{ sel.code }}</span>
+<span style="width:3px;height:3px;border-radius:999px;background:var(--ink-3)"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">{{ sel.cat }}</span>
+<span style="width:3px;height:3px;border-radius:999px;background:var(--ink-3)"></span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">{{ sel.period }}</span>
+</div>
+<div style="margin-top:22px;display:flex;align-items:flex-end;justify-content:space-between;gap:16px;padding:18px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-2);text-transform:uppercase">Amount</span><span style="font:200 33px/1 'Geist',sans-serif;letter-spacing:-.02em">₱ {{ sel.amount }}</span></div>
+<div style="display:flex;align-items:center;gap:7px;padding-bottom:4px"><sc-if value="{{ sel.dot }}" hint-placeholder-val="{{ false }}"><span style="width:7px;height:7px;border-radius:999px;background:{{ sel.statusColor }}"></span></sc-if><span style="font:500 13px 'Geist',sans-serif;color:{{ sel.statusColor }}">{{ sel.statusLabel }}</span></div>
+</div>
+
+<sc-if value="{{ sel.hasFx }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:20px;padding:14px 16px;background:var(--fill);border-radius:12px;display:flex;flex-direction:column;gap:10px">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-2);text-transform:uppercase">Multi-currency</span>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">Original</span><span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">{{ sel.fxAmt }} {{ sel.fxCur }}</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between"><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">Rate · {{ sel.fxSrc }}</span><span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">{{ sel.fxRate }}</span></div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding-top:8px;border-top:1px solid var(--hair)"><span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">Computed PHP</span><span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">₱ {{ sel.fxPhp }}</span></div>
+</div>
+</sc-if>
+
+<div style="margin-top:26px;display:flex;align-items:center;gap:10px;margin-bottom:12px"><span style="font:500 11px 'Geist',sans-serif;letter-spacing:.02em;color:var(--ink);text-transform:uppercase">Evidence</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ sel.eviLabel }} files</span></div>
+<sc-if value="{{ sel.noEvidence }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border:1px solid var(--critical);border-radius:12px">
+<span style="width:7px;height:7px;border-radius:999px;background:var(--critical);margin-top:5px;flex:none"></span>
+<span style="font:400 12.5px/1.5 'Geist',sans-serif;color:var(--ink)">No evidence attached. A claim cannot ship with holes, this entry blocks the dossier until a file is added.</span>
+</div>
+</sc-if>
+<div style="display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ sel.evidence }}" as="f" hint-placeholder-count="2">
+<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--fill);border-radius:12px">
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.name }}</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ f.hashLabel }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;flex:none"><span style="width:6px;height:6px;border-radius:999px;background:{{ f.stateColor }}"></span><span style="font:400 11px 'Geist Mono',monospace;color:{{ f.stateColor }}">{{ f.stateLabel }}</span></div>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top:26px;margin-bottom:12px"><span style="font:500 11px 'Geist',sans-serif;letter-spacing:.02em;color:var(--ink);text-transform:uppercase">Validation trail</span></div>
+<div style="display:flex;flex-direction:column;gap:0;padding:0 2px">
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:var(--success);flex:none"></span><span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink);flex:1">Submitted by {{ sel.subBy }}</span><span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">{{ sel.subOn }}</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:1px solid var(--hair)"><span style="width:6px;height:6px;border-radius:999px;background:{{ sel.valColor }};flex:none"></span><span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink);flex:1">{{ sel.valText }}</span><span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">{{ sel.valOn }}</span></div>
+</div>
+
+<sc-if value="{{ sel.hasClaim }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:26px;margin-bottom:12px"><span style="font:500 11px 'Geist',sans-serif;letter-spacing:.02em;color:var(--ink);text-transform:uppercase">Linked claim event</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--hair-strong);border-radius:12px">
+<span style="font:500 11.5px 'Geist Mono',monospace;color:var(--ink)">{{ sel.claim }}</span>
+<div style="width:1px;height:14px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">Access restriction ROW-7 · 148 days</span>
+</div>
+</sc-if>
+<div style="height:16px"></div>
+</div>
+</div>
+</sc-if>
+
+<sc-if value="{{ capture }}" hint-placeholder-val="{{ false }}">
+<div data-theme="{{ theme }}" data-screen-label="Capture" style="position:fixed;inset:0;z-index:30;background:var(--base);color:var(--ink);display:flex;flex-direction:column">
+<div style="flex:none;display:flex;align-items:center;gap:14px;padding:0 24px;height:56px;border-bottom:1px solid var(--hair)">
+<svg width="18" height="18" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em">New&nbsp;entry</span>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Capture · draft</span>
+<span style="flex:1"></span>
+<span onClick="{{ closeCapture }}" tabindex="0" style="cursor:pointer;font:400 12px 'Geist',sans-serif;color:var(--ink-2);padding:8px 12px;border-radius:8px" style-hover="background:var(--fill)" style-focus="box-shadow:var(--focus)">Cancel</span>
+<span onClick="{{ closeCapture }}" tabindex="0" style="cursor:pointer;display:flex;align-items:center;gap:8px;height:36px;padding:0 18px;background:var(--pill-bg);color:var(--pill-ink);border-radius:999px;font:500 13px 'Geist',sans-serif" style-hover="opacity:.9" style-focus="box-shadow:var(--focus)">Save&nbsp;entry</span>
+</div>
+<div style="flex:1;overflow-y:auto">
+<div style="max-width:880px;margin:0 auto;padding:32px 24px 80px;display:flex;flex-direction:column;gap:28px">
+
+<div onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" onClick="{{ simulate }}" tabindex="0" onKeyDown="{{ onDropKey }}" style="{{ dropStyle }}" style-focus="box-shadow:var(--focus)">
+<div style="width:44px;height:44px;border-radius:12px;background:var(--fill);display:flex;align-items:center;justify-content:center">
+<svg width="20" height="20" viewBox="0 0 24 24" style="display:block" fill="none"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 19 H20" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"></path></svg>
+</div>
+<span style="font:500 15px 'Geist',sans-serif;color:var(--ink)">{{ dropTitle }}</span>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">PDF, XLSX, images · hashed on drop · click to simulate</span>
+</div>
+
+<sc-if value="{{ hasFiles }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:8px;margin-top:-12px">
+<sc-for list="{{ files }}" as="f" hint-placeholder-count="1">
+<div style="{{ f.cardStyle }};display:flex;align-items:center;gap:14px;padding:13px 16px;background:var(--fill);border-radius:12px">
+<div style="width:9px;height:9px;border-radius:2px;background:{{ f.tick }};flex:none"></div>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.name }}</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2)">sha256 · {{ f.hashShown }}<sc-if value="{{ f.typing }}" hint-placeholder-val="{{ false }}"><span style="color:var(--ink-3)">▍</span></sc-if></span>
+</div>
+<span style="font:400 11px 'Geist Mono',monospace;color:{{ f.stateColor }};flex:none">{{ f.stateLabel }}</span>
+<span onClick="{{ f.remove }}" style="cursor:pointer;font:400 13px 'Geist',sans-serif;color:var(--ink-3);flex:none" style-hover="color:var(--ink)">✕</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<div style="display:flex;flex-direction:column;gap:16px">
+<span style="font:500 11px 'Geist',sans-serif;letter-spacing:.03em;color:var(--ink-2);text-transform:uppercase">Standardized fields</span>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Category</span><select style="{{ inputStyle }}" style-focus="border-color:var(--ink);box-shadow:var(--focus)"><option>5.2.1.1 Indirect Personnel</option><option>5.2.1.4 Plant &amp; Equipment</option><option>5.2.1.9 Head Office Overhead</option><option>5.2.1.11 Profit</option></select></label>
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Cost code</span><input value="5.2.1.1" style="{{ monoInputStyle }}" style-focus="border-color:var(--ink);box-shadow:var(--focus)"></label>
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Period</span><select style="{{ inputStyle }}" style-focus="border-color:var(--ink);box-shadow:var(--focus)"><option>2026-03</option><option>2026-04</option><option>2026-05</option><option>2026-06</option></select></label>
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Claim event</span><select style="{{ inputStyle }}" style-focus="border-color:var(--ink);box-shadow:var(--focus)"><option>CE-02 Access restriction ROW-7</option><option>None</option></select></label>
+<label style="display:flex;flex-direction:column;gap:7px;grid-column:1 / -1"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Description</span><textarea rows="2" placeholder="What this cost is and why the event caused it" style="{{ inputStyle }};resize:vertical" style-focus="border-color:var(--ink);box-shadow:var(--focus)"></textarea></label>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;align-items:center;gap:10px"><span style="font:500 11px 'Geist',sans-serif;letter-spacing:.03em;color:var(--ink-2);text-transform:uppercase">Per-person split</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">basis · headcount days</span></div>
+<div style="border:1px solid var(--hair);border-radius:12px;overflow:hidden">
+<div style="display:flex;align-items:center;gap:12px;padding:9px 14px;background:var(--fill);border-bottom:1px solid var(--hair)"><span style="flex:1;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Person</span><span style="width:150px;flex:none;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Basis</span><span style="width:140px;flex:none;text-align:right;font:500 10px 'Geist Mono',monospace;letter-spacing:.08em;color:var(--ink-3);text-transform:uppercase">Amount PHP</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--hair)"><span style="flex:1;font:400 13px 'Geist',sans-serif;color:var(--ink)">M. Reyes</span><span style="width:150px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">96 days</span><span style="width:140px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">786,554.64</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid var(--hair)"><span style="flex:1;font:400 13px 'Geist',sans-serif;color:var(--ink)">R. Dizon</span><span style="width:150px;flex:none;font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">64 days</span><span style="width:140px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">524,369.76</span></div>
+<div style="display:flex;align-items:center;gap:12px;padding:10px 14px"><span style="flex:1;font:400 12.5px 'Geist',sans-serif;color:var(--ink-2)">Total</span><span style="width:150px;flex:none"></span><span style="width:140px;flex:none;text-align:right;font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">1,310,924.40</span></div>
+</div>
+</div>
+
+<div style="display:flex;flex-direction:column;gap:14px">
+<span style="font:500 11px 'Geist',sans-serif;letter-spacing:.03em;color:var(--ink-2);text-transform:uppercase">Multi-currency</span>
+<div style="display:grid;grid-template-columns:1.3fr .8fr 1fr 1.4fr;gap:14px;align-items:end">
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Original amount</span><input value="{{ fxAmt }}" onInput="{{ setAmt }}" style="{{ monoInputStyle }};text-align:right" style-focus="border-color:var(--ink);box-shadow:var(--focus)"></label>
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Currency</span><select style="{{ inputStyle }}" style-focus="border-color:var(--ink);box-shadow:var(--focus)"><option>EUR</option><option>USD</option><option>JPY</option></select></label>
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Rate</span><input value="{{ fxRate }}" onInput="{{ setRate }}" style="{{ monoInputStyle }};text-align:right" style-focus="border-color:var(--ink);box-shadow:var(--focus)"></label>
+<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px 'Geist',sans-serif;color:var(--ink-2)">Rate source</span><input value="BSP · 15 Jun 2026" style="{{ inputStyle }}" style-focus="border-color:var(--ink);box-shadow:var(--focus)"></label>
+</div>
+<div style="display:flex;align-items:center;justify-content:space-between;padding:16px 18px;background:var(--fill);border-radius:12px">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.1em;color:var(--ink-2);text-transform:uppercase">Computed PHP</span>
+<span style="font:200 30px/1 'Geist',sans-serif;letter-spacing:-.02em">₱ {{ phpComputed }}</span>
+</div>
+</div>
+
+</div>
+</div>
+</div>
+</sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = {
+    theme: 'light', selected: null, capture: false,
+    files: [], dragging: false,
+    fx: { amt: '21,480.00', rate: '61.03' },
+    filters: { category: [], period: [], stakeholder: [], status: [], person: [] },
+    collapsed: ['category', 'stakeholder', 'person']
+  };
+  _fid = 0; _typer = null;
+
+  componentDidMount() {
+    this._key = (e) => {
+      if (e.key === 'Escape') {
+        if (this.state.capture) this.setState({ capture: false });
+        else if (this.state.selected) this.setState({ selected: null });
+      }
+    };
+    document.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount() {
+    document.removeEventListener('keydown', this._key);
+    if (this._typer) clearInterval(this._typer);
+  }
+
+  _fmt(n) { if (!isFinite(n)) return '0.00'; return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  _num(s) { return parseFloat(String(s).replace(/[^0-9.]/g, '')) || 0; }
+  _hash() { const h = '0123456789abcdef'; let s = ''; for (let i = 0; i < 16; i++) s += h[Math.floor(Math.random() * 16)]; return s; }
+  _short(n) { return n >= 1e6 ? '₱ ' + (n / 1e6).toFixed(1) + 'M' : '₱ ' + this._fmt(n); }
+
+  setTheme(t) { this.setState({ theme: t }); }
+  toggleCollapse(k) { this.setState(s => ({ collapsed: s.collapsed.includes(k) ? s.collapsed.filter(x => x !== k) : [...s.collapsed, k] })); }
+  toggleFilter(g, v) { this.setState(s => { const cur = s.filters[g]; const nx = cur.includes(v) ? cur.filter(x => x !== v) : [...cur, v]; return { filters: { ...s.filters, [g]: nx } }; }); }
+  clearFilters() { this.setState({ filters: { category: [], period: [], stakeholder: [], status: [], person: [] } }); }
+  openDrawer(r) { this.setState({ selected: r }); }
+  closeDrawer() { this.setState({ selected: null }); }
+  openCapture() { this.setState({ capture: true, files: [] }); }
+  closeCapture() { this.setState({ capture: false }); }
+
+  onDragOver(e) { e.preventDefault(); if (!this.state.dragging) this.setState({ dragging: true }); }
+  onDragLeave(e) { e.preventDefault(); this.setState({ dragging: false }); }
+  onDrop(e) {
+    e.preventDefault(); this.setState({ dragging: false });
+    const fs = e.dataTransfer && e.dataTransfer.files;
+    if (fs && fs.length) { for (const f of fs) this.addFile(f.name); } else { this.simulate(); }
+  }
+  simulate() {
+    const names = ['Timesheet_ROW7_2026-03.pdf', 'Payroll_register_Mar2026.xlsx', 'Site_diary_extract.pdf', 'Approval_memo_MR.pdf', 'Rate_certificate_BSP.pdf'];
+    this.addFile(names[this.state.files.length % names.length]);
+  }
+  onDropKey(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.simulate(); } }
+  addFile(name) {
+    const f = { id: ++this._fid, name, hash: this._hash(), typed: 0, mount: false };
+    this.setState(s => ({ files: [...s.files, f] }));
+    requestAnimationFrame(() => this.setState(s => ({ files: s.files.map(x => x.id === f.id ? { ...x, mount: true } : x) })));
+    if (!this._typer) this._typer = setInterval(() => this._tick(), 24);
+  }
+  _tick() {
+    this.setState(s => {
+      let any = false;
+      const files = s.files.map(f => { if (f.typed < f.hash.length) { any = true; return { ...f, typed: f.typed + 1 }; } return f; });
+      if (!any && this._typer) { clearInterval(this._typer); this._typer = null; }
+      return { files };
+    });
+  }
+  removeFile(id) { this.setState(s => ({ files: s.files.filter(f => f.id !== id) })); }
+  setFx(k, v) { this.setState(s => ({ fx: { ...s.fx, [k]: v } })); }
+
+  _seg(active) {
+    return active
+      ? 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:4px 12px;border-radius:999px;background:var(--fill-2);color:var(--ink)'
+      : 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:4px 12px;border-radius:999px;color:var(--ink-2)';
+  }
+
+  _statusMeta(st) {
+    if (st === 'partial') return { color: 'var(--partial)', dot: true };
+    if (st === 'critical') return { color: 'var(--critical)', dot: true };
+    if (st === 'pending') return { color: 'var(--ink-2)', dot: true };
+    return { color: 'var(--ink-2)', dot: false };
+  }
+
+  _entries() {
+    return [
+      { ref: 'ENT-2026-00411', code: '5.2.1.1', cat: 'Indirect Personnel', period: '2026-03', dept: 'Finance', persons: 'M. Reyes', personList: ['M. Reyes'], amount: '1,310,924.40', evi: 4, status: 'complete', statusLabel: 'Complete', desc: 'Standby site management during ROW-7 access restriction.', claim: 'CE-02', evidence: [{ name: 'Timesheet_ROW7_2026-03.pdf', hash: '9f2a7c14b8e0d3a1', state: 'verified' }, { name: 'Payroll_register_Mar.xlsx', hash: '4c81e2f9a7b30d55', state: 'verified' }], trail: { subBy: 'M. Reyes', subOn: '02 Apr 2026', valBy: 'M. Reyes', valOn: '05 Apr 2026' } },
+      { ref: 'ENT-2026-00412', code: '5.2.1.2', cat: 'Site Staff', period: '2026-02', dept: 'HR', persons: 'L. Cruz', personList: ['L. Cruz'], amount: '2,845,110.00', evi: 6, status: 'complete', statusLabel: 'Complete', desc: 'Retained site staff salaries during prolongation.', claim: 'CE-02', evidence: [{ name: 'Staff_roster_Feb.xlsx', hash: '7b1093ac52ef8d20', state: 'verified' }, { name: 'Contracts_batch.pdf', hash: 'a0f4419e7cc21b83', state: 'verified' }], trail: { subBy: 'L. Cruz', subOn: '03 Mar 2026', valBy: 'M. Reyes', valOn: '07 Mar 2026' } },
+      { ref: 'ENT-2026-00413', code: '5.2.1.3', cat: 'Accommodation & Welfare', period: '2026-04', dept: 'Site Admin', persons: 'J. Tan', personList: ['J. Tan'], amount: '731,500.00', evi: 3, status: 'partial', statusLabel: 'Partial', desc: 'Camp accommodation and welfare extended 148 days.', claim: 'CE-02', evidence: [{ name: 'Camp_invoice_Apr.pdf', hash: '2e77a9c410bf6d38', state: 'verified' }, { name: 'Utilities_receipt.pdf', hash: '', state: 'pending' }], trail: { subBy: 'J. Tan', subOn: '02 May 2026', valBy: null, valOn: null } },
+      { ref: 'ENT-2026-00414', code: '5.2.1.4', cat: 'Plant & Equipment', period: '2026-05', dept: 'Procurement', persons: 'R. Dizon', personList: ['R. Dizon'], amount: '8,204,760.50', evi: 9, status: 'complete', statusLabel: 'Complete', desc: 'Idle plant standby, tower cranes and access equipment.', claim: 'CE-02', fx: { amt: '21,480.00', cur: 'EUR', rate: '61.03', src: 'BSP · 15 Jun 2026', php: '1,310,924.40' }, evidence: [{ name: 'Plant_offhire_log.xlsx', hash: '55c1e0a9f2748bd6', state: 'verified' }, { name: 'EUR_invoice_9931.pdf', hash: 'c93a17e0b45f2a81', state: 'verified' }], trail: { subBy: 'R. Dizon', subOn: '02 Jun 2026', valBy: 'M. Reyes', valOn: '06 Jun 2026' } },
+      { ref: 'ENT-2026-00415', code: '5.2.1.5', cat: 'Temporary Works', period: '2026-03', dept: 'Procurement', persons: 'R. Dizon', personList: ['R. Dizon'], amount: '3,190,000.00', evi: 5, status: 'complete', statusLabel: 'Complete', desc: 'Temporary works maintained through restricted access.', claim: 'CE-02', evidence: [{ name: 'TW_maintenance_log.pdf', hash: '81b4402fac9e7d13', state: 'verified' }], trail: { subBy: 'R. Dizon', subOn: '01 Apr 2026', valBy: 'M. Reyes', valOn: '04 Apr 2026' } },
+      { ref: 'ENT-2026-00416', code: '5.2.1.6', cat: 'Site Establishment', period: '2026-02', dept: 'Site Admin', persons: 'J. Tan', personList: ['J. Tan'], amount: '1,048,220.75', evi: 2, status: 'complete', statusLabel: 'Complete', desc: 'Site offices and establishment kept operational.', claim: null, evidence: [{ name: 'Office_lease_Feb.pdf', hash: '3fa7c1900e2b84d5', state: 'verified' }], trail: { subBy: 'J. Tan', subOn: '03 Mar 2026', valBy: 'M. Reyes', valOn: '06 Mar 2026' } },
+      { ref: 'ENT-2026-00417', code: '5.2.1.7', cat: 'Utilities & Services', period: '2026-04', dept: 'IT', persons: 'K. Dizon', personList: ['K. Dizon'], amount: '486,930.20', evi: 3, status: 'partial', statusLabel: 'Partial', desc: 'Network, comms and utilities during extension.', claim: null, evidence: [{ name: 'Telco_billing_Apr.pdf', hash: '6d20a9f7c1108b34', state: 'verified' }, { name: 'Power_bill_Apr.pdf', hash: '', state: 'pending' }], trail: { subBy: 'K. Dizon', subOn: '02 May 2026', valBy: null, valOn: null } },
+      { ref: 'ENT-2026-00418', code: '5.2.1.8', cat: 'Insurances & Bonds', period: '2026-01', dept: 'Finance', persons: 'M. Reyes', personList: ['M. Reyes'], amount: '2,100,000.00', evi: 4, status: 'sealed', statusLabel: 'Sealed', desc: 'Extended insurance and bond premiums, period sealed.', claim: 'CE-02', evidence: [{ name: 'Insurance_endorsement.pdf', hash: '0aa4c1937e2f65d8', state: 'verified' }, { name: 'Bond_extension.pdf', hash: 'b81207fe9ac4310d', state: 'verified' }], trail: { subBy: 'M. Reyes', subOn: '12 Feb 2026', valBy: 'M. Reyes', valOn: '30 Jun 2026' } },
+      { ref: 'ENT-2026-00419', code: '5.2.1.9', cat: 'Head Office Overhead', period: '2026-06', dept: 'Finance', persons: 'P. Villanueva', personList: ['P. Villanueva'], amount: '5,672,415.00', evi: 0, status: 'critical', statusLabel: 'Critical', desc: 'Head office overhead contribution, Hudson formula.', claim: 'CE-02', evidence: [], trail: { subBy: 'P. Villanueva', subOn: '01 Jul 2026', valBy: null, valOn: null } },
+      { ref: 'ENT-2026-00420', code: '5.2.1.10', cat: 'Finance Charges', period: '2026-05', dept: 'Finance', persons: 'A. Santos', personList: ['A. Santos'], amount: '1,904,338.60', evi: 2, status: 'complete', statusLabel: 'Complete', desc: 'Financing cost on delayed certification.', claim: null, evidence: [{ name: 'Loan_statement_May.pdf', hash: 'e21f7a0c9b4438d1', state: 'verified' }], trail: { subBy: 'A. Santos', subOn: '02 Jun 2026', valBy: 'M. Reyes', valOn: '05 Jun 2026' } },
+      { ref: 'ENT-2026-00421', code: '5.2.1.11', cat: 'Profit', period: '2026-06', dept: 'Finance', persons: 'M. Reyes', personList: ['M. Reyes'], amount: '12,090,540.00', evi: 1, status: 'pending', statusLabel: 'Pending', desc: 'Profit on prolongation cost, awaiting second validation.', claim: 'CE-02', evidence: [{ name: 'Profit_computation.xlsx', hash: '7c0a41e9f2b83d16', state: 'verified' }], trail: { subBy: 'M. Reyes', subOn: '01 Jul 2026', valBy: null, valOn: null } }
+    ];
+  }
+
+  _groups() {
+    const F = this.state.filters, col = this.state.collapsed;
+    const dotFor = (l) => l === 'Partial' ? 'var(--partial)' : l === 'Critical' ? 'var(--critical)' : l === 'Pending' ? 'var(--ink-3)' : null;
+    const cats = this._entries().map(e => ({ v: e.code, label: e.code, sub: e.cat }));
+    const defs = [
+      { key: 'category', label: 'Category', items: cats },
+      { key: 'period', label: 'Period', items: ['2026-01', '2026-02', '2026-03', '2026-04', '2026-05', '2026-06'].map(p => ({ v: p, label: p, sub: '' })) },
+      { key: 'stakeholder', label: 'Stakeholder', items: ['Finance', 'HR', 'Procurement', 'Site Admin', 'IT'].map(p => ({ v: p, label: p, sub: '' })) },
+      { key: 'status', label: 'Status', items: ['Complete', 'Partial', 'Critical', 'Pending', 'Sealed'].map(p => ({ v: p, label: p, sub: '', dot: dotFor(p) })) },
+      { key: 'person', label: 'Person', items: ['M. Reyes', 'R. Dizon', 'K. Dizon', 'A. Santos', 'L. Cruz', 'J. Tan', 'P. Villanueva'].map(p => ({ v: p, label: p, sub: '' })) }
+    ];
+    return defs.map(g => ({
+      label: g.label,
+      open: !col.includes(g.key),
+      chev: col.includes(g.key) ? '+' : '\u2212',
+      active: F[g.key].length,
+      toggleCol: () => this.toggleCollapse(g.key),
+      items: g.items.map(it => ({
+        label: it.label, sub: it.sub || '',
+        dot: !!it.dot, dotColor: it.dot || 'transparent',
+        checked: F[g.key].includes(it.v),
+        toggle: () => this.toggleFilter(g.key, it.v),
+        box: 'width:15px;height:15px;border-radius:4px;flex:none;display:flex;align-items:center;justify-content:center;' + (F[g.key].includes(it.v) ? 'background:var(--ink);border:1px solid var(--ink)' : 'background:transparent;border:1px solid var(--hair-strong)')
+      }))
+    }));
+  }
+
+  renderVals() {
+    const all = this._entries();
+    const F = this.state.filters;
+    const pass = (e) => (!F.category.length || F.category.includes(e.code))
+      && (!F.period.length || F.period.includes(e.period))
+      && (!F.stakeholder.length || F.stakeholder.includes(e.dept))
+      && (!F.status.length || F.status.includes(e.statusLabel))
+      && (!F.person.length || e.personList.some(p => F.person.includes(p)));
+    const filtered = all.filter(pass);
+    const total = filtered.reduce((a, e) => a + this._num(e.amount), 0);
+
+    const entries = filtered.map(e => {
+      const m = this._statusMeta(e.status);
+      return {
+        ref: e.ref, desc: e.desc, code: e.code, period: e.period, persons: e.persons, amount: e.amount,
+        eviLabel: String(e.evi), eviColor: e.evi === 0 ? 'var(--critical)' : 'var(--ink-2)',
+        statusLabel: e.statusLabel, statusColor: m.color, dot: m.dot,
+        rowStyle: 'display:flex;align-items:center;gap:16px;padding:13px 28px;border-bottom:1px solid var(--hair);cursor:pointer',
+        open: () => this.openDrawer(e.ref)
+      };
+    });
+
+    const s = all.find(e => e.ref === this.state.selected) || null;
+    let sel = null;
+    if (s) {
+      const m = this._statusMeta(s.status);
+      sel = {
+        ref: s.ref, desc: s.desc, code: s.code, cat: s.cat, period: s.period, amount: s.amount,
+        statusLabel: s.statusLabel, statusColor: m.color, dot: m.dot,
+        eviLabel: String(s.evi), noEvidence: s.evi === 0,
+        hasFx: !!s.fx, fxAmt: s.fx && s.fx.amt, fxCur: s.fx && s.fx.cur, fxRate: s.fx && s.fx.rate, fxSrc: s.fx && s.fx.src, fxPhp: s.fx && s.fx.php,
+        evidence: s.evidence.map(f => ({
+          name: f.name,
+          hashLabel: f.state === 'pending' ? 'awaiting hash' : 'sha256 · ' + f.hash,
+          stateColor: f.state === 'verified' ? 'var(--ink-2)' : 'var(--partial)',
+          stateLabel: f.state === 'verified' ? 'verified' : 'pending'
+        })),
+        subBy: s.trail.subBy, subOn: s.trail.subOn,
+        valColor: s.trail.valBy ? 'var(--success)' : 'var(--partial)',
+        valText: s.trail.valBy ? ('Validated by ' + s.trail.valBy) : 'Pending second validation',
+        valOn: s.trail.valOn || '',
+        hasClaim: !!s.claim, claim: s.claim
+      };
+    }
+
+    const files = this.state.files.map(f => ({
+      name: f.name, hashShown: f.hash.slice(0, f.typed), typing: f.typed < f.hash.length, done: f.typed >= f.hash.length,
+      tick: f.typed >= f.hash.length ? 'var(--success)' : 'var(--ink-3)',
+      stateColor: f.typed >= f.hash.length ? 'var(--ink-2)' : 'var(--ink-3)',
+      stateLabel: f.typed >= f.hash.length ? 'hashed' : 'reading',
+      remove: () => this.removeFile(f.id),
+      cardStyle: 'transition:opacity .18s ease-out, transform .18s ease-out;' + (f.mount ? 'opacity:1;transform:none' : 'opacity:0;transform:translateY(7px)')
+    }));
+
+    const inputStyle = 'appearance:none;-webkit-appearance:none;width:100%;background:var(--fill);border:1px solid var(--hair-strong);border-radius:8px;color:var(--ink);font:400 13px \'Geist\',sans-serif;padding:9px 11px';
+    const monoInputStyle = 'appearance:none;-webkit-appearance:none;width:100%;background:var(--fill);border:1px solid var(--hair-strong);border-radius:8px;color:var(--ink);font:400 13px \'Geist Mono\',monospace;padding:9px 11px';
+    const dropBase = 'display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:40px 24px;border-radius:18px;cursor:pointer;transition:background .16s ease-out, border-color .16s ease-out;';
+    const dropStyle = dropBase + (this.state.dragging
+      ? 'border:1.5px solid var(--ink);background:var(--fill)'
+      : 'border:1.5px dashed var(--hair-strong);background:transparent');
+
+    return {
+      theme: this.state.theme,
+      segLight: this._seg(this.state.theme === 'light'),
+      segDark: this._seg(this.state.theme === 'dark'),
+      setLight: () => this.setTheme('light'), setDark: () => this.setTheme('dark'),
+      entries, count: filtered.length, totalShort: this._short(total),
+      filterGroups: this._groups(),
+      hasFilters: Object.values(F).some(a => a.length), activeCount: Object.values(F).reduce((a, x) => a + x.length, 0),
+      clearFilters: () => this.clearFilters(),
+      drawerOpen: !!s, sel, closeDrawer: () => this.closeDrawer(),
+      capture: this.state.capture, openCapture: () => this.openCapture(), closeCapture: () => this.closeCapture(),
+      dragging: this.state.dragging, dropStyle, dropTitle: this.state.dragging ? 'Release to capture' : 'Drop evidence here',
+      onDragOver: (e) => this.onDragOver(e), onDragLeave: (e) => this.onDragLeave(e), onDrop: (e) => this.onDrop(e), onDropKey: (e) => this.onDropKey(e), simulate: () => this.simulate(),
+      hasFiles: this.state.files.length > 0, files,
+      inputStyle, monoInputStyle,
+      fxAmt: this.state.fx.amt, fxRate: this.state.fx.rate,
+      setAmt: (e) => this.setFx('amt', e.target.value), setRate: (e) => this.setFx('rate', e.target.value),
+      phpComputed: this._fmt(this._num(this.state.fx.amt) * this._num(this.state.fx.rate))
+    };
+  }
+}
+</script>
+</body>
+</html>

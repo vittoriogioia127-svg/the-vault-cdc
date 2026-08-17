@@ -1,0 +1,66 @@
+/* ============================================================
+   THE VAULT - DESIGN TOKENS (FROZEN)
+   Direction: Showroom. Do not edit values. Do not add tokens.
+   This file is the only source of colors, type and state
+   colors for every Vault surface.
+   ============================================================ */
+
+/* ---------- Light (default) ---------- */
+:root{
+  --base:#FCFCFB;
+  --ink:#1D1D1F;
+  --ink-2:#86868B;
+  --ink-3:#B0B0B4;
+  --fill:#F4F4F2;
+  --fill-2:#EEEEEB;
+  --hair:rgba(29,29,31,.08);
+  --hair-strong:rgba(29,29,31,.12);
+  --hair-soft:rgba(29,29,31,.05);
+  --critical:#D9503F;
+  --partial:#BD7D22;
+  --success:#2E9E58;
+  --pill-bg:#1D1D1F;
+  --pill-ink:#FCFCFB;
+  --sans:'Geist',sans-serif;
+  --mono:'Geist Mono',monospace;
+}
+
+/* ---------- Dark (token-for-token) ---------- */
+[data-theme="dark"]{
+  --base:#101012;
+  --ink:#F5F5F7;
+  --ink-2:#98989D;
+  --ink-3:#636368;
+  --fill:#1B1B1D;
+  --fill-2:#212124;
+  --hair:rgba(245,245,247,.08);
+  --hair-strong:rgba(245,245,247,.14);
+  --hair-soft:rgba(245,245,247,.05);
+  --critical:#E5675B;
+  --partial:#D9A03C;
+  --success:#41BE73;
+  --pill-bg:#F5F5F7;
+  --pill-ink:#101012;
+}
+
+/* ============================================================
+   USAGE LAWS (frozen, enforce on every screen)
+   ------------------------------------------------------------
+   1. Muted = complete. A complete state renders in --ink-3 on
+      --base or --fill. It never carries color.
+   2. Color marks only the exception: --partial (amber) for a
+      missing condition, --critical (red) for absent evidence
+      or compromised integrity. --success is reserved for
+      transient confirmations, never for resting states.
+   3. One black pill maximum per screen: background --pill-bg,
+      text --pill-ink. It marks the single primary action or
+      the "Complete" gate. Everything else is quiet.
+   4. Hairlines only: borders and separators use --hair,
+      --hair-strong for emphasis, --hair-soft for whispers.
+      No shadows, no gradients, no glow.
+   5. Type: --sans (Geist) for UI and prose. --mono (Geist
+      Mono) for codes, amounts, hashes, timestamps, counters.
+      Large numerals: weight 200, tabular-nums.
+   6. Light is the default theme. Dark is token-for-token via
+      [data-theme="dark"] on the html element.
+   ============================================================ */

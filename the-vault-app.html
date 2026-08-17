@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Vault · App</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+/* ---------- frozen tokens (verbatim from spec/vault-tokens.css) ---------- */
+:root{
+  --base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;
+  --fill:#F4F4F2;--fill-2:#EEEEEB;
+  --hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);
+  --critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;
+  --pill-bg:#1D1D1F;--pill-ink:#FCFCFB;
+  --sans:'Geist',sans-serif;--mono:'Geist Mono',monospace;
+}
+[data-theme="dark"]{
+  --base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;
+  --fill:#1B1B1D;--fill-2:#212124;
+  --hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);
+  --critical:#E5675B;--partial:#D9A03C;--success:#41BE73;
+  --pill-bg:#F5F5F7;--pill-ink:#101012;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--base);color:var(--ink);font-family:var(--sans)}
+::selection{background:var(--hair-strong)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-3)}
+*{scrollbar-width:thin;scrollbar-color:var(--hair-strong) transparent}
+input,select,textarea{font-family:var(--sans);outline:none;color:inherit}
+input::placeholder,textarea::placeholder{color:var(--ink-3)}
+
+.app{width:1440px;height:100vh;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:var(--base)}
+.topbar{height:52px;flex:none;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid var(--hair)}
+.tb-chip{display:flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;background:var(--fill);font:500 12px var(--mono);color:var(--ink-2);cursor:default}
+.tb-search{display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;border-radius:999px;background:var(--fill);color:var(--ink-3);width:220px;cursor:text}
+.tb-icon{width:30px;height:30px;border-radius:999px;display:flex;align-items:center;justify-content:center;color:var(--ink-2);cursor:pointer;position:relative}
+.tb-icon:hover{background:var(--fill)}
+.badge{position:absolute;top:5px;right:6px;width:6px;height:6px;border-radius:999px;background:var(--critical)}
+.avatar{width:28px;height:28px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px var(--mono);color:var(--ink-2)}
+
+.body{flex:1;display:flex;min-height:0}
+.rail{width:216px;flex:none;border-right:1px solid var(--hair);display:flex;flex-direction:column;min-height:0}
+.rail.collapsed{width:60px}
+.rail-scroll{flex:1;overflow-y:auto;padding:12px 0;min-height:0}
+.rail-item{display:flex;align-items:center;gap:12px;height:38px;padding:0 18px;cursor:pointer;color:var(--ink-2);white-space:nowrap}
+.rail-item:hover{color:var(--ink)}
+.rail-item.active{color:var(--ink)}
+.rail-item.active .rail-bar{opacity:1}
+.rail-bar{position:absolute;left:0;width:2px;height:20px;background:var(--ink);border-radius:0 2px 2px 0;opacity:0}
+.rail-item{position:relative}
+.rail .lbl{font:500 11px var(--mono);letter-spacing:.04em;text-transform:uppercase}
+.rail.collapsed .lbl,.rail.collapsed .rail-head,.rail.collapsed .rs-role{display:none}
+.rail-sep{height:1px;background:var(--hair);margin:10px 18px}
+.rail-head{font:500 9.5px var(--mono);letter-spacing:.14em;color:var(--ink-3);padding:6px 18px 4px;text-transform:uppercase}
+.rail-foot{flex:none;border-top:1px solid var(--hair);padding:12px}
+.rs-label{font:500 9.5px var(--mono);letter-spacing:.14em;color:var(--ink-3);padding:0 6px 8px;text-transform:uppercase}
+.rail.collapsed .rs-label{display:none}
+.seg{display:flex;flex-wrap:wrap;gap:2px;background:var(--fill);border:1px solid var(--hair);border-radius:12px;padding:3px}
+.seg button{font:500 10px var(--mono);letter-spacing:.03em;color:var(--ink-2);background:transparent;border:none;padding:6px 8px;border-radius:9px;cursor:pointer;flex:1 0 auto}
+.seg button.on{background:var(--fill-2);color:var(--ink)}
+.rail.collapsed .rail-foot .seg{flex-direction:column}
+
+.main{flex:1;min-width:0;overflow:auto;position:relative}
+.view{animation:vfade .15s ease}
+@keyframes vfade{from{opacity:0}to{opacity:1}}
+.wrap{padding:26px 40px 60px}
+
+/* shared bits */
+.pill{display:inline-flex;align-items:center;justify-content:center;height:40px;padding:0 22px;border-radius:999px;background:var(--pill-bg);color:var(--pill-ink);font:500 13px var(--sans);cursor:pointer;border:none}
+.pill.sm{height:34px;padding:0 16px;font-size:12.5px}
+.pill.disabled{opacity:.32;cursor:not-allowed}
+.qbtn{font:500 13px var(--sans);color:var(--ink-2);cursor:pointer;padding:8px 6px}
+.qbtn:hover{color:var(--ink)}
+.sbtn{display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:999px;background:var(--fill);color:var(--ink);font:500 12.5px var(--sans);cursor:pointer}
+.sbtn:hover{background:var(--fill-2)}
+.eyebrow{font:500 11px var(--mono);letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase}
+.h1{font:600 26px/1.1 var(--sans);letter-spacing:-.02em}
+.h2{font:600 15px var(--sans);letter-spacing:-.01em}
+.num{font:200 44px/1 var(--sans);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.sub{font:400 13px var(--sans);color:var(--ink-2)}
+.mono{font:400 12px var(--mono);color:var(--ink-2)}
+.chip{display:inline-flex;align-items:center;gap:6px;font:500 10.5px var(--sans);padding:3px 10px;border-radius:999px}
+.chip.crit{color:var(--critical);background:rgba(217,80,63,.1)}
+.chip.part{color:var(--partial);background:rgba(189,125,34,.1)}
+.chip.seal{color:var(--ink-2);background:var(--fill)}
+.dot{width:6px;height:6px;border-radius:999px;flex:none}
+.card{border:1px solid var(--hair);border-radius:16px;padding:22px 24px}
+.tag{font:400 10.5px var(--mono);color:var(--ink-2);border:1px solid var(--hair-strong);padding:3px 10px;border-radius:999px;white-space:nowrap}
+.trow{display:flex;align-items:center;gap:14px;padding:12px 4px;border-top:1px solid var(--hair)}
+.thead{display:flex;align-items:center;gap:14px;padding:6px 4px;border-bottom:1px solid var(--hair)}
+.th{font:500 10px var(--mono);letter-spacing:.1em;color:var(--ink-3);text-transform:uppercase}
+.amt{font:500 12.5px var(--mono);color:var(--ink);font-variant-numeric:tabular-nums;text-align:right}
+.kpi-num{font:200 44px/1 var(--sans);letter-spacing:-.03em;font-variant-numeric:tabular-nums}
+.check{animation:cdis 0s linear 2s forwards}
+@keyframes cdis{to{opacity:0}}
+.skel{background:var(--fill-2);border-radius:6px}
+.modal-scrim{position:absolute;inset:0;background:rgba(0,0,0,.18);z-index:30;display:flex;align-items:center;justify-content:center}
+.modal{width:520px;background:var(--base);border:1px solid var(--hair-strong);border-radius:18px;padding:26px 28px}
+.inp{width:100%;background:var(--fill);border:1px solid var(--hair-strong);border-radius:8px;color:var(--ink);font:400 13px var(--sans);padding:10px 12px}
+.inp:focus{border-color:var(--ink)}
+textarea.inp{resize:vertical}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <div class="topbar" id="topbar"></div>
+  <div class="body">
+    <div class="rail" id="rail"></div>
+    <div class="main" id="main"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ============================ persisted prefs ============================ */
+var LS_THEME='vault-app-theme', LS_ROLE='vault-app-role';
+var theme='light', role='consolidator';
+try{var t=localStorage.getItem(LS_THEME); if(t==='dark'||t==='light') theme=t;}catch(e){}
+try{var r=localStorage.getItem(LS_ROLE); if(r&&ROLES_OK(r)) role=r;}catch(e){}
+function ROLES_OK(r){return ['contributor','validator','consolidator','auditor','reader','admin'].indexOf(r)>=0;}
+
+/* ephemeral UI state (in-session only) */
+var ui={ homeStage:'owed', gapOpen:false, validated:false, drawer:null, sealed:false,
+         resolved:false, profile:'notice', exported:false, unsealed:false, notified:false,
+         requestSent:false, manualStage:'form', railCollapsed:false, kpiDone:false };
+
+/* ============================ personas & roles ============================ */
+var ROLES={
+  contributor:{name:'A. Cruz', sub:'Contributor · Account', ini:'AC', landing:'#/home'},
+  validator:  {name:'R. Santos', sub:'Department validator', ini:'RS', landing:'#/queue'},
+  consolidator:{name:'M. Reyes', sub:'Consolidator', ini:'MR', landing:'#/cockpit'},
+  auditor:    {name:'L. Navarro', sub:'Auditor', ini:'LN', landing:'#/ledger'},
+  reader:     {name:'P. Aquino', sub:'Reader', ini:'PA', landing:'#/home'},
+  admin:      {name:'R. Dizon', sub:'Admin', ini:'RD', landing:'#/admin/users'}
+};
+var ROLE_ORDER=['contributor','validator','consolidator','auditor','reader','admin'];
+var ROLE_SHORT={contributor:'Contrib',validator:'Validator',consolidator:'Consol',auditor:'Auditor',reader:'Reader',admin:'Admin'};
+
+/* ============================ icons (16px, 1.5px, currentColor) ============================ */
+function ic(n){
+  var s='width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"';
+  var P={
+    process:'<circle cx="5" cy="12" r="2"/><circle cx="19" cy="6" r="2"/><circle cx="19" cy="18" r="2"/><path d="M7 12h5M12 12l5-5M12 12l5 5"/>',
+    home:'<path d="M4 11l8-6 8 6"/><path d="M6 10v9h12v-9"/>',
+    cockpit:'<rect x="4" y="4" width="7" height="7" rx="1"/><rect x="13" y="4" width="7" height="7" rx="1"/><rect x="4" y="13" width="7" height="7" rx="1"/><rect x="13" y="13" width="7" height="7" rx="1"/>',
+    queue:'<path d="M4 7l2 2 3-3"/><path d="M4 16l2 2 3-3"/><path d="M12 8h8M12 17h8"/>',
+    ledger:'<path d="M4 6h16M4 10h16M4 14h16M4 18h16"/>',
+    periods:'<rect x="4" y="5" width="16" height="16" rx="2"/><path d="M4 9h16M8 3v4M16 3v4"/>',
+    claims:'<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h6"/><circle cx="17" cy="15" r="4"/><path d="M17 13.5V15l1 .8"/>',
+    evidence:'<path d="M12 3l7 3v5c0 4-3 7-7 8-4-1-7-4-7-8V6z"/>',
+    reports:'<path d="M5 20V10M12 20V4M19 20v-7"/>',
+    admin:'<path d="M4 8h10M18 8h2M4 16h2M10 16h10"/><circle cx="16" cy="8" r="2"/><circle cx="8" cy="16" r="2"/>',
+    search:'<circle cx="11" cy="11" r="6"/><path d="M20 20l-3.5-3.5"/>',
+    bell:'<path d="M18 8a6 6 0 1 0-12 0c0 6-2 8-2 8h16s-2-2-2-8"/><path d="M10 20a2 2 0 0 0 4 0"/>',
+    user:'<circle cx="12" cy="9" r="3.2"/><path d="M6 19a6 6 0 0 1 12 0"/>',
+    chevron:'<path d="M9 6l6 6-6 6"/>',
+    lock:'<rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/>'
+  };
+  return '<svg '+s+'>'+(P[n]||'')+'</svg>';
+}
+var MARK='<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>';
+
+/* ============================ nav model ============================ */
+/* section access per the section-2 visibility matrix */
+var CAN={
+  process:['contributor','validator','consolidator','auditor','reader','admin'],
+  home:['contributor','validator','consolidator','auditor','reader','admin'],
+  ledger:['contributor','validator','consolidator','auditor','reader','admin'],
+  periods:['contributor','validator','consolidator','auditor','admin'],
+  claims:['consolidator','auditor','admin'],
+  evidence:['contributor','validator','consolidator','auditor','admin'],
+  reports:['consolidator','auditor','reader','admin'],
+  admin:['admin']
+};
+/* concrete route -> owning section (for active state) */
+var ROUTE_SEC={
+  '#/process':'process',
+  '#/home':'home','#/home/manual':'home','#/cockpit':'home','#/queue':'home','#/queue/item':'home',
+  '#/ledger':'ledger',
+  '#/periods':'periods','#/periods/seal':'periods',
+  '#/claims':'claims','#/claims/eot001':'claims','#/claims/eot001/build':'claims','#/claims/eot001/v2':'claims','#/claims/eot001/submit':'claims',
+  '#/evidence':'evidence','#/reports':'reports',
+  '#/admin/users':'admin','#/admin/config':'admin'
+};
+/* route -> roles allowed to view it (matrix guard) */
+var ROUTE_ROLES={
+  '#/process':CAN.process,
+  '#/home':['contributor','reader'],'#/home/manual':['contributor'],
+  '#/cockpit':['consolidator'],
+  '#/queue':['validator'],'#/queue/item':['validator'],
+  '#/ledger':CAN.ledger,
+  '#/periods':CAN.periods,'#/periods/seal':['consolidator'],
+  '#/claims':['consolidator','auditor','admin'],
+  '#/claims/eot001':['consolidator','auditor'],
+  '#/claims/eot001/build':['consolidator'],'#/claims/eot001/v2':['consolidator'],'#/claims/eot001/submit':['consolidator'],
+  '#/evidence':CAN.evidence,'#/reports':CAN.reports,
+  '#/admin/users':['admin'],'#/admin/config':['admin']
+};
+
+/* rail item list per role */
+function railItems(r){
+  var homeRoute=ROLES[r].landing;
+  var items=[];
+  items.push({sec:'process',label:'Process',route:'#/process',icon:'process'});
+  if(r==='auditor'){
+    /* auditor lands on read-only ledger; no duplicate Home item */
+  } else if(r==='admin'){
+    /* admin home folds into Admin section (Config summary) */
+  } else {
+    items.push({sec:'home',label:'Home',route:homeRoute,icon:'home'});
+  }
+  if(CAN.ledger.indexOf(r)>=0) items.push({sec:'ledger',label:'Ledger',route:'#/ledger',icon:'ledger'});
+  if(CAN.periods.indexOf(r)>=0) items.push({sec:'periods',label:'Periods',route:'#/periods',icon:'periods'});
+  if(CAN.claims.indexOf(r)>=0) items.push({sec:'claims',label:'Claims',route:'#/claims',icon:'claims'});
+  if(CAN.evidence.indexOf(r)>=0) items.push({sec:'evidence',label:'Evidence',route:'#/evidence',icon:'evidence'});
+  if(CAN.reports.indexOf(r)>=0) items.push({sec:'reports',label:'Reports',route:'#/reports',icon:'reports'});
+  return items;
+}
+
+/* ============================ data (real taxonomy, frozen numbers) ============================ */
+/* cockpit matrix — ported from the demo; totals reconcile to KPIs (24 gaps) */
+var MX_G=[
+ ['1.1','Salary','370,224,245.88',[['1.1.1','Basic Salary',3,'336,410,556.20'],['1.1.2','13th Month',1,'19,700,879.68'],['1.1.4','Per Diem Allowance',2,'12,844,410.00'],['1.1.10','Phone Allowance',1,'1,268,400.00']]],
+ ['1.2','Contribution','89,696,484.16',[['1.2.1','SSS',2,'31,240,118.55'],['1.2.3','PHIC',2,'6,412,850.25'],['1.2.5','HDMF',2,'3,820,600.00'],['1.2.6','Withholding Tax',2,'48,222,915.36']]],
+ ['1.3','Fringe Benefit','85,650,503.83',[['1.3.1','Phone Bill',2,'934,280.10'],['1.3.4','Medical Insurance',2,'21,264,545.12'],['1.3.6','Accomodation Rental',3,'29,509,320.78'],['1.3.10','School Fees',2,'5,610,000.00'],['1.3.13','Flight',2,'14,530,220.40'],['1.3.14','Expenses Claim',3,'7,481,006.44'],['1.3.17','IT Cost (softwares)',2,'4,102,730.99'],['1.3.18','Training',2,'2,218,400.00']]]
+];
+var MX_MISS={'1.3.14':{2:1,3:1,6:2},'1.3.6':{3:2,6:1},'1.2.6':{3:1},'1.3.1':{4:1},'1.3.10':{4:1,6:1},'1.1.4':{4:1},'1.3.13':{5:2,6:1},'1.3.4':{5:1,6:1},'1.2.3':{5:1},'1.3.17':{5:1},'1.1.10':{5:1},'1.1.1':{6:1},'1.2.1':{6:1},'1.2.5':{6:1},'1.3.18':{6:1}};
+var MX_CRIT={'1.3.6':3,'1.3.13':5};
+
+/* claim lines (6) — sum reconciles to PHP 421,947,223.90 */
+var CLAIM_LINES=[
+ ['1.1.1','Basic Salary','2026-01 to 2026-06','time-related staff cost','ok','336,410,556.20'],
+ ['1.1.2','13th Month','2026-01 to 2026-06','computed accrual','ok','19,700,879.68'],
+ ['1.2.1','SSS','2026-01 to 2026-06','statutory add-on','ok','31,240,118.55'],
+ ['1.3.4','Medical Insurance','2026-01 to 2026-06','premiums extended by delay','ok','21,264,545.12'],
+ ['1.3.6','Accomodation Rental','2026-03','lease continued through window','miss','4,918,220.13'],
+ ['1.3.13','Flight','2026-02','rotation cycle extended','ok','8,412,904.22']
+];
+
+/* ledger rows — real taxonomy; nominative "persons" column is HR-isolated */
+var LEDGER=[
+ {ref:'ENT-2026-00612',code:'1.1.1',name:'Basic Salary',cat:'Salary',period:'2026-06',origin:'Local',cur:'PHP',amt:'9,988,140.62',persons:'58 staff',evi:4,st:'complete',claim:'EOT001'},
+ {ref:'ENT-2026-00613',code:'1.1.2',name:'13th Month',cat:'Salary',period:'2026-06',origin:'Local',cur:'PHP',amt:'1,268,400.00',persons:'58 staff',evi:3,st:'complete',claim:'EOT001'},
+ {ref:'ENT-2026-00614',code:'1.2.1',name:'SSS',cat:'Contribution',period:'2026-06',origin:'Local',cur:'PHP',amt:'2,880,000.00',persons:'58 staff',evi:2,st:'complete',claim:null},
+ {ref:'ENT-2026-00341',code:'1.3.6',name:'Accomodation Rental',cat:'Fringe Benefit',period:'2026-03',origin:'HBased',cur:'PHP',amt:'4,918,220.13',persons:'R. Santos +3',evi:0,st:'critical',claim:'EOT001'},
+ {ref:'ENT-2026-00505',code:'1.3.13',name:'Flight',cat:'Fringe Benefit',period:'2026-05',origin:'COrigin',cur:'USD',amt:'8,412,904.22',persons:'12 staff',evi:2,st:'partial',claim:'EOT001',fx:{amt:'146,780.00',cur:'USD',rate:'57.32',src:'BSP · 15 Jun 2026',php:'8,412,904.22'}},
+ {ref:'ENT-2026-00448',code:'1.3.4',name:'Medical Insurance',cat:'Fringe Benefit',period:'2026-04',origin:'Local',cur:'PHP',amt:'21,264,545.12',persons:'58 staff',evi:5,st:'complete',claim:'EOT001'},
+ {ref:'ENT-2026-00619',code:'1.3.10',name:'School Fees',cat:'Fringe Benefit',period:'2026-06',origin:'Mainby',cur:'EUR',amt:'5,610,000.00',persons:'M. Reyes',evi:0,st:'partial',claim:null},
+ {ref:'ENT-2026-00620',code:'1.2.6',name:'Withholding Tax',cat:'Contribution',period:'2026-06',origin:'Local',cur:'PHP',amt:'48,222,915.36',persons:'58 staff',evi:2,st:'pending',claim:null},
+ {ref:'ENT-2026-00109',code:'1.3.1',name:'Phone Bill',cat:'Fringe Benefit',period:'2026-01',origin:'Local',cur:'PHP',amt:'934,280.10',persons:'58 staff',evi:2,st:'sealed',claim:null}
+];
+
+/* claim events with notice clocks */
+var EVENTS=[
+ {id:'EOT001',title:'ROW-7 access restriction',state:'counting',days:14,note:'identified 01 Jul 2026 · notice due 29 Jul 2026',route:'#/claims/eot001'},
+ {id:'EOT002',title:'Site access restriction ROW-12',state:'notified',days:null,note:'notified 20 Jun 2026 · proof on file',route:'#/claims/eot001'},
+ {id:'EOT003',title:'Design change NB-4',state:'barred',days:null,note:'notice window closed 12 Jun 2026',route:'#/claims/eot001'}
+];
+
+/* users (S16) */
+var USERS=[
+ {name:'A. Cruz',ini:'AC',role:'Contributor',dept:'Account',hr:false,status:'Active'},
+ {name:'R. Santos',ini:'RS',role:'Department validator',dept:'Staff Cost',hr:true,status:'Active'},
+ {name:'M. Reyes',ini:'MR',role:'Consolidator',dept:'Cost Control',hr:true,status:'Active'},
+ {name:'L. Navarro',ini:'LN',role:'Auditor',dept:'Assurance',hr:false,status:'Active'},
+ {name:'P. Aquino',ini:'PA',role:'Reader',dept:'Executive',hr:false,status:'Active'},
+ {name:'R. Dizon',ini:'RD',role:'Admin',dept:'Platform',hr:true,status:'Active'}
+];
+
+/* periods (S09) */
+var PERIODS=[
+ {p:'2026-01',state:'sealed',note:'Sealed · 30 Jun 2026',ratio:'33/33'},
+ {p:'2026-02',state:'complete',note:'32 / 33 filed',ratio:'32/33'},
+ {p:'2026-03',state:'partial',note:'29 / 33 filed',ratio:'29/33'},
+ {p:'2026-04',state:'complete',note:'30 / 33 filed',ratio:'30/33'},
+ {p:'2026-05',state:'partial',note:'27 / 33 filed',ratio:'27/33'},
+ {p:'2026-06',state:'open',note:'23 / 33 filed · open',ratio:'23/33'}
+];
+
+/* ============================ topbar ============================ */
+function renderTopbar(){
+  var R=ROLES[role];
+  document.getElementById('topbar').innerHTML=
+   MARK+
+   '<span style="font:600 14px var(--sans);letter-spacing:-.01em">The Vault</span>'+
+   '<div style="width:1px;height:16px;background:var(--hair-strong)"></div>'+
+   '<span class="tb-chip" title="Group platform (hint)">MMSP EOT001 '+ic('chevron').replace('16','12').replace('16','12')+'</span>'+
+   '<span class="tb-chip">2026-06 <span style="font-size:9px">▾</span></span>'+
+   '<span style="flex:1"></span>'+
+   '<span class="tb-search"><span style="color:var(--ink-3)">'+ic('search')+'</span><span style="font:400 13px var(--sans)">Search</span><span style="flex:1"></span><span style="font:500 10.5px var(--mono);color:var(--ink-3)">⌘K</span></span>'+
+   '<span class="tb-icon">'+ic('bell')+'</span>'+
+   '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px"><span style="font:500 12px var(--sans)">'+R.name+'</span><span style="font:400 10.5px var(--sans);color:var(--ink-2)">'+R.sub+'</span></div>'+
+   '<div class="avatar">'+R.ini+'</div>';
+}
+
+/* ============================ rail ============================ */
+function renderRail(){
+  var cur=curRoute(), sec=ROUTE_SEC[cur]||'';
+  var items=railItems(role), html='';
+  html+='<div class="rail-scroll">';
+  items.forEach(function(it){
+    html+='<div class="rail-item'+(it.sec===sec?' active':'')+'" data-act="nav" data-arg="'+it.route+'"><span class="rail-bar"></span>'+ic(it.icon)+'<span class="lbl">'+it.label+'</span></div>';
+  });
+  if(role==='admin'){
+    html+='<div class="rail-sep"></div><div class="rail-head">Admin</div>';
+    html+='<div class="rail-item'+(cur==='#/admin/users'?' active':'')+'" data-act="nav" data-arg="#/admin/users"><span class="rail-bar"></span>'+ic('user')+'<span class="lbl">Users &amp; roles</span></div>';
+    html+='<div class="rail-item'+(cur==='#/admin/config'?' active':'')+'" data-act="nav" data-arg="#/admin/config"><span class="rail-bar"></span>'+ic('admin')+'<span class="lbl">Config summary</span></div>';
+  }
+  html+='</div>';
+  /* footer: role switcher + theme + collapse */
+  var rs='<div class="rs-label">View as</div><div class="seg" id="seg-role">';
+  ROLE_ORDER.forEach(function(r){ rs+='<button data-act="role" data-arg="'+r+'" class="'+(r===role?'on':'')+'">'+ROLE_SHORT[r]+'</button>'; });
+  rs+='</div>';
+  var th='<div class="seg" id="seg-theme" style="margin-top:8px"><button data-act="theme" data-arg="light" class="'+(theme==='light'?'on':'')+'">Light</button><button data-act="theme" data-arg="dark" class="'+(theme==='dark'?'on':'')+'">Dark</button></div>';
+  html+='<div class="rail-foot">'+rs+th+'</div>';
+  var railEl=document.getElementById('rail');
+  railEl.className='rail'+(ui.railCollapsed?' collapsed':'');
+  railEl.innerHTML=html;
+}
+
+/* ============================ router ============================ */
+function curRoute(){ var h=location.hash; return h && ROUTE_SEC[h]!==undefined ? h : ROLES[role].landing; }
+function nav(route){ if(location.hash===route){ render(); } else { location.hash=route; } }
+
+function render(){
+  document.documentElement.setAttribute('data-theme',theme);
+  var route=curRoute();
+  /* matrix guard: role must be allowed to view the route */
+  var allowed=ROUTE_ROLES[route]||[];
+  if(allowed.indexOf(role)<0){ location.hash=ROLES[role].landing; return; }
+  renderTopbar();
+  renderRail();
+  var m=document.getElementById('main');
+  m.scrollTop=0;
+  m.innerHTML='<div class="view">'+viewFor(route)+'</div>';
+  if(route==='#/cockpit') runKpiCountup();
+}
+
+function viewFor(route){
+  switch(route){
+    case '#/process': return vProcess();
+    case '#/cockpit': return vCockpit();
+    case '#/home': return role==='reader'?vReaderDash():vHome();
+    case '#/home/manual': return vManual();
+    case '#/queue': return vQueue();
+    case '#/queue/item': return vQueueItem();
+    case '#/ledger': return vLedger();
+    case '#/periods': return vPeriods();
+    case '#/periods/seal': return vSeal();
+    case '#/claims': return vClaims();
+    case '#/claims/eot001': return vEvent();
+    case '#/claims/eot001/build': return vBuild();
+    case '#/claims/eot001/v2': return vVersion();
+    case '#/claims/eot001/submit': return vSubmit();
+    case '#/evidence': return vEvidence();
+    case '#/reports': return vReports();
+    case '#/admin/users': return vUsers();
+    case '#/admin/config': return vConfig();
+    default: return '<div class="wrap"><span class="sub">Not found.</span></div>';
+  }
+}
+
+/* ============================ helpers ============================ */
+function head(eyebrow,title,sub,rightHtml){
+  return '<div style="display:flex;align-items:flex-start;gap:40px">'+
+    '<div style="display:flex;flex-direction:column;gap:9px;flex:1">'+
+    '<span class="eyebrow">'+eyebrow+'</span><span class="h1">'+title+'</span>'+(sub?'<span class="sub">'+sub+'</span>':'')+'</div>'+
+    (rightHtml||'')+'</div>';
+}
+function statusMeta(st){
+  if(st==='partial')return{c:'var(--partial)',dot:true,label:'Partial'};
+  if(st==='critical')return{c:'var(--critical)',dot:true,label:'Critical'};
+  if(st==='pending')return{c:'var(--ink-2)',dot:true,label:'Pending'};
+  if(st==='sealed')return{c:'var(--ink-2)',dot:false,label:'Sealed'};
+  return{c:'var(--ink-2)',dot:false,label:'Complete'};
+}
+
+/* ============================ S23 process map ============================ */
+function node(id,label,roles,gate){
+  var active=roles.indexOf(role)>=0;
+  var dim=active?'':'opacity:.28';
+  var ring=gate?'border:1px solid var(--ink)':'border:1px solid var(--hair-strong)';
+  var chip=roles.length===1?ROLE_SHORT[roles[0]]:'shared';
+  return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:118px;'+dim+'">'+
+   '<span style="width:40px;height:40px;border-radius:999px;'+ring+';display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:'+(gate?'var(--ink)':'var(--ink-3)')+'"></span></span>'+
+   '<span style="font:500 10.5px var(--mono);letter-spacing:.1em;color:var(--ink-2);text-align:center">'+label+'</span>'+
+   (gate?'<span style="font:500 10px var(--mono);letter-spacing:.1em;background:var(--pill-bg);color:var(--pill-ink);padding:3px 10px;border-radius:999px">gate</span>':'<span class="tag" style="font-size:9.5px;padding:2px 8px">'+chip+'</span>')+
+   '</div>';
+}
+function conn(){ return '<div style="flex:1;max-width:46px;height:1px;background:var(--hair-strong);margin-top:20px"></div>'; }
+function vProcess(){
+  var reg=[node('drop','DROP',['contributor']),conn(),node('extract','EXTRACT',['contributor']),conn(),node('subst','SUBSTANTIATE',['contributor']),conn(),node('validate','VALIDATE',['validator'],true),conn(),node('engine','COMPLETENESS',['consolidator']),conn(),node('periods','PERIODS',['consolidator']),conn(),node('seal','SEAL',['consolidator'])].join('');
+  var claim=[node('identify','IDENTIFY',['consolidator']),conn(),node('notify','NOTIFY',['consolidator']),conn(),node('build','BUILD',['consolidator']),conn(),node('submit','SUBMIT',['consolidator']),conn(),node('supersede','SEAL / SUPERSEDE',['consolidator'])].join('');
+  var cross=[node('config','ACCESS &amp; CONFIG',['admin']),node('audit','AUDIT TRAIL',['auditor']),node('reports','REPORTS',['reader'])].join('<div style="width:40px"></div>');
+  return '<div class="wrap" id="view-process" style="height:calc(100vh - 52px);overflow:hidden;padding:22px 40px">'+
+   head('Process map','The Vault, end to end','Every department sees its brick in the edifice. Switch a role to light its gestures.','')+
+   '<div style="margin-top:26px;display:flex;flex-direction:column;gap:6px">'+
+     '<span class="eyebrow" style="color:var(--ink-3)">Register pipeline &rarr; completeness &rarr; seal</span>'+
+     '<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:14px 0">'+reg+'</div>'+
+   '</div>'+
+   '<div style="height:1px;background:var(--hair);margin:14px 0"></div>'+
+   '<div style="display:flex;flex-direction:column;gap:6px">'+
+     '<span class="eyebrow" style="color:var(--ink-3)">Claim lifecycle</span>'+
+     '<div style="display:flex;align-items:flex-start;gap:0;padding:14px 0">'+claim+'</div>'+
+   '</div>'+
+   '<div style="height:1px;background:var(--hair);margin:14px 0"></div>'+
+   '<div style="display:flex;flex-direction:column;gap:10px">'+
+     '<span class="eyebrow" style="color:var(--ink-3)">Cross-cutting</span>'+
+     '<div style="display:flex;align-items:flex-start;padding:6px 0">'+cross+'</div>'+
+   '</div>'+
+   '<div style="margin-top:20px"><span class="mono" style="color:var(--ink-3)">Viewing as '+ROLES[role].sub+' &middot; highlighted nodes are '+ROLE_SHORT[role]+' gestures</span></div>'+
+  '</div>';
+}
+
+/* ============================ S01 cockpit + S17 gap ============================ */
+function buildMatrixRows(){
+  var mono='var(--mono)', grid='display:grid;grid-template-columns:216px repeat(6,1fr) 136px;align-items:stretch;', cell='display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:0 14px;', html='';
+  MX_G.forEach(function(g){
+    html+='<div style="'+grid+'border-top:1px solid var(--hair-strong);height:30px"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:500 11px '+mono+';color:var(--ink);width:46px;flex:none">'+g[0]+'</span><span style="font:600 12.5px var(--sans);color:var(--ink);white-space:nowrap">'+g[1]+'</span></div>';
+    for(var gm=1;gm<=6;gm++) html+='<div style="'+cell+(gm===1?'background:var(--fill)':'')+'"></div>';
+    html+='<span style="font:500 11.5px '+mono+';color:var(--ink);display:flex;align-items:center;justify-content:flex-end">'+g[2]+'</span></div>';
+    g[3].forEach(function(el){
+      var code=el[0],name=el[1],req=el[2],total=el[3];
+      html+='<div style="'+grid+'border-top:1px solid var(--hair-soft);height:26px"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:400 10.5px '+mono+';color:var(--ink-3);width:46px;flex:none">'+code+'</span><span style="font:400 12px var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+name+'</span></div>';
+      for(var m=1;m<=6;m++){
+        var miss=(MX_MISS[code]&&MX_MISS[code][m])||0, filed=req-miss, crit=MX_CRIT[code]===m, txt, dot='';
+        if(miss===0){ txt='font:400 11.5px '+mono+';color:var(--ink-3)'; }
+        else { txt='font:500 11.5px '+mono+';color:var(--ink)'; dot='<span class="dot" style="width:5px;height:5px;background:var(--'+(crit?'critical':'partial')+')"></span>'; }
+        html+='<div style="'+cell+(m===1?'background:var(--fill)':'')+'"><span style="'+txt+'">'+filed+'/'+req+'</span>'+dot+'</div>';
+      }
+      html+='<span style="font:400 11.5px '+mono+';color:var(--ink-2);display:flex;align-items:center;justify-content:flex-end;font-variant-numeric:tabular-nums">'+total+'</span></div>';
+    });
+  });
+  return html;
+}
+function kpi(label,val,ctx,accent){
+  return '<div style="display:flex;flex-direction:column;gap:5px"><span style="font:500 11.5px var(--sans);color:var(--ink-2)">'+label+'</span><span class="kpi-num" data-kpi="'+(typeof val==='number'?val:'')+'" style="'+(accent?'color:'+accent:'')+'">'+val+'</span><span style="font:400 11.5px var(--sans);color:var(--ink-2)">'+ctx+'</span></div>';
+}
+function vCockpit(){
+  var mono='var(--mono)';
+  var mxHeadCols='';
+  var months=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'], ratios=['Sealed · 30 Jun','32/33','29/33','30/33','27/33','23/33'];
+  months.forEach(function(mn,i){ mxHeadCols+='<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px;'+(i===0?'background:var(--fill);border-radius:10px 10px 0 0':'')+'"><span style="font:500 11.5px '+mono+';color:var(--ink)">'+mn+'</span><span style="font:400 9.5px '+(i===0?'var(--sans)':mono)+';color:var(--ink-'+(i===0?'2':'3')+')">'+ratios[i]+'</span></div>'; });
+  var gap=ui.gapOpen? gapPanel():'';
+  return '<div class="wrap" style="position:relative;padding-right:'+(ui.gapOpen?'452px':'40px')+'">'+
+   '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-bottom:20px">'+
+     kpi('Open gaps','24','PHP 38.2M blocked · oldest 52 days')+
+     kpi('Pending validations','14','PHP 18.9M awaiting countersign')+
+     kpi('Periods sealed','1<span style="font-size:26px;color:var(--ink-3)"> / 6</span>','2026-01 · sealed 30 Jun 2026')+
+     kpi('Nearest notice','14<span style="font-size:22px;color:var(--ink-2)"> days</span>','EOT001 · notice due 29 Jul',null)+
+   '</div>'+
+   '<div style="display:flex;align-items:baseline;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--hair)"><span class="h2">Evidence completeness</span><span style="font:400 11.5px var(--sans);color:var(--ink-3)">A - Staff Cost · documents filed vs required</span><span style="flex:1"></span><span style="font:400 11px var(--sans);color:var(--ink-3)">Muted = complete</span><span style="display:flex;align-items:center;gap:6px;font:400 11px var(--sans);color:var(--ink-2)"><span class="dot" style="background:var(--partial)"></span>Partial</span><span style="display:flex;align-items:center;gap:6px;font:400 11px var(--sans);color:var(--ink-2)"><span class="dot" style="background:var(--critical)"></span>Critical</span></div>'+
+   '<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px"><div style="height:40px;display:flex;align-items:flex-end;padding-bottom:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">Element</span></div>'+mxHeadCols+'<div style="height:40px;display:flex;align-items:flex-end;justify-content:flex-end;padding-bottom:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">Total · PHP</span></div></div>'+
+   '<div>'+buildMatrixRows()+'</div>'+
+   '<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px;border-top:1px solid var(--hair-strong)"><div style="height:32px;display:flex;align-items:center"><span style="font:500 11px var(--sans);color:var(--ink-2)">Cost head total</span></div><div style="height:32px;background:var(--fill);border-radius:0 0 10px 10px"></div><div></div><div></div><div></div><div></div><div></div><span style="height:32px;display:flex;align-items:center;justify-content:flex-end;font:600 12px var(--mono);color:var(--ink)">545,571,233.87</span></div>'+
+   '<div style="margin-top:12px;display:flex;align-items:center;gap:12px"><span class="mono" style="color:var(--ink-3)">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span><span style="flex:1"></span>'+(ui.gapOpen?'':'<span class="qbtn" data-act="gap">Open critical gap &rarr;</span>')+'</div>'+
+   gap+
+  '</div>';
+}
+function gapPanel(){
+  var body= ui.requestSent
+    ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:24px;padding:14px 16px;border:1px solid var(--hair-strong);border-radius:12px"><span class="eyebrow" style="color:var(--ink-3)">Request sent</span><span class="sub" style="color:var(--ink)">Document request sent to R. Dizon · Admin.</span><span class="mono" style="color:var(--ink-3)">Lease Agreement, Proof of payment · due 22 Jul 2026</span></div>'
+    : '<div style="display:flex;flex-direction:column;margin-top:24px">'+
+       '<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:var(--critical)"></span><span class="sub" style="color:var(--ink);flex:1">Lease Agreement</span><span style="font:500 11.5px var(--sans);color:var(--critical)">Missing</span></div>'+
+       '<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:var(--critical)"></span><span class="sub" style="color:var(--ink);flex:1">Proof of payment</span><span style="font:500 11.5px var(--sans);color:var(--critical)">Missing</span></div>'+
+       '<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:var(--ink-3)"></span><span class="sub" style="color:var(--ink);flex:1">Invoice INV-7741</span><span style="font:500 11.5px var(--sans);color:var(--ink-2)">On file</span></div>'+
+      '</div>';
+  return '<div style="position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);padding:26px 30px;display:flex;flex-direction:column">'+
+   '<div style="display:flex;align-items:center;gap:10px"><span class="chip crit">Critical</span><span class="mono" style="color:var(--ink-3)">GAP-118</span><span style="flex:1"></span><span class="sub">open 52 days</span><span class="qbtn" data-act="gapClose" style="padding:2px 6px">✕</span></div>'+
+   '<span style="font:600 18px var(--sans);letter-spacing:-.01em;margin-top:16px">1.3.6 Accomodation Rental <span style="font:400 15px var(--sans);color:var(--ink-2)">· 2026-03</span></span>'+
+   '<span class="eyebrow" style="color:var(--ink-3);margin-top:22px">Blocks</span>'+
+   '<span style="font:200 32px/1 var(--sans);letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums">PHP 4,918,220.13</span>'+
+   body+
+   '<div style="display:flex;align-items:center;gap:10px;padding:12px 0 18px;border-top:1px solid var(--hair);margin-top:8px"><div class="avatar">RD</div><span class="sub" style="color:var(--ink)">R. Dizon <span style="color:var(--ink-2)">· Admin</span></span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">since 12 May 2026</span></div>'+
+   '<span style="flex:1"></span>'+
+   (ui.requestSent?'':'<div style="display:flex;align-items:center;gap:14px"><button class="pill" style="flex:1" data-act="request">Request documents</button><span class="qbtn">Escalate</span></div>')+
+  '</div>';
+}
+
+/* ============================ S02/S03/S04 contributor home ============================ */
+function catRow(code,label,detail,amt,statusHtml,box){
+  return '<div class="trow"><span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;'+box+'"></span><div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0"><span style="font:500 14px var(--sans)">'+label+'</span><span style="font:400 11.5px var(--mono);color:var(--ink-3)">'+detail+'</span></div><span style="width:190px;flex:none;text-align:right" class="amt">'+amt+'</span><span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">'+statusHtml+'</span></div>';
+}
+function vHome(){
+  var stage=ui.homeStage;
+  var owedStatus='<span class="dot" style="background:var(--partial)"></span><span style="font:400 12.5px var(--sans);color:var(--partial)">owed</span>';
+  var extractedStatus='<span style="font:400 12.5px var(--sans);color:var(--ink-2)">extracted · awaiting validation</span>';
+  var completeStatus='<span style="font:400 12.5px var(--sans);color:var(--ink-3)">Complete</span>';
+  var owedBox='background:transparent;border:1.5px solid var(--partial)';
+  var quietBox='background:transparent;border:1px solid var(--hair-strong)';
+  var doneBox='background:var(--fill-2);border:1px solid var(--hair)';
+  var rows;
+  if(stage==='filed'){
+    rows=catRow('1.1','1.1 Salary','audited payroll file · 2026-06','PHP 9,988,140.62',extractedStatus,quietBox)+
+         catRow('1.2','1.2 Contribution','SSS · PHIC · HDMF · Withholding Tax · 2026-06','PHP 1,854,159.52',extractedStatus,quietBox);
+  } else {
+    rows=catRow('1.1','1.1 Salary','audited payroll file · 2026-06','',owedStatus,owedBox)+
+         catRow('1.2','1.2 Contribution','SSS · PHIC · HDMF · Withholding Tax · 2026-06','',owedStatus,owedBox);
+  }
+  rows+=catRow('1.1','1.1 Salary','audited payroll file · 2026-05','PHP 9,912,884.10',completeStatus,doneBox)+
+        catRow('1.2','1.2 Contribution','SSS · PHIC · HDMF · Withholding Tax · 2026-05','PHP 1,833,092.71',completeStatus,doneBox);
+
+  var right='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span style="font:200 50px/1 var(--sans);letter-spacing:-.03em">3</span><span style="font:500 11px var(--sans);color:var(--ink-2)">days before close</span><span style="font:400 11px var(--mono);color:var(--ink-3)">closes 08 Jul 2026</span></div>';
+
+  var dropArea;
+  if(stage==='owed'){
+    dropArea='<div class="card" data-act="drop" style="margin-top:22px;display:flex;align-items:center;gap:14px;border:1.5px dashed var(--hair-strong);cursor:pointer"><div style="width:36px;height:36px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 19 H20" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"></path></svg></div><div style="display:flex;flex-direction:column;gap:3px;flex:1"><span style="font:500 13.5px var(--sans)">Drop source files</span><span style="font:400 11px var(--mono);color:var(--ink-2)">registered, hashed and filed automatically</span></div><span style="font:400 11px var(--mono);color:var(--ink-3)">XLSX, PDF, images</span></div>';
+  } else if(stage==='loading'){
+    dropArea='<div class="card" data-act="drop" style="margin-top:22px;background:var(--fill);border:none;cursor:pointer"><div style="display:flex;align-items:center;gap:14px"><div style="width:30px;height:38px;border:1px solid var(--hair-strong);border-radius:4px;background:var(--base);flex:none"></div><div style="flex:1;display:flex;flex-direction:column;gap:6px"><span style="font:500 13px var(--sans)">CRPH_Payroll_Local_2026-06.xlsx</span><span style="font:400 11px var(--mono);color:var(--ink-2)">registering · fingerprint 8f3a…c41d</span></div><span class="mono" style="color:var(--ink-2)">reading</span></div><div style="margin-top:14px;display:flex;flex-direction:column;gap:8px">'+
+      '<div class="skel" style="height:12px;width:60%"></div><div class="skel" style="height:12px;width:82%"></div><div class="skel" style="height:12px;width:48%"></div></div>'+
+      '<div style="margin-top:12px"><span style="font:400 12.5px var(--mono);color:var(--ink)">extracting… 318 / 612 cost lines · 41 / 58 staff</span></div></div>';
+  } else {
+    dropArea='<div class="card" style="margin-top:22px;background:var(--fill);border:none"><div style="display:flex;align-items:center;gap:14px"><div style="width:30px;height:38px;border:1px solid var(--hair-strong);border-radius:4px;background:var(--base);flex:none"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13px var(--sans)">CRPH_Payroll_Local_2026-06.xlsx</span><span style="font:400 11px var(--mono);color:var(--ink-2)">registered · fingerprint 8f3a…c41d</span></div><span class="check" style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span></div>'+
+      '<div style="margin-top:10px"><span style="font:400 12.5px var(--mono);color:var(--ink)">612 cost lines filed · 58 staff · PHP 11,842,300.14 · June 2026</span></div>'+
+      '<div class="thead" style="margin-top:14px"><span style="width:70px" class="th">Staff</span><span style="flex:1" class="th">Element</span><span style="width:100px" class="th">Origin</span><span style="width:140px;text-align:right" class="th">Amount · PHP</span><span style="width:100px;text-align:right" class="th">Status</span></div>'+
+      previewRow('E.R.','1.1.1 Basic Salary','Local','84,120.00')+previewRow('J.D.','1.1.1 Basic Salary','Local','61,480.00')+previewRow('M.T.','1.1.2 13th Month','Local','7,010.00')+previewRow('S.L.','1.2.1 SSS','Local','2,880.00')+previewRow('K.B.','1.1.1 Basic Salary','Local','96,340.00')+'</div>';
+  }
+  var hint = stage==='owed'?'Colour marks what is owed. Drop the payroll file to file this period.':(stage==='loading'?'Registering and extracting — no shimmer, just counts.':'Filed and quiet. Nothing celebratory; the calm is the point.');
+  return '<div class="wrap" style="max-width:940px;margin:0 auto">'+
+    head('My monthly close','Period 2026-06','A. Cruz · Account · open and in progress',right)+
+    '<div style="margin-top:14px;display:flex;align-items:center;gap:14px"><div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:'+(stage==='owed'?'50%':(stage==='loading'?'60%':'100%'))+';height:100%;background:var(--ink-3)"></div></div><span class="sub">'+(stage==='filed'?'4 of 4 items filed':'2 of 4 items complete')+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+(stage==='owed'?'<span style="color:var(--partial)">2 owed this period</span>':'2 extracted · awaiting validation')+'</span></div>'+
+    '<div style="margin-top:20px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:14px"><span class="h2">Your categories</span><span style="flex:1"></span><span style="font:400 11px var(--sans);color:var(--ink-3)">'+hint+'</span></div>'+
+    rows+dropArea+
+    '<div style="margin-top:18px;display:flex;align-items:center;gap:14px"><span class="qbtn" data-act="nav" data-arg="#/home/manual">Add a manual element &rarr;</span></div>'+
+  '</div>';
+}
+function previewRow(s,e,o,a){ return '<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--hair-soft)"><span style="width:70px;font:500 12px var(--mono)">'+s+'</span><span style="flex:1;font:400 12.5px var(--sans)">'+e+'</span><span style="width:100px;font:400 11.5px var(--mono);color:var(--ink-2)">'+o+'</span><span style="width:140px;text-align:right;font:500 12px var(--mono)">'+a+'</span><span style="width:100px;text-align:right;font:400 11.5px var(--mono);color:var(--ink-2)">extracted</span></div>'; }
+
+/* ============================ S05 manual entry ============================ */
+function vManual(){
+  var stage=ui.manualStage;
+  var attached = stage!=='form';
+  var submitted = stage==='submitted';
+  return '<div class="wrap" style="max-width:820px;margin:0 auto">'+
+   head('Manual element','1.3.10 School Fees','Invoice-mode element · manual with evidence','')+
+   '<div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Element</span><input class="inp" value="1.3.10 School Fees" readonly></label>'+
+     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Period</span><select class="inp"><option>2026-06</option><option>2026-05</option></select></label>'+
+     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Origin</span><select class="inp"><option>Mainby</option><option>Local</option><option>HBased</option><option>COrigin</option></select></label>'+
+     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Amount · EUR</span><input class="inp" style="font-family:var(--mono)" value="94,500.00"></label>'+
+   '</div>'+
+   '<div style="margin-top:20px;padding:12px 16px;background:var(--fill);border-radius:10px"><span class="mono" style="color:var(--ink-2)">Accepted source · tuition invoice from an accredited school, per config. Notarization not required.</span></div>'+
+   (attached
+     ? '<div class="card" style="margin-top:16px;display:flex;align-items:center;gap:14px;background:var(--fill);border:none"><div style="width:30px;height:38px;border:1px solid var(--hair-strong);border-radius:4px;background:var(--base);flex:none"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13px var(--sans)">invoice_schoolfees_2026-06.pdf</span><span style="font:400 11px var(--mono);color:var(--ink-2)">sha256 · a91c…44f0 · attached</span></div><span class="mono" style="color:var(--ink-2)">hashed</span></div>'
+     : '<div class="card" data-act="attach" style="margin-top:16px;display:flex;align-items:center;gap:14px;border:1.5px dashed var(--hair-strong);cursor:pointer"><div style="width:36px;height:36px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13.5px var(--sans)">Attach evidence</span><span style="font:400 11px var(--mono);color:var(--ink-2)">the invoice, registered and hashed</span></div></div>')+
+   '<div style="margin-top:22px;display:flex;align-items:center;gap:14px">'+
+     (submitted
+       ? '<span style="display:flex;align-items:center;gap:8px"><svg width="14" height="14" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="sub" style="color:var(--ink)">Filed · awaiting validation</span></span>'
+       : '<button class="pill'+(attached?'':' disabled')+'" '+(attached?'data-act="manualSubmit"':'')+'>Submit element</button><span class="sub" style="color:var(--ink-3)">'+(attached?'evidence attached, ready to file':'attach evidence to enable')+'</span>')+
+   '</div>'+
+  '</div>';
+}
+
+/* ============================ S06 queue / S07 validate ============================ */
+function vQueue(){
+  var n=ui.validated?13:14;
+  var rows='';
+  var items=[['1.1.1 Basic Salary','E. Ramos','Local','2026-06','84,120.00'],['1.1.1 Basic Salary','J. Dela','Local','2026-06','61,480.00'],['1.1.2 13th Month','M. Tan','Local','2026-06','7,010.00'],['1.2.1 SSS','S. Lim','Local','2026-06','2,880.00'],['1.1.4 Per Diem Allowance','K. Bautista','Local','2026-06','18,400.00']];
+  items.forEach(function(it,i){
+    rows+='<div class="trow" data-act="nav" data-arg="#/queue/item" style="cursor:pointer">'+
+      '<span style="width:22px;height:22px;border-radius:6px;border:1.5px solid var(--partial);flex:none"></span>'+
+      '<div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font:500 13.5px var(--sans)">'+it[0]+'</span><span class="mono" style="color:var(--ink-3)">'+it[1]+' · '+it[2]+' · '+it[3]+'</span></div>'+
+      '<span class="amt" style="width:150px">'+it[4]+'</span>'+
+      '<span style="width:120px;text-align:right"><span class="dot" style="background:var(--partial);display:inline-block;margin-right:6px"></span><span style="font:400 12px var(--sans);color:var(--partial)">pending</span></span>'+
+      (i===0?'<span class="qbtn">Open &rarr;</span>':'<span style="width:56px"></span>')+'</div>';
+  });
+  var right='<div style="display:flex;align-items:flex-start;gap:14px"><span class="num">'+n+'</span><div style="display:flex;flex-direction:column;gap:3px;padding-top:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">pending</span><span class="mono" style="color:var(--ink-3)">PHP 18.9M awaiting countersign</span></div></div>';
+  var body= n===0
+    ? '<div style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px"><span class="sub">Queue clear. Nothing awaits validation.</span></div>'
+    : '<div style="margin-top:22px"><div class="thead"><span style="width:22px"></span><span style="flex:1" class="th">Element / staff</span><span style="width:150px;text-align:right" class="th">Amount · PHP</span><span style="width:120px;text-align:right" class="th">Status</span><span style="width:56px"></span></div>'+rows+'<div style="padding:12px 4px"><span class="mono" style="color:var(--ink-3)">…9 more pending</span></div></div>';
+  return '<div class="wrap" style="max-width:1120px;margin:0 auto">'+head('Validation queue','A - Staff Cost','Every extracted cost faces its source before it counts.',right)+body+'</div>';
+}
+function vQueueItem(){
+  var validated=ui.validated;
+  var pillOrCheck = validated
+    ? '<span style="display:flex;align-items:center;gap:10px;height:40px;padding:0 20px;border-radius:999px;background:var(--fill);color:var(--ink)"><svg width="16" height="16" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="font:500 13px var(--sans)">Validated · locked to proof</span></span>'
+    : '<button class="pill" data-act="validate">Validate against evidence</button>';
+  var trace = validated
+    ? '<div class="trow"><span style="width:20px;height:20px;border-radius:6px;background:var(--fill-2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span class="sub">1.1.1 Basic Salary · E.R. · Local · 2026-06</span><span style="flex:1"></span><span class="amt">84,120.00</span><span class="mono" style="color:var(--ink-3)">validated just now · R. Santos</span></div>'
+    : '';
+  return '<div class="wrap" style="max-width:1120px;margin:0 auto">'+
+   '<div style="display:flex;align-items:center;gap:12px"><span class="qbtn" data-act="nav" data-arg="#/queue">&larr; Queue</span></div>'+
+   head('The gate','Validate against evidence','Extracted cost, left. Its source, right.','')+
+   '<div style="margin-top:24px;display:flex;gap:24px">'+
+     '<div class="card" style="flex:1;display:flex;flex-direction:column"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Extracted cost</span><span style="font:600 19px var(--sans);margin-top:12px">1.1.1 Basic Salary</span><span style="font:200 40px/1 var(--sans);letter-spacing:-.02em;margin-top:14px;font-variant-numeric:tabular-nums">PHP 84,120.00</span>'+
+       '<div style="margin-top:18px">'+kv('Staff','E. Ramos')+kv('Origin','Local')+kv('Period','2026-06')+kv('Source','CRPH_Payroll_Local_2026-06.xlsx · line 214')+kv('Fingerprint','8f3a…c41d')+'</div>'+
+       '<span style="flex:1"></span><div style="display:flex;align-items:center;gap:14px;padding-top:18px">'+pillOrCheck+(validated?'':'<span class="sub" style="color:var(--ink-3)">countersign locks this line to its proof</span>')+'</div></div>'+
+     '<div class="card" style="width:430px;flex:none;background:var(--fill);display:flex;flex-direction:column"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Evidence</span><div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px 0 10px"><div style="width:230px;height:280px;background:var(--base);border:1px solid var(--hair-strong);border-radius:4px;padding:20px 18px;display:flex;flex-direction:column;gap:9px"><span class="skel" style="height:7px;width:44%"></span><span class="skel" style="height:4px;width:70%"></span><span class="skel" style="height:4px;width:58%"></span><span style="height:1px;background:var(--hair);margin-top:8px"></span><span class="skel" style="height:4px;width:40%"></span><span class="skel" style="height:4px;width:52%"></span><span style="flex:1"></span><span style="height:1px;background:var(--hair)"></span><div style="display:flex;justify-content:space-between;align-items:center"><span class="skel" style="height:4px;width:30%"></span><span style="font:500 11px var(--mono)">84,120.00</span></div></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span style="font:500 12px var(--mono)">payslip_ramos_2026-06.pdf</span><span class="mono" style="color:var(--ink-3)">sha256 · d41c…9e2b · registered 05 Jul 2026</span></div></div>'+
+   '</div>'+
+   '<div style="margin-top:22px"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Validated today</span>'+(validated?trace:'<div class="trow"><span class="mono" style="color:var(--ink-3)">nothing yet in this session</span></div>')+'</div>'+
+  '</div>';
+}
+function kv(k,v){ return '<div style="display:flex;align-items:center;gap:12px;padding:9px 0;border-top:1px solid var(--hair)"><span style="width:110px;flex:none;font:400 11.5px var(--sans);color:var(--ink-2)">'+k+'</span><span style="font:400 12px var(--mono);color:var(--ink)">'+v+'</span></div>'; }
+
+/* ============================ S08 ledger + drawer ============================ */
+function vLedger(){
+  var nominative = role!=='reader';   /* HR isolation: reader loses the persons column */
+  var readOnly = (role==='auditor'||role==='reader');
+  var thead='<div class="thead"><span style="width:120px" class="th">Reference</span><span style="flex:1" class="th">Description</span><span style="width:120px" class="th">Code / Period</span>'+(nominative?'<span style="width:120px" class="th">Persons</span>':'')+'<span style="width:150px;text-align:right" class="th">Amount PHP</span><span style="width:50px;text-align:center" class="th">Evid</span><span style="width:100px" class="th">Status</span></div>';
+  var rows='';
+  LEDGER.forEach(function(e){
+    var m=statusMeta(e.st);
+    rows+='<div class="trow" data-act="drawer" data-arg="'+e.ref+'" style="cursor:pointer">'+
+      '<span style="width:120px;font:400 12px var(--mono);color:var(--ink-2)">'+e.ref+'</span>'+
+      '<span style="flex:1;font:400 13px var(--sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e.code+' '+e.name+'</span>'+
+      '<span style="width:120px;display:flex;flex-direction:column;gap:2px"><span style="font:500 11.5px var(--mono)">'+e.code+'</span><span style="font:400 11px var(--mono);color:var(--ink-3)">'+e.period+'</span></span>'+
+      (nominative?'<span style="width:120px;font:400 12px var(--sans);color:var(--ink-2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+e.persons+'</span>':'')+
+      '<span style="width:150px;text-align:right" class="amt">'+e.amt+'</span>'+
+      '<span style="width:50px;text-align:center;font:400 12px var(--mono);color:'+(e.evi===0?'var(--critical)':'var(--ink-2)')+'">'+e.evi+'</span>'+
+      '<span style="width:100px;display:flex;align-items:center;gap:7px">'+(m.dot?'<span class="dot" style="background:'+m.c+'"></span>':'')+'<span style="font:400 12px var(--sans);color:'+m.c+'">'+m.label+'</span></span>'+
+    '</div>';
+  });
+  var scope = role==='reader'?'aggregates':(role==='auditor'?'all (read)':(role==='contributor'?'own categories':(role==='validator'?'own department':'all')));
+  var right = readOnly?'':'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:2px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Assembled</span><span style="font:200 30px/1 var(--sans);letter-spacing:-.02em">₱ 104.5M</span></div>'+'<button class="pill sm" style="margin-left:16px" data-act="noop"><span style="font:400 15px var(--mono);margin-right:6px">+</span>New entry</button>';
+  var iso = nominative?'':'<span class="chip seal" style="margin-left:10px"><span style="color:var(--ink-2)">'+ic('lock').replace(/width="16" height="16"/,'width="11" height="11"')+'</span>Nominative columns hidden · HR isolation</span>';
+  return '<div class="wrap" style="position:relative;padding-right:'+(ui.drawer?'492px':'40px')+'">'+
+   head('Cost ledger','A - Staff Cost','window 2026-01 to 2026-06 · scope: '+scope+iso, right?'<div style="display:flex;align-items:center">'+right+'</div>':'')+
+   '<div style="margin-top:22px">'+thead+rows+'</div>'+
+   (ui.drawer?ledgerDrawer(ui.drawer):'')+
+  '</div>';
+}
+function ledgerDrawer(ref){
+  var e=null; LEDGER.forEach(function(x){ if(x.ref===ref) e=x; }); if(!e) return '';
+  var m=statusMeta(e.st);
+  var nominative = role!=='reader';
+  var evi = e.evi===0
+    ? '<div style="display:flex;align-items:flex-start;gap:10px;padding:14px 16px;border:1px solid var(--critical);border-radius:12px"><span class="dot" style="background:var(--critical);margin-top:5px"></span><span style="font:400 12.5px/1.5 var(--sans)">No evidence attached. A claim cannot ship with holes; this entry blocks the dossier until a file is added.</span></div>'
+    : '<div style="display:flex;flex-direction:column;gap:8px">'+eviFile('lease_'+e.code+'.pdf','sha256 · 9f2a…d3a1','verified')+(e.evi>1?eviFile('proof_'+e.period+'.pdf','sha256 · 4c81…0d55','verified'):'')+'</div>';
+  var fx = e.fx?'<div style="margin-top:20px;padding:14px 16px;background:var(--fill);border-radius:12px;display:flex;flex-direction:column;gap:10px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Multi-currency</span><div style="display:flex;justify-content:space-between"><span class="sub">Original</span><span style="font:500 12.5px var(--mono)">'+e.fx.amt+' '+e.fx.cur+'</span></div><div style="display:flex;justify-content:space-between"><span class="sub">Rate · '+e.fx.src+'</span><span style="font:500 12.5px var(--mono)">'+e.fx.rate+'</span></div><div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--hair)"><span class="sub">Computed PHP</span><span style="font:500 12.5px var(--mono)">₱ '+e.fx.php+'</span></div></div>':'';
+  return '<div class="modal-scrim" data-act="drawerClose" style="background:rgba(0,0,0,.14);justify-content:flex-end"></div>'+
+   '<div style="position:absolute;top:0;right:0;bottom:0;width:472px;background:var(--base);border-left:1px solid var(--hair-strong);z-index:31;display:flex;flex-direction:column">'+
+    '<div style="display:flex;align-items:center;gap:12px;padding:18px 24px;border-bottom:1px solid var(--hair)"><span class="mono" style="color:var(--ink-2)">'+e.ref+'</span><span style="flex:1"></span><span class="qbtn" data-act="drawerClose" style="padding:2px 8px">✕</span></div>'+
+    '<div style="flex:1;overflow-y:auto;padding:24px">'+
+     '<span style="font:600 17px var(--sans);display:block">'+e.code+' '+e.name+'</span>'+
+     '<div style="display:flex;align-items:center;gap:10px;margin-top:10px"><span style="font:500 11.5px var(--mono)">'+e.code+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+e.cat+'</span><span class="dot" style="background:var(--ink-3)"></span><span style="font:400 11.5px var(--mono);color:var(--ink-2)">'+e.period+'</span></div>'+
+     '<div style="margin-top:22px;display:flex;align-items:flex-end;justify-content:space-between;padding:18px 0;border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)"><div style="display:flex;flex-direction:column;gap:4px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Amount</span><span style="font:200 33px/1 var(--sans);letter-spacing:-.02em">₱ '+e.amt+'</span></div><div style="display:flex;align-items:center;gap:7px">'+(m.dot?'<span class="dot" style="background:'+m.c+'"></span>':'')+'<span style="font:500 13px var(--sans);color:'+m.c+'">'+m.label+'</span></div></div>'+
+     fx+
+     (nominative?'<div style="margin-top:22px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Persons</span><div style="margin-top:8px"><span class="sub" style="color:var(--ink)">'+e.persons+'</span></div></div>':'')+
+     '<div style="margin-top:22px;margin-bottom:12px"><span class="eyebrow" style="font-size:11px;color:var(--ink-2)">Evidence · '+e.evi+' files</span></div>'+evi+
+     '<div style="margin-top:24px;margin-bottom:12px"><span class="eyebrow" style="font-size:11px;color:var(--ink-2)">Validation trail</span></div>'+
+     '<div class="trow" style="border-top:1px solid var(--hair)"><span class="dot" style="background:var(--success)"></span><span class="sub" style="flex:1;color:var(--ink)">Submitted</span><span class="mono" style="color:var(--ink-2)">02 Jul 2026</span></div>'+
+     '<div class="trow"><span class="dot" style="background:'+(e.st==='pending'?'var(--partial)':'var(--success)')+'"></span><span class="sub" style="flex:1;color:var(--ink)">'+(e.st==='pending'?'Pending second validation':'Validated · M. Reyes')+'</span><span class="mono" style="color:var(--ink-2)">'+(e.st==='pending'?'—':'06 Jul 2026')+'</span></div>'+
+     (e.claim?'<div style="margin-top:24px;margin-bottom:12px"><span class="eyebrow" style="font-size:11px;color:var(--ink-2)">Linked claim event</span></div><div style="display:flex;align-items:center;gap:12px;padding:13px 16px;border:1px solid var(--hair-strong);border-radius:12px"><span style="font:500 11.5px var(--mono)">'+e.claim+'</span><div style="width:1px;height:14px;background:var(--hair-strong)"></div><span class="sub">ROW-7 access restriction · 148 days</span></div>':'')+
+    '</div></div>';
+}
+function eviFile(name,hash,state){ return '<div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:var(--fill);border-radius:12px"><div style="flex:1;display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font:400 12.5px var(--sans);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+name+'</span><span style="font:400 11px var(--mono);color:var(--ink-3)">'+hash+'</span></div><div style="display:flex;align-items:center;gap:6px"><span class="dot" style="background:var(--ink-2)"></span><span style="font:400 11px var(--mono);color:var(--ink-2)">'+state+'</span></div></div>'; }
+
+/* ============================ S09 periods ============================ */
+function vPeriods(){
+  var cards='';
+  PERIODS.forEach(function(p){
+    var chip, dim='';
+    if(p.state==='sealed'){ chip='<span class="chip seal">'+ic('lock').replace(/width="16" height="16"/,'width="11" height="11"')+' Sealed</span>'; dim='opacity:.72'; }
+    else if(p.state==='open'){ chip='<span class="chip" style="color:var(--ink-2);background:var(--fill)">Open</span>'; }
+    else if(p.state==='partial'){ chip='<span class="chip part"><span class="dot" style="background:var(--partial)"></span>Partial</span>'; }
+    else { chip='<span class="chip seal">Complete</span>'; }
+    var action = p.state==='open'?'<span class="qbtn" data-act="nav" data-arg="#/periods/seal" style="padding:8px 0">Close checklist &rarr;</span>':'';
+    cards+='<div class="card" style="'+dim+';display:flex;flex-direction:column;gap:12px"><div style="display:flex;align-items:center;gap:10px"><svg width="16" height="16" viewBox="0 0 96 96" style="color:var(--ink)"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg><span class="h2">'+p.p+'</span><span style="flex:1"></span>'+chip+'</div><span style="font:200 30px/1 var(--sans);font-variant-numeric:tabular-nums">'+p.ratio+'</span><span class="sub">'+p.note+'</span>'+action+'</div>';
+  });
+  return '<div class="wrap">'+head('Periods','2026-01 to 2026-06','Six periods · one sealed · 2026-06 open for close','')+
+   '<div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">'+cards+'</div>'+
+   '<div style="margin-top:24px;border-top:1px solid var(--hair);padding-top:18px"><span class="h2">Close checklist · 2026-06</span>'+
+     checkRow('All owed categories filed','23 / 33 elements','part')+
+     checkRow('Pending validations cleared','14 awaiting countersign','part')+
+     checkRow('No critical gaps open','1 critical · GAP-118','crit')+
+     '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Seal is available once the checklist is quiet.</span></div>'+
+   '</div>'+
+  '</div>';
+}
+function checkRow(label,detail,st){ var c=st==='crit'?'var(--critical)':'var(--partial)'; return '<div class="trow"><span class="dot" style="background:'+c+'"></span><span class="sub" style="color:var(--ink);flex:1">'+label+'</span><span class="mono" style="color:'+c+'">'+detail+'</span></div>'; }
+
+/* ============================ S10 seal ceremony ============================ */
+function vSeal(){
+  var sealed=ui.sealed;
+  if(sealed){
+    return '<div class="wrap" style="display:flex;flex-direction:column;align-items:center;padding-top:40px">'+
+     '<span style="font:200 40px/1.15 var(--sans);letter-spacing:-.02em;text-align:center">Sealed. Contemporaneous. Court-ready.</span>'+
+     '<div class="card" style="width:620px;margin-top:36px;border:1px solid var(--hair-strong)">'+
+       '<div style="display:flex;align-items:center;gap:12px"><svg width="18" height="18" viewBox="0 0 96 96" style="color:var(--ink)"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg><span class="h2">Period 2026-06</span><span style="flex:1"></span><span class="chip seal">Sealed · just now</span></div>'+
+       '<span class="eyebrow" style="font-size:10px;color:var(--ink-3);display:block;margin-top:24px">Seal fingerprint</span>'+
+       '<span style="font:500 14px var(--mono);display:block;margin-top:8px;letter-spacing:.02em">sha256 · b7e2 41a0 9c3f 88d1 6a2e f094</span>'+
+       '<span class="sub" style="display:block;margin-top:12px">Write-once · corrections create versions, never overwrites.</span>'+
+       '<div class="trow" style="margin-top:16px"><div class="avatar" style="width:24px;height:24px">MR</div><span class="sub" style="color:var(--ink)">Countersigned · M. Reyes · Consolidator</span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">just now</span></div>'+
+     '</div>'+
+     '<div style="width:620px;margin-top:24px"><span class="eyebrow" style="font-size:10px;color:var(--ink-3)">Period history</span>'+
+       histRow('Deposit','CRPH_Payroll_Local_2026-06.xlsx · registered','05 Jul 2026 · 10:12')+
+       histRow('Validation','33 of 33 evidence sets countersigned','—')+
+       histRow('Seal','Period locked · fingerprint issued','just now')+
+     '</div>'+
+    '</div>';
+  }
+  return '<div class="wrap" style="display:flex;flex-direction:column;align-items:center;padding-top:40px">'+
+   '<span style="font:200 38px/1.15 var(--sans);letter-spacing:-.02em;text-align:center">The seal is a one-way door.</span>'+
+   '<div class="card" style="width:620px;margin-top:36px;border:1px solid var(--hair-strong)">'+
+     '<div style="display:flex;align-items:center;gap:12px"><span class="h2">Period 2026-06</span><span style="flex:1"></span><span class="chip" style="color:var(--ink-2);background:var(--fill)">Ready to seal</span></div>'+
+     '<span class="sub" style="display:block;margin-top:14px">Sealing issues a fingerprint and makes the period write-once. Later corrections create a new version, never an overwrite.</span>'+
+     '<div style="margin-top:20px">'+kv('Elements filed','33 / 33')+kv('Validations','all countersigned')+kv('Countersign','M. Reyes · Consolidator')+'</div>'+
+     '<div style="margin-top:20px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="seal">Seal period</button><span class="sub" style="color:var(--ink-3)">this cannot be undone silently</span></div>'+
+   '</div>'+
+  '</div>';
+}
+function histRow(k,v,t){ return '<div class="trow"><span class="dot" style="background:var(--ink-3)"></span><span style="width:92px;font:500 13px var(--sans)">'+k+'</span><span class="sub" style="flex:1">'+v+'</span><span class="mono" style="color:var(--ink-3)">'+t+'</span></div>'; }
+
+/* ============================ S11 claims list ============================ */
+function vClaims(){
+  var cards='';
+  EVENTS.forEach(function(ev){
+    var clock, dim='', chip;
+    if(ev.state==='counting'){ chip='<span class="chip part"><span class="dot" style="background:var(--partial)"></span>'+ev.days+' days left</span>'; clock='<span style="font:200 34px/1 var(--sans);color:var(--partial);font-variant-numeric:tabular-nums">'+ev.days+'<span style="font-size:15px"> days</span></span>'; }
+    else if(ev.state==='notified'){ chip='<span class="chip seal">Notified</span>'; clock='<span style="font:200 34px/1 var(--sans);color:var(--ink-3)">—</span>'; }
+    else { chip='<span class="chip crit">Barred</span>'; clock='<span style="font:200 34px/1 var(--sans);color:var(--critical)">0</span>'; dim='opacity:.55'; }
+    var clickable = role==='consolidator';
+    cards+='<div class="card" style="'+dim+';display:flex;align-items:center;gap:24px'+(clickable?';cursor:pointer':'')+'" '+(clickable?'data-act="nav" data-arg="'+ev.route+'"':'')+'>'+
+      '<div style="flex:1;display:flex;flex-direction:column;gap:6px"><div style="display:flex;align-items:center;gap:10px"><span style="font:500 12.5px var(--mono)">'+ev.id+'</span><span class="dot" style="background:var(--ink-3)"></span><span style="font:600 17px var(--sans);letter-spacing:-.01em">'+ev.title+'</span>'+chip+'</div><span class="mono" style="color:var(--ink-3)">'+ev.note+'</span></div>'+
+      '<div style="text-align:right">'+clock+'<div class="mono" style="color:var(--ink-3);margin-top:4px">notice clock</div></div>'+
+    '</div>';
+  });
+  return '<div class="wrap">'+head('Claims','Contractual events','Notice clocks first. A missed clock is the most expensive state in the app.','')+
+   '<div style="margin-top:22px;display:flex;flex-direction:column;gap:16px">'+cards+'</div>'+
+   (role==='consolidator'?'':'<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Read-only for your role. Consolidator owns the claim lifecycle.</span></div>')+
+  '</div>';
+}
+
+/* ============================ S12 event + notify ============================ */
+function vEvent(){
+  var notified=ui.notified;
+  var timeline='<div style="display:flex;align-items:center;gap:0;margin-top:8px">'+
+    tlNode('Identify',true)+tlLine()+tlNode('Notify',notified)+tlLine()+tlNode('Build',false)+'</div>';
+  var composer = notified
+    ? '<div class="card" style="margin-top:20px;background:var(--fill);border:none"><div style="display:flex;align-items:center;gap:10px"><svg width="14" height="14" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="h2">Notice served</span></div><span class="sub" style="display:block;margin-top:8px">Notice of delay served to the Engineer · proof of notice registered and hashed.</span><div style="margin-top:12px">'+eviFile('notice_EOT001_2026-07-15.pdf','sha256 · 77d2…b3e8','verified')+'</div></div>'
+    : '<div class="card" style="margin-top:20px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Notify composer</span>'+
+      '<div style="margin-top:14px;display:grid;grid-template-columns:1fr 1fr;gap:14px"><label style="display:flex;flex-direction:column;gap:6px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Recipient</span><input class="inp" value="The Engineer · MMSP"></label><label style="display:flex;flex-direction:column;gap:6px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Clause</span><input class="inp" value="Sub-Clause 20.1"></label></div>'+
+      '<label style="display:flex;flex-direction:column;gap:6px;margin-top:14px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Notice of delay</span><textarea class="inp" rows="2">Access to ROW-7 was restricted from the identification date, delaying the works. Formal notice of the event and its likely consequences is hereby given.</textarea></label>'+
+      '<div class="card" data-act="attach" style="margin-top:14px;border:1.5px dashed var(--hair-strong);cursor:pointer;display:flex;align-items:center;gap:12px"><span class="sub" style="color:var(--ink)">Attach proof of notice</span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">PDF · hashed on drop</span></div>'+
+      '<div style="margin-top:18px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="notify">Serve notice</button><span class="sub" style="color:var(--ink-3)">14 days remain on the notice clock</span></div></div>';
+  var right='<div style="text-align:right"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Notice clock</span><div style="font:200 44px/1 var(--sans);color:'+(notified?'var(--ink-3)':'var(--partial)')+';font-variant-numeric:tabular-nums;margin-top:6px">'+(notified?'served':'14<span style="font-size:20px"> days</span>')+'</div><span class="mono" style="color:var(--ink-3)">due 29 Jul 2026</span></div>';
+  return '<div class="wrap" style="max-width:1000px;margin:0 auto">'+
+   '<span class="qbtn" data-act="nav" data-arg="#/claims">&larr; Claims</span>'+
+   head('EOT001 · ROW-7 access restriction','Identify &rarr; Notify &rarr; Build','148 days · window 2026-01 to 2026-06 · identified 01 Jul 2026',right)+
+   timeline+composer+
+   '<div style="margin-top:20px;display:flex;align-items:center;gap:14px">'+(notified?'<button class="pill" data-act="nav" data-arg="#/claims/eot001/build">Build the claim &rarr;</button>':'<span class="sub" style="color:var(--ink-3)">Serve notice to unlock the build.</span>')+'</div>'+
+  '</div>';
+}
+function tlNode(l,done){ return '<div style="display:flex;flex-direction:column;align-items:center;gap:6px"><span style="width:14px;height:14px;border-radius:999px;'+(done?'background:var(--ink)':'border:1.5px solid var(--hair-strong)')+'"></span><span style="font:500 10.5px var(--mono);letter-spacing:.08em;color:'+(done?'var(--ink)':'var(--ink-3)')+'">'+l+'</span></div>'; }
+function tlLine(){ return '<div style="flex:1;max-width:120px;height:1px;background:var(--hair-strong);margin-top:-14px"></div>'; }
+
+/* ============================ S13 build / blocked ============================ */
+function vBuild(){
+  var resolved=ui.resolved;
+  var rows='';
+  CLAIM_LINES.forEach(function(l){
+    var miss = l[4]==='miss' && !resolved;
+    var eviHtml = miss
+      ? '<span style="width:160px;display:flex;align-items:center;gap:7px"><span class="dot" style="background:var(--critical)"></span><span style="font:500 12px var(--sans);color:var(--critical)">evidence missing</span></span>'
+      : '<span style="width:160px;display:flex;align-items:center;gap:7px"><span class="dot" style="background:var(--ink-3)"></span><span style="font:400 12px var(--sans);color:var(--ink-2)">'+(l[0]==='1.3.6'&&resolved?'lease attached':'proof on file')+'</span></span>';
+    rows+='<div class="trow" style="border-top:1px solid var(--hair-soft)"><span style="flex:1;display:flex;align-items:center;gap:10px"><span style="font:400 11px var(--mono);color:var(--ink-3);width:44px">'+l[0]+'</span><span style="font:500 13.5px var(--sans)">'+l[1]+'</span></span><span style="width:150px;font:400 12px var(--mono);color:var(--ink-2)">'+l[2]+'</span><span style="width:220px"><span class="tag">'+l[3]+'</span></span>'+eviHtml+'<span style="width:170px;text-align:right" class="amt">'+l[5]+'</span></div>';
+  });
+  var footer = resolved
+    ? '<div style="margin-top:18px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--hair);padding-top:18px"><button class="pill" data-act="nav" data-arg="#/claims/eot001/submit">Continue to submission</button><span class="sub" style="color:var(--ink)">Hole resolved · every line carries proof.</span></div>'
+    : '<div style="margin-top:18px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--hair);padding-top:18px"><button class="pill disabled">Export dossier</button><span style="font:400 12.5px var(--sans);color:var(--critical)"><span style="font-weight:600">Export blocked · 1 line without proof.</span> A claim cannot ship with a hole.</span><span style="flex:1"></span><span class="qbtn" data-act="resolve">Attach the missing lease &rarr;</span></div>';
+  var right='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Assembled total</span><span style="font:200 34px/1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums">PHP 421,947,223.90</span><span class="mono" style="color:var(--ink-3)">6 selected lines · A - Staff Cost</span></div>';
+  return '<div class="wrap">'+
+   '<span class="qbtn" data-act="nav" data-arg="#/claims/eot001">&larr; Event</span>'+
+   head('Claim workspace · EOT001','ROW-7 access restriction','Select eligible lines · each carries an eligibility basis',right)+
+   '<div style="margin-top:20px"><div class="thead"><span style="flex:1" class="th">Element</span><span style="width:150px" class="th">Period</span><span style="width:220px" class="th">Eligibility basis</span><span style="width:160px" class="th">Evidence</span><span style="width:170px;text-align:right" class="th">Amount · PHP</span></div>'+rows+'</div>'+footer+
+  '</div>';
+}
+
+/* ============================ S14 version chain + diff ============================ */
+function vVersion(){
+  if(!ui.unsealed){
+    return '<div class="wrap"><span class="qbtn" data-act="nav" data-arg="#/claims/eot001/build">&larr; Workspace</span>'+
+     head('Version chain · EOT001','v1 sealed','A sealed version is write-once. A correction opens v2 — the original stays consultable.','')+
+     '<div style="margin-top:22px;display:flex;gap:20px">'+
+       '<div class="card" style="width:260px;flex:none"><div style="display:flex;align-items:center;gap:8px"><span class="chip seal">'+ic('lock').replace(/width="16" height="16"/,'width="11" height="11"')+' v1 · sealed</span></div><span class="sub" style="display:block;margin-top:12px">Sealed 10 Jul 2026 · fingerprint b7e2…f094</span><span class="mono" style="display:block;margin-top:8px;color:var(--ink-3)">6 lines · PHP 421,947,223.90</span></div>'+
+       '<div class="card" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:12px"><span class="h2">Correct the sealed claim?</span><span class="sub">The lease for 1.3.6 arrived after seal. Opening v2 keeps v1 archived and consultable, and records the reason on the trail.</span><button class="pill" data-act="unsealOpen">Create version 2</button></div>'+
+     '</div>'+
+    '</div>';
+  }
+  var modal = ui.unsealed==='modal' ? unsealModal() : '';
+  var diffView = ui.unsealed==='done' ? diffRows() : '';
+  return '<div class="wrap" style="position:relative"><span class="qbtn" data-act="nav" data-arg="#/claims/eot001/build">&larr; Workspace</span>'+
+   head('Version chain · EOT001','v1 &rarr; v2','v1 stays sealed and consultable; v2 is the working draft.','')+
+   '<div style="margin-top:22px;display:flex;gap:14px;margin-bottom:22px">'+
+     '<span class="chip seal" style="padding:6px 12px">'+ic('lock').replace(/width="16" height="16"/,'width="11" height="11"')+' v1 · superseded</span>'+
+     '<span class="chip" style="padding:6px 12px;color:var(--ink-2);background:var(--fill)">v2 · draft</span>'+
+   '</div>'+
+   (ui.unsealed==='done'? '<div><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Line-level diff · v1 &rarr; v2</span>'+diffView+'<div style="margin-top:18px"><button class="pill" data-act="nav" data-arg="#/claims/eot001/submit">Continue to submission</button></div></div>' : '')+
+   modal+
+  '</div>';
+}
+function unsealModal(){
+  return '<div class="modal-scrim"><div class="modal"><span class="h2">Open version 2</span><span class="sub" style="display:block;margin-top:10px">v1 stays sealed and archived. State the reason for creating a new version — it is written to the permanent trail.</span>'+
+   '<label style="display:flex;flex-direction:column;gap:6px;margin-top:16px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Reason (required)</span><textarea class="inp" id="unseal-reason" rows="3" placeholder="e.g. Lease Agreement for 1.3.6 Accomodation Rental received after seal; substantiation now complete."></textarea></label>'+
+   '<div style="margin-top:18px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="unsealConfirm">Create v2</button><span class="qbtn" data-act="unsealCancel">Cancel</span><span style="flex:1"></span><span class="mono" id="unseal-warn" style="color:var(--ink-3)">a reason is mandatory</span></div>'+
+  '</div></div>';
+}
+function diffRows(){
+  return '<div style="margin-top:10px">'+
+   diffRow('changed','1.3.6 Accomodation Rental · 2026-03','evidence missing &rarr; lease attached','var(--partial)')+
+   diffRow('added','1.3.18 Training · 2026-05','new eligible line · proof on file','var(--success)')+
+   diffRow('removed','1.3.13 Flight · 2026-02','withdrawn — outside revised basis','var(--critical)')+
+  '</div>';
+}
+function diffRow(kind,label,detail,c){
+  var mark=kind==='added'?'+':(kind==='removed'?'−':'±');
+  return '<div class="trow"><span style="width:22px;font:500 14px var(--mono);color:'+c+'">'+mark+'</span><span style="width:90px;font:500 10.5px var(--mono);letter-spacing:.08em;color:'+c+';text-transform:uppercase">'+kind+'</span><span style="font:500 13.5px var(--sans);flex:1">'+label+'</span><span class="sub">'+detail+'</span></div>';
+}
+
+/* ============================ S15 submission composer ============================ */
+function vSubmit(){
+  var p=ui.profile;
+  function mask(v){ if(p==='notice') return '••••••••'; if(p==='interim'&&arguments[1]==='line') return '••••••'; return v; }
+  var profiles=[['notice','Notice only'],['interim','Interim'],['full','Full detail']];
+  var seg='<div class="seg" style="background:var(--fill);border:1px solid var(--hair)">';
+  profiles.forEach(function(pr){ seg+='<button data-act="profile" data-arg="'+pr[0]+'" class="'+(p===pr[0]?'on':'')+'" style="padding:8px 16px">'+pr[1]+'</button>'; });
+  seg+='</div>';
+  var lineAmt = p==='full' ? null : (p==='notice'?'••••••••':'••••••');
+  var lines='';
+  CLAIM_LINES.forEach(function(l){
+    var a = p==='full' ? l[5] : (p==='notice'?'••••••••':'••••••');
+    lines+='<div class="trow" style="border-top:1px solid var(--hair-soft)"><span style="flex:1"><span style="font:400 11px var(--mono);color:var(--ink-3);margin-right:10px">'+l[0]+'</span><span style="font:500 13px var(--sans)">'+l[1]+'</span></span><span class="amt" style="width:180px;color:'+(p==='full'?'var(--ink)':'var(--ink-3)')+'">'+a+'</span></div>';
+  });
+  var total = p==='notice' ? '••••••••••••' : 'PHP 421,947,223.90';
+  var desc = p==='notice'?'Notice-only: existence of the event and lines, amounts withheld.':(p==='interim'?'Interim: category totals shown, line detail masked.':'Full detail: every line and amount disclosed.');
+  var footer = ui.exported
+    ? '<div style="margin-top:18px;border-top:1px solid var(--hair);padding-top:16px"><span class="sub" style="color:var(--ink)">Exported · disclosure profile "'+profiles.filter(function(x){return x[0]===p})[0][1]+'"</span><span class="mono" style="display:block;margin-top:6px;color:var(--ink-3)">export trace · sha256 c19f…a4d3 · 15 Jul 2026 · M. Reyes</span></div>'
+    : '<div style="margin-top:18px;border-top:1px solid var(--hair);padding-top:16px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="export">Export dossier</button><span class="sub" style="color:var(--ink-3)">every export is stamped and traceable</span></div>';
+  return '<div class="wrap"><span class="qbtn" data-act="nav" data-arg="#/claims/eot001/build">&larr; Workspace</span>'+
+   head('Submission · EOT001','Disclosure profile','Choose how much the recipient sees. Amounts mask live.','')+
+   '<div style="margin-top:20px;display:flex;align-items:center;gap:16px">'+seg+'<span class="sub" style="color:var(--ink-3)">'+desc+'</span></div>'+
+   '<div class="card" style="margin-top:20px"><div style="display:flex;align-items:baseline;justify-content:space-between"><span class="h2">Live preview</span><span class="mono" style="color:var(--ink-3)">recipient view</span></div>'+
+     '<div style="margin-top:14px;display:flex;align-items:flex-end;justify-content:space-between;border-bottom:1px solid var(--hair);padding-bottom:14px"><span class="sub">Assembled total</span><span style="font:200 30px/1 var(--sans);font-variant-numeric:tabular-nums;color:'+(p==='notice'?'var(--ink-3)':'var(--ink)')+'">'+total+'</span></div>'+
+     lines+
+   '</div>'+footer+
+  '</div>';
+}
+
+/* ============================ S16 users & roles ============================ */
+function vUsers(){
+  var rows='';
+  USERS.forEach(function(u){
+    rows+='<div class="trow"><div class="avatar" style="width:26px;height:26px">'+u.ini+'</div><div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font:500 13.5px var(--sans)">'+u.name+'</span><span class="mono" style="color:var(--ink-3)">'+u.dept+'</span></div>'+
+      '<span style="width:220px"><span class="sbtn" style="height:30px">'+u.role+' <span style="margin-left:8px;color:var(--ink-3);font-size:9px">▾</span></span></span>'+
+      '<span style="width:180px">'+(u.hr?'<span class="chip seal">'+ic('lock').replace(/width="16" height="16"/,'width="11" height="11"')+' HR isolation</span>':'<span class="mono" style="color:var(--ink-3)">no nominative</span>')+'</span>'+
+      '<span style="width:80px;text-align:right;font:400 12px var(--sans);color:var(--ink-2)">'+u.status+'</span></div>';
+  });
+  return '<div class="wrap">'+head('Users &amp; roles','Six roles','Assign a role · HR isolation badge marks nominative access','<button class="pill sm" data-act="noop">Invite user</button>')+
+   '<div style="margin-top:22px"><div class="thead"><span style="width:26px"></span><span style="flex:1" class="th">User</span><span style="width:220px" class="th">Role</span><span style="width:180px" class="th">HR access</span><span style="width:80px;text-align:right" class="th">Status</span></div>'+rows+'</div>'+
+   '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">HR isolation strips nominative columns from any view a role is not authorized for.</span></div>'+
+  '</div>';
+}
+
+/* ============================ config summary (S19 stub) ============================ */
+function vConfig(){
+  function cCard(label,val,ctx){ return '<div class="card" style="display:flex;flex-direction:column;gap:6px"><span style="font:500 11.5px var(--sans);color:var(--ink-2)">'+label+'</span><span style="font:200 40px/1 var(--sans);letter-spacing:-.03em;font-variant-numeric:tabular-nums">'+val+'</span><span class="sub" style="color:var(--ink-3)">'+ctx+'</span></div>'; }
+  return '<div class="wrap">'+head('Config summary','MMSP EOT001','Read-only. The taxonomy and rule editors arrive after the pilot.','')+
+   '<div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">'+
+     cCard('Categories','3','1.1 Salary · 1.2 Contribution · 1.3 Fringe Benefit')+
+     cCard('Cost elements','40','mapped on the real price file')+
+     cCard('Roles','6','contributor to admin')+
+     cCard('Notice period','28<span style="font-size:20px;color:var(--ink-2)"> days</span>','default contractual notice window')+
+     cCard('FX source','pending','rate provider not yet configured')+
+     cCard('Acquisition modes','3','extracted · computed · manual with evidence')+
+   '</div>'+
+   '<div style="margin-top:20px"><span class="sub" style="color:var(--ink-3)">One glance, no editing controls in this build.</span></div>'+
+  '</div>';
+}
+
+/* ============================ S18 reports (stub) ============================ */
+function vReports(){
+  var aggregates = role==='reader';
+  return '<div class="wrap">'+head('Reports &amp; export',''+(aggregates?'Aggregates':'Full')+' view','Filter builder and export formats · this surface is a stub in T1.','')+
+   '<div style="margin-top:22px;display:flex;gap:20px">'+
+     '<div class="card" style="width:280px;flex:none"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Filter builder</span>'+
+       '<div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">'+repFilter('Cost head','A - Staff Cost')+repFilter('Window','2026-01 to 2026-06')+repFilter('Grouping',aggregates?'Category':'Element')+(aggregates?'':repFilter('Persons','all'))+'</div></div>'+
+     '<div class="card" style="flex:1"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Export</span>'+
+       '<div style="margin-top:14px;display:flex;gap:10px"><span class="sbtn">PDF dossier</span><span class="sbtn">XLSX</span><span class="sbtn">CSV</span></div>'+
+       '<div style="margin-top:20px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="noop">Export report</button></div>'+
+       '<div style="margin-top:20px;border-top:1px solid var(--hair);padding-top:14px"><span class="mono" style="color:var(--ink-3)">Every export carries a trace footnote: fingerprint, timestamp, author and disclosure profile.</span></div>'+
+     '</div>'+
+   '</div>'+
+   '<div style="margin-top:18px"><span class="chip seal">Stub · full report builder is Tier 2</span></div>'+
+  '</div>';
+}
+function repFilter(k,v){ return '<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 12px;background:var(--fill);border-radius:8px"><span style="font:500 12px var(--sans);color:var(--ink-2)">'+k+'</span><span style="font:400 12px var(--mono);color:var(--ink)">'+v+'</span></div>'; }
+
+/* ============================ evidence register (+ empty state) ============================ */
+function vEvidence(){
+  if(role==='contributor'){
+    return '<div class="wrap">'+head('Evidence','My uploads','Own uploads · registered and hashed on drop','')+
+     '<div style="margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px"><span class="sub">No evidence uploaded yet. Drop your first source.</span><button class="pill" data-act="nav" data-arg="#/home">Go to my close</button></div>'+
+    '</div>';
+  }
+  var nominative = role!=='reader';
+  var rows='';
+  LEDGER.filter(function(e){return e.evi>0;}).forEach(function(e){
+    rows+='<div class="trow"><span style="flex:1;font:400 13px var(--sans)">'+e.code+' '+e.name+'</span><span style="width:120px;font:400 11.5px var(--mono);color:var(--ink-2)">'+e.period+'</span>'+(nominative?'<span style="width:120px;font:400 12px var(--sans);color:var(--ink-2)">'+e.persons+'</span>':'')+'<span style="width:80px;text-align:center;font:400 12px var(--mono);color:var(--ink-2)">'+e.evi+' files</span><span style="width:110px"><span class="dot" style="background:var(--ink-2);display:inline-block;margin-right:6px"></span><span class="sub">registered</span></span></div>';
+  });
+  var scope = role==='validator'?'own department':(role==='auditor'?'all (read)':'all');
+  return '<div class="wrap">'+head('Evidence','Register','Deposits, hashed and filed · scope: '+scope,'')+
+   '<div style="margin-top:22px"><div class="thead"><span style="flex:1" class="th">Element</span><span style="width:120px" class="th">Period</span>'+(nominative?'<span style="width:120px" class="th">Persons</span>':'')+'<span style="width:80px;text-align:center" class="th">Files</span><span style="width:110px" class="th">State</span></div>'+rows+'</div>'+
+  '</div>';
+}
+
+/* ============================ reader dashboard (stub) ============================ */
+function vReaderDash(){
+  return '<div class="wrap">'+head('Dashboard','Aggregates','Read-only overview · no nominative detail','')+
+   '<div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">'+
+     kpi('Assembled','PHP 421.9M','EOT001 · 6 lines')+
+     kpi('Open gaps','24','PHP 38.2M blocked')+
+     kpi('Periods sealed','1<span style="font-size:26px;color:var(--ink-3)"> / 6</span>','2026-01')+
+   '</div>'+
+   '<div style="margin-top:24px;border-top:1px solid var(--hair);padding-top:18px"><span class="h2">Cost head · A - Staff Cost</span>'+
+     '<div class="trow"><span class="sub" style="flex:1;color:var(--ink)">1.1 Salary</span><span class="amt">370,224,245.88</span></div>'+
+     '<div class="trow"><span class="sub" style="flex:1;color:var(--ink)">1.2 Contribution</span><span class="amt">89,696,484.16</span></div>'+
+     '<div class="trow"><span class="sub" style="flex:1;color:var(--ink)">1.3 Fringe Benefit</span><span class="amt">85,650,503.83</span></div>'+
+   '</div>'+
+   '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Nominative columns are hidden for this role · HR isolation.</span></div>'+
+  '</div>';
+}
+
+/* ============================ KPI count-up (first cockpit render) ============================ */
+function runKpiCountup(){
+  if(ui.kpiDone) return; ui.kpiDone=true;
+  if(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  var els=document.querySelectorAll('[data-kpi]');
+  els.forEach(function(el){
+    var target=parseInt(el.getAttribute('data-kpi'),10);
+    if(!target) return;
+    var suffix=el.innerHTML.replace(/^\d+/,'');
+    var start=null, dur=520;
+    function step(ts){ if(!start)start=ts; var p=Math.min(1,(ts-start)/dur); el.innerHTML=Math.round(p*target)+suffix; if(p<1) requestAnimationFrame(step); }
+    el.innerHTML='0'+suffix; requestAnimationFrame(step);
+  });
+}
+
+/* ============================ actions ============================ */
+function setTheme(v){ theme=v; try{localStorage.setItem(LS_THEME,v);}catch(e){} render(); }
+function setRole(v){ role=v; try{localStorage.setItem(LS_ROLE,v);}catch(e){}
+  /* reset flow states that are role-specific so a fresh role starts clean */
+  ui.gapOpen=false; ui.drawer=null; ui.kpiDone=false;
+  /* the process map is legible to every role: stay on it so the highlight
+     follows the switcher. Otherwise land on the role's home. */
+  var dest = location.hash==='#/process' ? '#/process' : ROLES[role].landing;
+  if(location.hash===dest){ render(); } else { location.hash=dest; }
+}
+var HANDLERS={
+  nav:function(a){ nav(a); },
+  role:function(a){ setRole(a); },
+  theme:function(a){ setTheme(a); },
+  gap:function(){ ui.gapOpen=true; render(); },
+  gapClose:function(){ ui.gapOpen=false; render(); },
+  request:function(){ ui.requestSent=true; render(); },
+  drop:function(){ ui.homeStage = ui.homeStage==='owed'?'loading':(ui.homeStage==='loading'?'filed':'owed'); render(); },
+  attach:function(){ if(curRoute()==='#/home/manual'){ ui.manualStage='attached'; } render(); },
+  manualSubmit:function(){ ui.manualStage='submitted'; render(); },
+  validate:function(){ ui.validated=true; render(); },
+  drawer:function(a){ ui.drawer=a; render(); },
+  drawerClose:function(){ ui.drawer=null; render(); },
+  seal:function(){ ui.sealed=true; render(); },
+  resolve:function(){ ui.resolved=true; render(); },
+  notify:function(){ ui.notified=true; render(); },
+  profile:function(a){ ui.profile=a; render(); },
+  export:function(){ ui.exported=true; render(); },
+  unsealOpen:function(){ ui.unsealed='modal'; render(); },
+  unsealCancel:function(){ ui.unsealed=false; render(); },
+  unsealConfirm:function(){
+    var ta=document.getElementById('unseal-reason');
+    if(!ta||!ta.value.trim()){ var w=document.getElementById('unseal-warn'); if(w){ w.style.color='var(--critical)'; w.textContent='a reason is mandatory'; } if(ta) ta.focus(); return; }
+    ui.unsealed='done'; render();
+  },
+  noop:function(){}
+};
+document.getElementById('app').addEventListener('click',function(e){
+  var t=e.target.closest('[data-act]'); if(!t) return;
+  var a=t.getAttribute('data-act'), arg=t.getAttribute('data-arg');
+  if(HANDLERS[a]){ e.stopPropagation(); HANDLERS[a](arg); }
+});
+
+/* ============================ boot ============================ */
+window.addEventListener('hashchange',render);
+if(!location.hash || ROUTE_SEC[location.hash]===undefined){ location.hash=ROLES[role].landing; }
+render();
+
+})();
+</script>
+</body>
+</html>

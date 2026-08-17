@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>The Vault — Foundations</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;600&family=Geist+Mono:wght@400;500;600&display=swap">
+<style>
+html,body{margin:0;padding:0;background:#FCFCFB}
+*{box-sizing:border-box}
+::selection{background:rgba(29,29,31,.12)}
+</style>
+</helmet>
+<div style="min-width:1280px;background:#FCFCFB;color:#1D1D1F;font-family:'Geist',sans-serif">
+<div style="max-width:1400px;margin:0 auto;padding:0 56px 96px">
+
+<div data-screen-label="Foundations header" style="display:flex;align-items:center;gap:12px;height:76px;border-bottom:1px solid rgba(29,29,31,.08)">
+<svg width="22" height="22" viewBox="0 0 96 96" style="color:#1D1D1F;display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">The Vault</span>
+<div style="width:1px;height:20px;background:rgba(29,29,31,.12)"></div>
+<span style="font:400 13px 'Geist',sans-serif;color:#86868B">Design foundations</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">v1.0 · frozen 4 Jul 2026 · from Showroom 3a / 3b</span>
+</div>
+
+<div style="padding:72px 0 0;display:flex;align-items:flex-end;gap:48px">
+<div style="display:flex;flex-direction:column;gap:16px">
+<span style="font:200 64px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">Foundations</span>
+<span style="font:400 14px/1.6 'Geist',sans-serif;color:#86868B;max-width:640px">The contract for every future screen of The Vault. One layout discipline, two themes — token for token. If a screen cannot be built from this page, the screen is wrong.</span>
+</div>
+<span style="flex:1"></span>
+<div style="display:flex;gap:10px;padding-bottom:6px">
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;border:1px solid rgba(29,29,31,.1)"><span style="width:12px;height:12px;border-radius:4px;background:#FCFCFB;border:1px solid rgba(29,29,31,.12)"></span><span style="font:500 12px 'Geist',sans-serif;color:#1D1D1F">Light</span><span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">#FCFCFB</span></div>
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#101012"><span style="width:12px;height:12px;border-radius:4px;background:#101012;border:1px solid rgba(245,245,247,.25)"></span><span style="font:500 12px 'Geist',sans-serif;color:#F5F5F7">Dark</span><span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#636368">#101012</span></div>
+</div>
+</div>
+
+<div data-screen-label="01 Laws" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 30px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">01</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Laws of the direction</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Non-negotiable</span>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:32px 56px">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">LAW 01</span>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Silence is health</span>
+<span style="font:400 13px/1.6 'Geist',sans-serif;color:#86868B">Muted means complete. Color belongs to exceptions only — partial, critical, success. A calm board is a healthy dossier; the eye goes straight to what needs work.</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">LAW 02</span>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Hairlines are the structure, soft fills are the depth</span>
+<span style="font:400 13px/1.6 'Geist',sans-serif;color:#86868B">1px lines organize the page; planes of soft fill lift what matters. No gradients, no glow, no glassmorphism — shadows barely there, and only under things that float.</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">LAW 03</span>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Thin numerals, calm titles</span>
+<span style="font:400 13px/1.6 'Geist',sans-serif;color:#86868B">Display figures are Geist 200 — large, light, unmissable. Titles stay 600 at modest sizes. Hierarchy comes from scale and space, never from weight noise.</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">LAW 04</span>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Data is mono, amounts right-aligned — always</span>
+<span style="font:400 13px/1.6 'Geist',sans-serif;color:#86868B">Codes, references and every peso live in Geist Mono with tabular figures. The UI face never carries data; the mono face never speaks.</span>
+</div>
+</div>
+
+<div data-screen-label="02 Tokens" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 30px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">02</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Tokens</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Exact values from the canvas — light 3a, dark 3b</span>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:26px 28px">
+<div style="display:flex;align-items:baseline;gap:10px;padding-bottom:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Light</span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Showroom 3a</span>
+</div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#B0B0B4;padding:14px 0 6px">SURFACES</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#FCFCFB;border:1px solid rgba(29,29,31,.1);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--bg</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#FCFCFB</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#F4F4F2;border:1px solid rgba(29,29,31,.08);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--fill</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#F4F4F2</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#EEEEEB;border:1px solid rgba(29,29,31,.08);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--fill-hover</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#EEEEEB</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#ECECEA;border:1px solid rgba(29,29,31,.08);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--track</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#ECECEA</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#B0B0B4;padding:14px 0 6px">INK</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#1D1D1F;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--ink</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#1D1D1F</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#86868B;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--ink-2</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#86868B</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#B0B0B4;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--ink-3</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#B0B0B4</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#B0B0B4;padding:14px 0 6px">STRUCTURE</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(29,29,31,.08);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--hairline</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">rgba(29,29,31,.08)</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(29,29,31,.05);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--hairline-faint</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">rgba(29,29,31,.05)</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(29,29,31,.035);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--wash-hover</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">rgba(29,29,31,.035)</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#B0B0B4;padding:14px 0 6px">STATES — NEVER DECORATIVE</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#2E9E58;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--ok</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#2E9E58</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#BD7D22;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--partial</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#BD7D22</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#D9503F;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--critical</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#D9503F</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(217,80,63,.1);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--state-tint</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">state hex + 1A (10%)</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#B0B0B4;padding:14px 0 6px">SEALED · ACTION · FOCUS</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#F4F4F2;border:1px solid rgba(29,29,31,.08);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--sealed</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">fill band + ink-2 text</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:30px;height:16px;border-radius:999px;background:#1D1D1F;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--pill</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">#1D1D1F on #FCFCFB</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:16px;height:16px;border-radius:6px;background:#FCFCFB;box-shadow:0 0 0 2px #FCFCFB,0 0 0 4px rgba(29,29,31,.35);margin:0 2px;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--ring</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">2px bg gap + 2px ink 35%</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(29,29,31,.05)"><span style="width:18px;height:18px;border-radius:6px;background:#FCFCFB;border:1px solid rgba(29,29,31,.08);box-shadow:0 2px 8px rgba(29,29,31,.06);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">--shadow-float</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">0 2px 8px rgba(29,29,31,.06)</span></div>
+</div>
+
+<div style="border-radius:18px;background:#101012;padding:26px 28px">
+<div style="display:flex;align-items:baseline;gap:10px;padding-bottom:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#F5F5F7">Dark</span>
+<span style="font:400 11px 'Geist',sans-serif;color:#636368">Showroom 3b</span>
+</div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#636368;padding:14px 0 6px">SURFACES</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#101012;border:1px solid rgba(245,245,247,.14);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--bg</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#101012</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#1B1B1D;border:1px solid rgba(245,245,247,.14);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--fill</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#1B1B1D</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#212124;border:1px solid rgba(245,245,247,.14);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--fill-hover</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#212124</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#222225;border:1px solid rgba(245,245,247,.14);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--track</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#222225</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#636368;padding:14px 0 6px">INK</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#F5F5F7;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--ink</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#F5F5F7</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#98989D;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--ink-2</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#98989D</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#636368;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--ink-3</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#636368</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#636368;padding:14px 0 6px">STRUCTURE</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(245,245,247,.1);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--hairline</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">rgba(245,245,247,.10)</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(245,245,247,.06);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--hairline-faint</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">rgba(245,245,247,.06)</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(245,245,247,.05);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--wash-hover</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">rgba(245,245,247,.05)</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#636368;padding:14px 0 6px">STATES — NEVER DECORATIVE</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#41BE73;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--ok</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#41BE73</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#D9A03C;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--partial</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#D9A03C</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#E5675B;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--critical</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#E5675B</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:rgba(229,103,91,.1);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--state-tint</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">state hex + 1A (10%)</span></div>
+<div style="font:500 10px 'Geist',sans-serif;letter-spacing:.06em;color:#636368;padding:14px 0 6px">SEALED · ACTION · FOCUS</div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#1B1B1D;border:1px solid rgba(245,245,247,.14);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--sealed</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">fill band + ink-2 text</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:30px;height:16px;border-radius:999px;background:#F5F5F7;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--pill</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">#F5F5F7 on #101012</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:16px;height:16px;border-radius:6px;background:#101012;box-shadow:0 0 0 2px #101012,0 0 0 4px rgba(245,245,247,.4);margin:0 2px;flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--ring</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">2px bg gap + 2px ink 40%</span></div>
+<div style="display:flex;align-items:center;gap:12px;height:34px;border-top:1px solid rgba(245,245,247,.06)"><span style="width:18px;height:18px;border-radius:6px;background:#1B1B1D;border:1px solid rgba(245,245,247,.14);box-shadow:0 2px 8px rgba(0,0,0,.35);flex:none"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">--shadow-float</span><span style="flex:1"></span><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">0 2px 8px rgba(0,0,0,.35)</span></div>
+</div>
+</div>
+
+<div data-screen-label="03 Type system" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 10px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">03</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Type system</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Geist speaks · Geist Mono counts — identical in both themes</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:76px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Display figure</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">88<span style="font-size:30px;color:#86868B">%</span></span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 200 · 56/1 · ls -.03em — unit 30 · ink-2</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Section title</span>
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Evidence completeness</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 600 · 16/1.3 · ls -.01em</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Object title</span>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Equipment Standby <span style="font:400 15px 'Geist',sans-serif;color:#86868B">· 2026-05</span></span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 600 · 17/1.3 · ls -.01em</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Control</span>
+<span style="font:500 13px 'Geist',sans-serif;color:#1D1D1F">Request documents</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 500 · 13/1 — buttons, nav, selectors</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Body</span>
+<span style="font:400 13px/1.5 'Geist',sans-serif;color:#1D1D1F;max-width:560px">Invoices, payslips, leases and payment proofs — registered, hashed and filed.</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 400 · 13/1.5</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Label</span>
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Claim-ready coverage</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 500 · 12/1.3 · ink-2</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Caption</span>
+<span style="font:400 11px/1.4 'Geist',sans-serif;color:#B0B0B4">Sealed · 30 Jun 2026</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist 400 · 11/1.4 · ink-3</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Data — amounts</span>
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F;text-align:right;max-width:220px;display:block">1,310,924.40</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist Mono 500 · 12 · tabular · right-aligned, always</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Data secondary</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">21,480.00 EUR @ 61.03 · BSP, 15 Jun 2026</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist Mono 400 · 11 · ink-2 — fx notes, datelines, column figures</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr 320px;align-items:center;min-height:52px;border-top:1px solid rgba(29,29,31,.05);border-bottom:1px solid rgba(29,29,31,.05);gap:24px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Code / refs</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">ENT-2026-00421 · SHA-256 A94F…9C2E</span>
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B;text-align:right">Geist Mono 400 · 10 · ink-3</span>
+</div>
+
+<div data-screen-label="04 Components" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 30px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">04</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Components</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Every state, both themes</span>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Button pill</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">Primary inverts per theme. Hover: fill shift or 85% opacity, 150ms. One primary per screen.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;flex-direction:column;gap:14px;justify-content:center">
+<div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px">
+<div style="height:40px;padding:0 20px;border-radius:999px;background:#1D1D1F;color:#FCFCFB;display:flex;align-items:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85">Request documents</div>
+<div style="height:40px;padding:0 20px;border-radius:999px;background:#F4F4F2;color:#1D1D1F;display:flex;align-items:center;font:500 13px 'Geist',sans-serif;cursor:pointer" style-hover="background:#EEEEEB">Export dossier</div>
+<span style="font:500 13px 'Geist',sans-serif;color:#86868B;cursor:pointer;padding:8px 4px" style-hover="color:#1D1D1F">Escalate</span>
+<div style="height:40px;padding:0 20px;border-radius:999px;background:#F4F4F2;color:#B0B0B4;display:flex;align-items:center;font:500 13px 'Geist',sans-serif;cursor:not-allowed;opacity:.6">Seal period</div>
+</div>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Primary · Secondary · Quiet · Disabled — 40px action, 34px control</span>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;flex-direction:column;gap:14px;justify-content:center">
+<div style="display:flex;align-items:center;flex-wrap:wrap;gap:12px">
+<div style="height:40px;padding:0 20px;border-radius:999px;background:#F5F5F7;color:#101012;display:flex;align-items:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85">Request documents</div>
+<div style="height:40px;padding:0 20px;border-radius:999px;background:#1B1B1D;color:#F5F5F7;display:flex;align-items:center;font:500 13px 'Geist',sans-serif;cursor:pointer" style-hover="background:#212124">Export dossier</div>
+<span style="font:500 13px 'Geist',sans-serif;color:#98989D;cursor:pointer;padding:8px 4px" style-hover="color:#F5F5F7">Escalate</span>
+<div style="height:40px;padding:0 20px;border-radius:999px;background:#1B1B1D;color:#636368;display:flex;align-items:center;font:500 13px 'Geist',sans-serif;cursor:not-allowed;opacity:.6">Seal period</div>
+</div>
+<span style="font:400 11px 'Geist',sans-serif;color:#636368">Primary · Secondary · Quiet · Disabled — 40px action, 34px control</span>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Input &amp; search</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">Focus is a 2px background gap plus an ink ring at 35/40% — never a color glow.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;flex-direction:column;gap:16px;justify-content:center">
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#F4F4F2;color:#86868B;cursor:text;width:280px" style-hover="background:#EEEEEB">
+<span style="font-size:13px">⌕</span>
+<span style="font:400 13px 'Geist',sans-serif">Search</span>
+<span style="flex:1"></span>
+<span style="font:500 10.5px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">⌘K</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#F4F4F2;width:280px;box-shadow:0 0 0 2px #FCFCFB,0 0 0 4px rgba(29,29,31,.35)">
+<span style="font-size:13px;color:#1D1D1F">⌕</span>
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F">trackworks cert</span>
+<span style="width:1.5px;height:14px;background:#1D1D1F"></span>
+<span style="flex:1"></span>
+<span style="font:500 10.5px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">⌘K</span>
+</div>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Rest (hover live) · Focus</span>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;flex-direction:column;gap:16px;justify-content:center">
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#1B1B1D;color:#98989D;cursor:text;width:280px" style-hover="background:#212124">
+<span style="font-size:13px">⌕</span>
+<span style="font:400 13px 'Geist',sans-serif">Search</span>
+<span style="flex:1"></span>
+<span style="font:500 10.5px 'Geist Mono',ui-monospace,monospace;color:#636368">⌘K</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#1B1B1D;width:280px;box-shadow:0 0 0 2px #101012,0 0 0 4px rgba(245,245,247,.4)">
+<span style="font-size:13px;color:#F5F5F7">⌕</span>
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7">trackworks cert</span>
+<span style="width:1.5px;height:14px;background:#F5F5F7"></span>
+<span style="flex:1"></span>
+<span style="font:500 10.5px 'Geist Mono',ui-monospace,monospace;color:#636368">⌘K</span>
+</div>
+<span style="font:400 11px 'Geist',sans-serif;color:#636368">Rest (hover live) · Focus</span>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Period selector &amp; user chip</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">Sealed periods stay listed, dimmed, never hidden. Role rides under the name.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;align-items:flex-start;gap:32px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;background:#F4F4F2;cursor:pointer;width:fit-content">
+<span style="font:500 13px 'Geist',sans-serif;color:#1D1D1F">2026-06</span>
+<span style="font-size:9px;color:#86868B">▾</span>
+</div>
+<div style="width:180px;border:1px solid rgba(29,29,31,.08);border-radius:12px;padding:6px;display:flex;flex-direction:column;background:#FCFCFB">
+<div style="display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px;background:#F4F4F2"><span style="font:500 12.5px 'Geist',sans-serif;color:#1D1D1F">2026-06</span></div>
+<div style="display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px;cursor:pointer" style-hover="background:#F4F4F2"><span style="font:400 12.5px 'Geist',sans-serif;color:#1D1D1F">2026-05</span></div>
+<div style="display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px"><span style="font:400 12.5px 'Geist',sans-serif;color:#B0B0B4">2026-01</span><span style="flex:1"></span><span style="font:400 10px 'Geist',sans-serif;color:#B0B0B4">Sealed</span></div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding-top:1px">
+<div style="width:32px;height:32px;border-radius:50%;background:#F4F4F2;display:flex;align-items:center;justify-content:center;font:600 11px 'Geist',sans-serif;color:#1D1D1F">MR</div>
+<div style="display:flex;flex-direction:column;gap:1px">
+<span style="font:500 12px 'Geist',sans-serif;color:#1D1D1F">M. Reyes</span>
+<span style="font:400 10.5px 'Geist',sans-serif;color:#86868B">Consolidator · V2</span>
+</div>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;align-items:flex-start;gap:32px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;background:#1B1B1D;cursor:pointer;width:fit-content">
+<span style="font:500 13px 'Geist',sans-serif;color:#F5F5F7">2026-06</span>
+<span style="font-size:9px;color:#98989D">▾</span>
+</div>
+<div style="width:180px;border:1px solid rgba(245,245,247,.1);border-radius:12px;padding:6px;display:flex;flex-direction:column;background:#101012">
+<div style="display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px;background:#1B1B1D"><span style="font:500 12.5px 'Geist',sans-serif;color:#F5F5F7">2026-06</span></div>
+<div style="display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px;cursor:pointer" style-hover="background:#1B1B1D"><span style="font:400 12.5px 'Geist',sans-serif;color:#F5F5F7">2026-05</span></div>
+<div style="display:flex;align-items:center;height:30px;padding:0 10px;border-radius:8px"><span style="font:400 12.5px 'Geist',sans-serif;color:#636368">2026-01</span><span style="flex:1"></span><span style="font:400 10px 'Geist',sans-serif;color:#636368">Sealed</span></div>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding-top:1px">
+<div style="width:32px;height:32px;border-radius:50%;background:#1B1B1D;display:flex;align-items:center;justify-content:center;font:600 11px 'Geist',sans-serif;color:#F5F5F7">MR</div>
+<div style="display:flex;flex-direction:column;gap:1px">
+<span style="font:500 12px 'Geist',sans-serif;color:#F5F5F7">M. Reyes</span>
+<span style="font:400 10.5px 'Geist',sans-serif;color:#98989D">Consolidator · V2</span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">KPI block</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">Label above, thin figure, one line of context. The progress bar is the only place green appears at rest.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;align-items:center">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Claim-ready coverage</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">88<span style="font-size:30px;color:#86868B">%</span></span>
+<div style="width:150px;height:3px;border-radius:2px;background:#ECECEA;margin-top:4px"><div style="width:88%;height:100%;border-radius:2px;background:#2E9E58"></div></div>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B">₱371.3M of ₱421.9M assembled</span>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;align-items:center">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#98989D">Claim-ready coverage</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#F5F5F7">88<span style="font-size:30px;color:#98989D">%</span></span>
+<div style="width:150px;height:3px;border-radius:2px;background:#222225;margin-top:4px"><div style="width:88%;height:100%;border-radius:2px;background:#41BE73"></div></div>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D">₱371.3M of ₱421.9M assembled</span>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Matrix cells</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">42px, amount right-aligned. Complete is muted — no dot, no green. The sealed band is a soft fill, dim but legible.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;flex-direction:column;gap:12px;justify-content:center">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(29,29,31,.05);border-radius:10px"><span style="font:400 12px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">1,310,924.40</span></div><span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Complete — muted</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(29,29,31,.05);border-radius:10px"><span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">882,406.10</span><span style="width:6px;height:6px;border-radius:50%;background:#BD7D22;flex:none"></span></div><span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Partial</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(29,29,31,.05);border-radius:10px"><span style="font:600 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">918,220.16</span><span style="width:6px;height:6px;border-radius:50%;background:#D9503F;flex:none"></span></div><span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Critical</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;background:#F4F4F2;border-radius:10px"><span style="font:400 12px 'Geist Mono',ui-monospace,monospace;color:#86868B">1,310,924.40</span></div><span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Sealed band</span></div>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;flex-direction:column;gap:12px;justify-content:center">
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(245,245,247,.06);border-radius:10px"><span style="font:400 12px 'Geist Mono',ui-monospace,monospace;color:#636368">1,310,924.40</span></div><span style="font:400 11px 'Geist',sans-serif;color:#636368">Complete — muted</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(245,245,247,.06);border-radius:10px"><span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">882,406.10</span><span style="width:6px;height:6px;border-radius:50%;background:#D9A03C;flex:none"></span></div><span style="font:400 11px 'Geist',sans-serif;color:#636368">Partial</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(245,245,247,.06);border-radius:10px"><span style="font:600 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">918,220.16</span><span style="width:6px;height:6px;border-radius:50%;background:#E5675B;flex:none"></span></div><span style="font:400 11px 'Geist',sans-serif;color:#636368">Critical</span></div>
+<div style="display:flex;flex-direction:column;gap:6px"><div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;background:#1B1B1D;border-radius:10px"><span style="font:400 12px 'Geist Mono',ui-monospace,monospace;color:#98989D">1,310,924.40</span></div><span style="font:400 11px 'Geist',sans-serif;color:#636368">Sealed band</span></div>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Status language</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">6px dots for tables, tinted pills for cards, plain colored text for inline marks. Tint = state hex + 1A.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;flex-direction:column;gap:16px;justify-content:center">
+<div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+<span style="display:flex;align-items:center;gap:7px;font:400 12px 'Geist',sans-serif;color:#1D1D1F"><span style="width:6px;height:6px;border-radius:50%;background:#2E9E58"></span>On file</span>
+<span style="display:flex;align-items:center;gap:7px;font:400 12px 'Geist',sans-serif;color:#1D1D1F"><span style="width:6px;height:6px;border-radius:50%;background:#BD7D22"></span>Partial</span>
+<span style="display:flex;align-items:center;gap:7px;font:400 12px 'Geist',sans-serif;color:#1D1D1F"><span style="width:6px;height:6px;border-radius:50%;background:#D9503F"></span>Critical</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<span style="font:600 10.5px 'Geist',sans-serif;color:#D9503F;background:rgba(217,80,63,.1);padding:3px 10px;border-radius:999px">Critical</span>
+<span style="font:600 10.5px 'Geist',sans-serif;color:#BD7D22;background:rgba(189,125,34,.1);padding:3px 10px;border-radius:999px">Open</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#2E9E58">Filed ✓</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#D9503F">Missing</span>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;flex-direction:column;gap:16px;justify-content:center">
+<div style="display:flex;align-items:center;gap:22px;flex-wrap:wrap">
+<span style="display:flex;align-items:center;gap:7px;font:400 12px 'Geist',sans-serif;color:#F5F5F7"><span style="width:6px;height:6px;border-radius:50%;background:#41BE73"></span>On file</span>
+<span style="display:flex;align-items:center;gap:7px;font:400 12px 'Geist',sans-serif;color:#F5F5F7"><span style="width:6px;height:6px;border-radius:50%;background:#D9A03C"></span>Partial</span>
+<span style="display:flex;align-items:center;gap:7px;font:400 12px 'Geist',sans-serif;color:#F5F5F7"><span style="width:6px;height:6px;border-radius:50%;background:#E5675B"></span>Critical</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+<span style="font:600 10.5px 'Geist',sans-serif;color:#E5675B;background:rgba(229,103,91,.1);padding:3px 10px;border-radius:999px">Critical</span>
+<span style="font:600 10.5px 'Geist',sans-serif;color:#D9A03C;background:rgba(217,160,60,.1);padding:3px 10px;border-radius:999px">Open</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#41BE73">Filed ✓</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#E5675B">Missing</span>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Gap card</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">Severity pill, object title, document list with missing / on file, owner, one primary action.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:600 10.5px 'Geist',sans-serif;color:#D9503F;background:rgba(217,80,63,.1);padding:3px 10px;border-radius:999px">Critical</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">GAP-118</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B">open 52 days</span>
+</div>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F;margin-top:10px">Equipment Standby <span style="font:400 15px 'Geist',sans-serif;color:#86868B">· 2026-05</span></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B;margin-top:2px">Blocks ₱1,310,924.40 · 5.2.1.5</span>
+<div style="display:flex;flex-direction:column;margin-top:10px">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(29,29,31,.05)">
+<span style="width:6px;height:6px;border-radius:50%;background:#D9503F;flex:none"></span>
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Proof of payment — TrackWorks cert. #2214</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#D9503F;flex:none">Missing</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(29,29,31,.05)">
+<span style="width:6px;height:6px;border-radius:50%;background:#2E9E58;opacity:.45;flex:none"></span>
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Standby certificate #2214</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#86868B;flex:none">On file</span>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0 14px;border-top:1px solid rgba(29,29,31,.05)">
+<div style="width:26px;height:26px;border-radius:50%;background:#F4F4F2;display:flex;align-items:center;justify-content:center;font:600 10px 'Geist',sans-serif;color:#1D1D1F;flex:none">LS</div>
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F">L. Santos <span style="color:#86868B">· Plant &amp; Equipment</span></span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:#B0B0B4">since 13 May</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="flex:1;height:40px;border-radius:999px;background:#1D1D1F;color:#FCFCFB;display:flex;align-items:center;justify-content:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85">Request documents</div>
+<span style="font:500 13px 'Geist',sans-serif;color:#86868B;cursor:pointer;padding:8px 6px" style-hover="color:#1D1D1F">Escalate</span>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;flex-direction:column">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font:600 10.5px 'Geist',sans-serif;color:#E5675B;background:rgba(229,103,91,.1);padding:3px 10px;border-radius:999px">Critical</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#636368">GAP-118</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D">open 52 days</span>
+</div>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#F5F5F7;margin-top:10px">Equipment Standby <span style="font:400 15px 'Geist',sans-serif;color:#98989D">· 2026-05</span></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D;margin-top:2px">Blocks ₱1,310,924.40 · 5.2.1.5</span>
+<div style="display:flex;flex-direction:column;margin-top:10px">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(245,245,247,.06)">
+<span style="width:6px;height:6px;border-radius:50%;background:#E5675B;flex:none"></span>
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Proof of payment — TrackWorks cert. #2214</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#E5675B;flex:none">Missing</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(245,245,247,.06)">
+<span style="width:6px;height:6px;border-radius:50%;background:#41BE73;opacity:.45;flex:none"></span>
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Standby certificate #2214</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#98989D;flex:none">On file</span>
+</div>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0 14px;border-top:1px solid rgba(245,245,247,.06)">
+<div style="width:26px;height:26px;border-radius:50%;background:#1B1B1D;display:flex;align-items:center;justify-content:center;font:600 10px 'Geist',sans-serif;color:#F5F5F7;flex:none">LS</div>
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7">L. Santos <span style="color:#98989D">· Plant &amp; Equipment</span></span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:#636368">since 13 May</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="flex:1;height:40px;border-radius:999px;background:#F5F5F7;color:#101012;display:flex;align-items:center;justify-content:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85">Request documents</div>
+<span style="font:500 13px 'Geist',sans-serif;color:#98989D;cursor:pointer;padding:8px 6px" style-hover="color:#F5F5F7">Escalate</span>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Drop evidence</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">Rest (hover it), then received: filename, destination, hash. Registered — hashed — filed.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch">
+<div style="border-radius:18px;background:#F4F4F2;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;cursor:pointer;justify-content:center" style-hover="background:#EEEEEB">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(29,29,31,.18);display:flex;align-items:center;justify-content:center;font-size:15px;color:#1D1D1F">↓</div>
+<span style="font:600 13px 'Geist',sans-serif;color:#1D1D1F">Drop evidence</span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:#86868B">or browse <span style="color:#B0B0B4">⌘U</span></span>
+</div>
+<div style="border-radius:18px;background:#F4F4F2;padding:18px;display:flex;flex-direction:column;gap:6px;justify-content:center">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F;word-break:break-all">payroll_may_2026_06A.pdf</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">→ 5.2.1.1 Indirect Personnel</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">SHA-256 A94F…9C2E</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#2E9E58;margin-top:2px">Filed ✓</span>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:stretch">
+<div style="border-radius:18px;background:#1B1B1D;padding:22px 18px;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;cursor:pointer;justify-content:center" style-hover="background:#212124">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(245,245,247,.22);display:flex;align-items:center;justify-content:center;font-size:15px;color:#F5F5F7">↓</div>
+<span style="font:600 13px 'Geist',sans-serif;color:#F5F5F7">Drop evidence</span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:#98989D">or browse <span style="color:#636368">⌘U</span></span>
+</div>
+<div style="border-radius:18px;background:#1B1B1D;padding:18px;display:flex;flex-direction:column;gap:6px;justify-content:center">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7;word-break:break-all">payroll_may_2026_06A.pdf</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">→ 5.2.1.1 Indirect Personnel</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">SHA-256 A94F…9C2E</span>
+<span style="font:500 11.5px 'Geist',sans-serif;color:#41BE73;margin-top:2px">Filed ✓</span>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Table row</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">44px, hairline separated, hover wash. V1 field validation, V2 consolidator countersign, D = documents attached.</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;flex-direction:column;justify-content:center">
+<div style="display:grid;grid-template-columns:112px 1fr 118px 74px;gap:12px;align-items:center;height:44px;border-top:1px solid rgba(29,29,31,.05);border-bottom:1px solid rgba(29,29,31,.05);cursor:pointer" style-hover="background:rgba(29,29,31,.035)">
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#86868B">ENT-2026-00421</span>
+<div style="display:flex;flex-direction:column;gap:1px;min-width:0">
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">TrackWorks standby certificate — ROW-7</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">21,480.00 EUR @ 61.03 · BSP, 15 Jun 2026</span>
+</div>
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F;text-align:right">1,310,924.40</span>
+<span style="display:flex;align-items:center;justify-content:flex-end;gap:7px"><span style="font:500 10px 'Geist Mono',ui-monospace,monospace;color:#2E9E58">V1✓</span><span style="font:500 10px 'Geist Mono',ui-monospace,monospace;color:#BD7D22">V2·</span><span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">D3</span></span>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;flex-direction:column;justify-content:center">
+<div style="display:grid;grid-template-columns:112px 1fr 118px 74px;gap:12px;align-items:center;height:44px;border-top:1px solid rgba(245,245,247,.06);border-bottom:1px solid rgba(245,245,247,.06);cursor:pointer" style-hover="background:rgba(245,245,247,.05)">
+<span style="font:400 10.5px 'Geist Mono',ui-monospace,monospace;color:#98989D">ENT-2026-00421</span>
+<div style="display:flex;flex-direction:column;gap:1px;min-width:0">
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">TrackWorks standby certificate — ROW-7</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">21,480.00 EUR @ 61.03 · BSP, 15 Jun 2026</span>
+</div>
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7;text-align:right">1,310,924.40</span>
+<span style="display:flex;align-items:center;justify-content:flex-end;gap:7px"><span style="font:500 10px 'Geist Mono',ui-monospace,monospace;color:#41BE73">V1✓</span><span style="font:500 10px 'Geist Mono',ui-monospace,monospace;color:#D9A03C">V2·</span><span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">D3</span></span>
+</div>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Toast</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">The only element that floats — shadow barely there. Confirms, then leaves in 150ms.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:24px;display:flex;align-items:center">
+<div style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px 10px 14px;border-radius:999px;background:#FCFCFB;border:1px solid rgba(29,29,31,.08);box-shadow:0 2px 8px rgba(29,29,31,.06)">
+<span style="width:6px;height:6px;border-radius:50%;background:#2E9E58;flex:none"></span>
+<span style="font:500 12.5px 'Geist',sans-serif;color:#1D1D1F">Evidence filed</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">payroll_may_2026_06A.pdf → 5.2.1.1 · SHA-256 A94F…9C2E</span>
+</div>
+</div>
+<div style="border-radius:18px;background:#101012;padding:24px;display:flex;align-items:center">
+<div style="display:inline-flex;align-items:center;gap:10px;padding:10px 18px 10px 14px;border-radius:999px;background:#1B1B1D;border:1px solid rgba(245,245,247,.08);box-shadow:0 2px 8px rgba(0,0,0,.35)">
+<span style="width:6px;height:6px;border-radius:50%;background:#41BE73;flex:none"></span>
+<span style="font:500 12.5px 'Geist',sans-serif;color:#F5F5F7">Evidence filed</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">payroll_may_2026_06A.pdf → 5.2.1.1 · SHA-256 A94F…9C2E</span>
+</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr 1fr;gap:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Empty state</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">No illustration, no cheer. The absence of color is the good news.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;justify-content:center">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(29,29,31,.12);display:flex;align-items:center;justify-content:center;font-size:13px;color:#86868B">✓</div>
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">No gaps in this period</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B">Silence is health — every document is on file.</span>
+<span style="font:500 12.5px 'Geist',sans-serif;color:#86868B;cursor:pointer;margin-top:2px" style-hover="color:#1D1D1F">Review the board →</span>
+</div>
+<div style="border-radius:18px;background:#101012;padding:32px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;justify-content:center">
+<div style="width:36px;height:36px;border-radius:50%;border:1px solid rgba(245,245,247,.14);display:flex;align-items:center;justify-content:center;font-size:13px;color:#98989D">✓</div>
+<span style="font:600 14px 'Geist',sans-serif;color:#F5F5F7">No gaps in this period</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D">Silence is health — every document is on file.</span>
+<span style="font:500 12.5px 'Geist',sans-serif;color:#98989D;cursor:pointer;margin-top:2px" style-hover="color:#F5F5F7">Review the board →</span>
+</div>
+</div>
+
+<div data-screen-label="05 Geometry" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 10px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">05</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Geometry</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">One line each</span>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr auto;align-items:center;gap:24px;min-height:64px;border-top:1px solid rgba(29,29,31,.05)">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Spacing</span>
+<span style="font:400 13px/1.5 'Geist',sans-serif;color:#1D1D1F">Base 8 — gutters 56 · module gap 48 · card padding 24 · controls 34/40 · rows 42–48.</span>
+<div style="display:flex;align-items:flex-end;gap:6px"><div style="width:8px;height:14px;border-radius:3px;background:#ECECEA"></div><div style="width:24px;height:14px;border-radius:3px;background:#ECECEA"></div><div style="width:48px;height:14px;border-radius:3px;background:#ECECEA"></div><div style="width:56px;height:14px;border-radius:3px;background:#ECECEA"></div></div>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr auto;align-items:center;gap:24px;min-height:64px;border-top:1px solid rgba(29,29,31,.05)">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Radius</span>
+<span style="font:400 13px/1.5 'Geist',sans-serif;color:#1D1D1F">999 controls &amp; pills · 18 cards · 12 bands &amp; menus · 10 list rows · 0 inside tables.</span>
+<div style="display:flex;align-items:center;gap:6px"><div style="width:36px;height:22px;border-radius:999px;border:1px solid rgba(29,29,31,.14)"></div><div style="width:36px;height:22px;border-radius:9px;border:1px solid rgba(29,29,31,.14)"></div><div style="width:36px;height:22px;border-radius:6px;border:1px solid rgba(29,29,31,.14)"></div><div style="width:36px;height:22px;border-radius:5px;border:1px solid rgba(29,29,31,.14)"></div></div>
+</div>
+<div style="display:grid;grid-template-columns:190px 1fr auto;align-items:center;gap:24px;min-height:64px;border-top:1px solid rgba(29,29,31,.05);border-bottom:1px solid rgba(29,29,31,.05)">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Hairline &amp; shadow</span>
+<span style="font:400 13px/1.5 'Geist',sans-serif;color:#1D1D1F">1px at 8% (light) / 10% (dark) ink; faint 5% / 6%. Depth is a soft fill; shadow exists only under the toast.</span>
+<div style="display:flex;flex-direction:column;gap:8px;width:120px"><div style="height:1px;background:rgba(29,29,31,.08)"></div><div style="height:1px;background:rgba(29,29,31,.05)"></div></div>
+</div>
+
+<div data-screen-label="06 Motion" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 16px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">06</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Motion</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">150–200ms · ease-out · nothing bounces, nothing glows</span>
+</div>
+<span style="font:400 13px/1.6 'Geist',sans-serif;color:#86868B;display:block;max-width:720px;margin-bottom:24px">One curve: cubic-bezier(.25, 0, .2, 1). Fades 150ms, movement 200ms, state resolution 300ms. Two signature moments only — everything else is instant or a plain fade.</span>
+
+<div style="display:grid;grid-template-columns:220px 1fr;gap:20px;margin-bottom:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">The Drop</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">A file settles, its hash appears, and the matching board cell quietly resolves.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:26px;display:flex;align-items:center;gap:24px">
+<div style="width:130px;flex:none">
+<div style="height:34px;padding:0 16px;border-radius:999px;background:#F4F4F2;color:#1D1D1F;display:inline-flex;align-items:center;font:500 13px 'Geist',sans-serif;white-space:nowrap;cursor:pointer" style-hover="background:#EEEEEB" onClick="{{ playDrop }}">{{ dropBtnTxt }}</div>
+</div>
+<div style="width:250px;flex:none;display:flex;flex-direction:column;gap:8px">
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Intake</span>
+<div style="height:34px">
+<div style="{{ dropChipSt }}"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">payroll_may_2026_06A.pdf</span><span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#86868B">→ 5.2.1.1</span></div>
+</div>
+<span style="{{ dropHashSt }}">SHA-256 A94F…9C2E · registered 14:32</span>
+</div>
+<span style="font-size:14px;color:#B0B0B4;flex:none">→</span>
+<div style="width:180px;flex:none;display:flex;flex-direction:column;gap:8px">
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Board cell · 5.2.1.1 × 2026-05</span>
+<div style="height:42px;display:flex;align-items:center;justify-content:flex-end;gap:7px;padding:0 14px;border:1px solid rgba(29,29,31,.08);border-radius:10px">
+<span style="{{ dropCellTxtSt }}">882,406.10</span>
+<span style="{{ dropDotSt }}"></span>
+</div>
+<span style="font:400 10.5px 'Geist',sans-serif;color:#B0B0B4">{{ dropCellCapTxt }}</span>
+</div>
+<span style="flex:1"></span>
+<span style="font:400 11px/1.7 'Geist',sans-serif;color:#B0B0B4;flex:none;width:170px;text-align:right">file settles 200ms · hash fades 150ms · cell resolves 300ms</span>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:220px 1fr;gap:20px">
+<div style="display:flex;flex-direction:column;gap:6px;padding-top:6px">
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">The Seal</span>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:#86868B">A period locks with a brief settle. Immutable after. No confetti, no glow.</span>
+</div>
+<div style="border:1px solid rgba(29,29,31,.08);border-radius:18px;background:#FCFCFB;padding:26px;display:flex;align-items:center;gap:36px">
+<div style="width:150px;flex:none">
+<div style="height:34px;padding:0 16px;border-radius:999px;background:#1D1D1F;color:#FCFCFB;display:inline-flex;align-items:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85" onClick="{{ playSeal }}">{{ sealBtnTxt }}</div>
+</div>
+<div style="{{ sealColSt }}">
+<div style="padding:12px 14px 8px;display:flex;flex-direction:column;gap:2px;align-items:flex-end">
+<span style="{{ sealHdrSt }}">2026-02</span>
+<span style="{{ sealCapSt }}">Sealed · 4 Jul 2026</span>
+</div>
+<div style="height:36px;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;border-top:1px solid rgba(29,29,31,.05)"><span style="{{ sealAmtSt }}">1,310,924.40</span></div>
+<div style="height:36px;display:flex;align-items:center;justify-content:flex-end;padding:0 14px;border-top:1px solid rgba(29,29,31,.05)"><span style="{{ sealAmtSt }}">612,884.03</span></div>
+</div>
+<span style="flex:1"></span>
+<span style="font:400 11px/1.7 'Geist',sans-serif;color:#B0B0B4;max-width:220px;text-align:right">press settles 150ms · band fills 300ms · caption fades 150ms · immutable after</span>
+</div>
+</div>
+
+<div data-screen-label="07 Contract" style="display:flex;align-items:baseline;gap:16px;margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding:36px 0 24px">
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">07</span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">The contract</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">CSS custom properties — matches the canvas to the pixel</span>
+</div>
+<div style="background:#101012;border-radius:18px;overflow:hidden">
+<div style="display:flex;align-items:center;gap:12px;padding:16px 26px;border-bottom:1px solid rgba(245,245,247,.08)">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">foundations.css</span>
+<span style="font:400 11px 'Geist',sans-serif;color:#98989D">the engineering contract</span>
+<span style="flex:1"></span>
+<div style="height:32px;padding:0 16px;border-radius:999px;background:#F5F5F7;color:#101012;display:flex;align-items:center;font:600 12px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85" onClick="{{ copyCss }}">{{ copyLabel }}</div>
+</div>
+<pre style="margin:0;padding:24px 26px 30px;font:400 11.5px/1.65 'Geist Mono',ui-monospace,monospace;color:#C9C9CE;white-space:pre;overflow-x:auto">{{ cssText }}</pre>
+</div>
+
+<div style="margin-top:72px;border-top:1px solid rgba(29,29,31,.08);padding-top:20px;display:flex;align-items:baseline;gap:14px">
+<span style="font:400 11px 'Geist',sans-serif;color:#86868B">The Vault — Showroom foundations v1.0</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Geist · Geist Mono · color is state, never decoration</span>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;slowMotion&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Motion demos&quot;}}">
+class Component extends DCLogic {
+  state = { copied: false, dropPhase: 0, sealPhase: 0 };
+
+  m() { return (this.props.slowMotion ?? false) ? 4 : 1; }
+
+  css() {
+    return [
+      '/* ==================================================',
+      '   THE VAULT - SHOWROOM FOUNDATIONS v1.0',
+      '   Frozen 4 Jul 2026 - matches canvas 3a / 3b to the pixel',
+      '   ================================================== */',
+      '',
+      ':root {',
+      "  --font-ui:   'Geist', sans-serif;",
+      "  --font-data: 'Geist Mono', ui-monospace, monospace;",
+      '',
+      '  /* geometry */',
+      '  --base: 8px;  --gutter: 56px;  --module-gap: 48px;  --card-pad: 24px;',
+      '  --r-pill: 999px;  --r-card: 18px;  --r-band: 12px;  --r-row: 10px;',
+      '  --h-control: 34px;  --h-action: 40px;  --h-cell: 42px;  --h-header: 48px;',
+      '  --hairline-w: 1px;',
+      '',
+      '  /* motion */',
+      '  --ease-out: cubic-bezier(.25, 0, .2, 1);',
+      '  --t-fade: 150ms;     /* fades, focus, hover, toast exit */',
+      '  --t-move: 200ms;     /* movement: the drop, the seal settle */',
+      '  --t-resolve: 300ms;  /* state color changes: a cell resolving */',
+      '}',
+      '',
+      '/* ---------------- LIGHT (Showroom 3a) ---------------- */',
+      ':root, [data-theme="light"] {',
+      '  --bg:         #FCFCFB;',
+      '  --fill:       #F4F4F2;   /* soft fill: cards, chips, sealed band */',
+      '  --fill-hover: #EEEEEB;',
+      '  --track:      #ECECEA;   /* progress track */',
+      '',
+      '  --ink:   #1D1D1F;        /* primary */',
+      '  --ink-2: #86868B;        /* secondary */',
+      '  --ink-3: #B0B0B4;        /* muted - complete cells, captions */',
+      '',
+      '  --hairline:       rgba(29,29,31,.08);',
+      '  --hairline-faint: rgba(29,29,31,.05);',
+      '  --wash-hover:     rgba(29,29,31,.035);',
+      '',
+      '  /* states - never decorative */',
+      '  --ok:       #2E9E58;',
+      '  --partial:  #BD7D22;',
+      '  --critical: #D9503F;',
+      '  /* state pill background = state hex + 1A (10%) */',
+      '',
+      '  --sealed-bg: var(--fill);  --sealed-ink: var(--ink-2);',
+      '  --pill-bg: #1D1D1F;  --pill-ink: #FCFCFB;   /* primary action */',
+      '  --ring: 0 0 0 2px #FCFCFB, 0 0 0 4px rgba(29,29,31,.35);',
+      '  --shadow-float: 0 2px 8px rgba(29,29,31,.06);  /* toast only */',
+      '}',
+      '',
+      '/* ---------------- DARK (Showroom 3b) ---------------- */',
+      '[data-theme="dark"] {',
+      '  --bg:         #101012;',
+      '  --fill:       #1B1B1D;',
+      '  --fill-hover: #212124;',
+      '  --track:      #222225;',
+      '',
+      '  --ink:   #F5F5F7;',
+      '  --ink-2: #98989D;',
+      '  --ink-3: #636368;',
+      '',
+      '  --hairline:       rgba(245,245,247,.10);',
+      '  --hairline-faint: rgba(245,245,247,.06);',
+      '  --wash-hover:     rgba(245,245,247,.05);',
+      '',
+      '  --ok:       #41BE73;',
+      '  --partial:  #D9A03C;',
+      '  --critical: #E5675B;',
+      '',
+      '  --sealed-bg: var(--fill);  --sealed-ink: var(--ink-2);',
+      '  --pill-bg: #F5F5F7;  --pill-ink: #101012;',
+      '  --ring: 0 0 0 2px #101012, 0 0 0 4px rgba(245,245,247,.40);',
+      '  --shadow-float: 0 2px 8px rgba(0,0,0,.35);',
+      '}',
+      '',
+      '/* ---------------- TYPE ROLES ---------------- */',
+      '.t-display { font: 200 56px/1 var(--font-ui); letter-spacing: -.03em; }    /* KPI figures */',
+      '.t-unit    { font: 200 30px/1 var(--font-ui); color: var(--ink-2); }       /* %, /6 inside a display figure */',
+      '.t-title   { font: 600 16px/1.3 var(--font-ui); letter-spacing: -.01em; }  /* section titles */',
+      '.t-object  { font: 600 17px/1.3 var(--font-ui); letter-spacing: -.01em; }  /* card subjects */',
+      '.t-control { font: 500 13px/1 var(--font-ui); }                            /* buttons, nav, selectors */',
+      '.t-body    { font: 400 13px/1.5 var(--font-ui); }',
+      '.t-label   { font: 500 12px/1.3 var(--font-ui); color: var(--ink-2); }',
+      '.t-caption { font: 400 11px/1.4 var(--font-ui); color: var(--ink-3); }',
+      '.t-data    { font: 500 12px/1 var(--font-data); }                          /* amounts - right-aligned, always */',
+      '.t-data-2  { font: 400 11px/1 var(--font-data); color: var(--ink-2); }     /* fx notes, datelines, column figures */',
+      '.t-code    { font: 400 10px/1 var(--font-data); color: var(--ink-3); }     /* refs: ENT-2026-00421, hashes */',
+      '.t-data, .t-data-2, .t-code { font-variant-numeric: tabular-nums; }',
+      '',
+      '/* Laws: muted means complete - color belongs to exceptions only.',
+      '   Hairlines are structure, soft fills are depth: no gradients,',
+      '   no glow, no glassmorphism; shadow only under the toast.',
+      '   Green/amber/red are states, never decoration. Never #FFD700.',
+      '   No near-black paired with saturated orange. */',
+    ].join('\n');
+  }
+
+  renderVals() {
+    const m = this.m();
+    const e = 'cubic-bezier(.25, 0, .2, 1)';
+    const p = this.state.dropPhase;
+    const s = this.state.sealPhase;
+    const mono = "'Geist Mono',ui-monospace,monospace";
+    return {
+      cssText: this.css(),
+      copyLabel: this.state.copied ? 'Copied' : 'Copy CSS',
+      copyCss: () => {
+        try {
+          if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(this.css());
+        } catch (err) {}
+        this.setState({ copied: true });
+        clearTimeout(this._ct);
+        this._ct = setTimeout(() => this.setState({ copied: false }), 1500);
+      },
+      playDrop: () => {
+        (this._dt || []).forEach(clearTimeout);
+        this.setState({ dropPhase: 0 });
+        this._dt = [
+          setTimeout(() => this.setState({ dropPhase: 1 }), 80),
+          setTimeout(() => this.setState({ dropPhase: 2 }), 80 + 280 * m),
+          setTimeout(() => this.setState({ dropPhase: 3 }), 80 + 560 * m),
+        ];
+      },
+      dropBtnTxt: p === 0 ? 'Play the drop' : 'Replay',
+      dropChipSt: {
+        display: 'flex', alignItems: 'center', gap: '8px', height: '34px', padding: '0 12px',
+        borderRadius: '10px', background: '#F4F4F2', width: 'fit-content',
+        transform: p >= 1 ? 'translateY(0)' : 'translateY(-14px)',
+        opacity: p >= 1 ? 1 : 0,
+        transition: 'transform ' + 200 * m + 'ms ' + e + ', opacity ' + 200 * m + 'ms ' + e,
+      },
+      dropHashSt: {
+        font: '400 10px ' + mono, color: '#86868B',
+        opacity: p >= 2 ? 1 : 0,
+        transition: 'opacity ' + 150 * m + 'ms ' + e,
+      },
+      dropCellTxtSt: {
+        font: (p >= 3 ? '400' : '600') + ' 12px ' + mono,
+        color: p >= 3 ? '#B0B0B4' : '#1D1D1F',
+        transition: 'color ' + 300 * m + 'ms ' + e,
+      },
+      dropDotSt: {
+        width: '6px', height: '6px', borderRadius: '50%', background: '#D9503F', flex: 'none',
+        opacity: p >= 3 ? 0 : 1,
+        transition: 'opacity ' + 300 * m + 'ms ' + e,
+      },
+      dropCellCapTxt: p >= 3 ? 'Complete — resolved' : 'Critical — 1 missing',
+      playSeal: () => {
+        clearTimeout(this._st);
+        if (s === 2) { this.setState({ sealPhase: 0 }); return; }
+        this.setState({ sealPhase: 1 });
+        this._st = setTimeout(() => this.setState({ sealPhase: 2 }), 150 * m);
+      },
+      sealBtnTxt: s === 2 ? 'Reset' : 'Seal 2026-02',
+      sealColSt: {
+        width: '210px', flex: 'none', display: 'flex', flexDirection: 'column',
+        borderRadius: '12px', overflow: 'hidden',
+        border: '1px solid rgba(29,29,31,.08)',
+        background: s === 2 ? '#F4F4F2' : '#FCFCFB',
+        transform: s === 1 ? 'translateY(2px)' : 'translateY(0)',
+        transition: 'background ' + 300 * m + 'ms ' + e + ', transform ' + 150 * m + 'ms ' + e,
+      },
+      sealHdrSt: {
+        font: '500 12px ' + mono,
+        color: s === 2 ? '#86868B' : '#1D1D1F',
+        transition: 'color ' + 300 * m + 'ms ' + e,
+      },
+      sealCapSt: {
+        font: "400 10px 'Geist',sans-serif", color: '#86868B',
+        opacity: s === 2 ? 1 : 0,
+        transition: 'opacity ' + 150 * m + 'ms ' + e + (s === 2 ? ' ' + 150 * m + 'ms' : ''),
+      },
+      sealAmtSt: {
+        font: '400 11px ' + mono,
+        color: s === 2 ? '#86868B' : '#1D1D1F',
+        transition: 'color ' + 300 * m + 'ms ' + e,
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

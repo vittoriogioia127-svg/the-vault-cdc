@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<meta name="design_doc_mode" content="canvas">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..600&amp;family=IBM+Plex+Sans:wght@400;500;600&amp;family=IBM+Plex+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&amp;family=Spline+Sans+Mono:wght@400;500;600&amp;family=Bricolage+Grotesque:opsz,wght@12..96,400..800&amp;family=Red+Hat+Mono:wght@400;500;600&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Franklin:ital,wght@0,400;0,500;0,600;0,700;1,400&amp;display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;300;400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap">
+<style>
+body{margin:0;background:#0C0C0D;font-family:'IBM Plex Sans',sans-serif}
+.dv-turn{padding:44px 52px 36px;scroll-margin-top:16px}
+.dv-thd{display:flex;align-items:baseline;gap:12px;margin:0 0 6px}
+.dv-tid{font:600 10px 'Red Hat Mono',monospace;padding:3px 7px;background:#ECEAE4;color:#111;border-radius:4px;text-decoration:none}
+.dv-tname{font:600 14px/1.2 'Bricolage Grotesque',sans-serif;color:#ECEAE4;letter-spacing:.02em}
+.dv-ctx{margin:0 0 28px;font:400 12px/1.5 'IBM Plex Sans',sans-serif;color:rgba(236,234,228,.48);max-width:920px}
+.dv-opts{display:flex;flex-wrap:wrap;gap:72px;align-items:flex-start}
+.dv-opt{flex:none;display:flex;flex-direction:column;gap:12px;scroll-margin-top:16px}
+.dv-oid{font:600 10.5px 'Red Hat Mono',monospace;padding:3px 7px;background:rgba(236,234,228,.12);color:#ECEAE4;border-radius:5px;text-decoration:none}
+.dv-card{max-width:100%;background:#111;border:1px solid rgba(255,255,255,.09);border-radius:10px;box-shadow:0 30px 90px rgba(0,0,0,.55);overflow:hidden}
+.dv-opt:target .dv-oid{background:#3D6FD6;color:#fff}
+.dv-next{margin:30px 0 0;font:12px/1.6 'IBM Plex Sans',sans-serif;color:rgba(236,234,228,.45)}
+</style>
+</helmet>
+
+<section class="dv-turn" id="t3">
+<div class="dv-thd"><a class="dv-tid" href="#t3">3</a><span class="dv-tname">SHOWROOM — premium minimal, two finishes</span></div>
+<p class="dv-ctx">Round 3, direction reset per feedback: Apple/Tesla restraint — space as structure, efficiency over ornament. Everything non-essential removed (no ledger feed, no chrome). Large light numerals carry the key figures; the board colors exceptions only (muted = complete); 2026-01 is a quiet sealed band; one black pill per screen. Same layout in a light and a dark finish. Geist for UI, Geist Mono for data. Gap rows are clickable.</p>
+<div class="dv-opts">
+
+<div class="dv-opt" id="3a" style="{{ opt3aSt }}">
+<div style="display:flex;flex-direction:column;gap:7px;width:1512px">
+<div style="display:flex;align-items:baseline;gap:12px">
+<a class="dv-oid" href="#3a">3a</a>
+<span style="font:700 15px 'Bricolage Grotesque',sans-serif;color:#ECEAE4;letter-spacing:.08em">SHOWROOM · LIGHT</span>
+<span style="font:400 12.5px 'IBM Plex Sans',sans-serif;color:rgba(236,234,228,.55)">Near-white gallery — thin numerals, hairlines, soft fills; color belongs to exceptions only.</span>
+</div>
+</div>
+<div class="dv-card">
+<div data-screen-label="3a SHOWROOM LIGHT cockpit" style="width:1512px;height:1072px;background:#FCFCFB;color:#1D1D1F;display:flex;flex-direction:column;overflow:hidden;font-family:'Geist',sans-serif">
+
+<div style="display:flex;align-items:center;gap:18px;height:76px;padding:0 56px;border-bottom:1px solid rgba(29,29,31,.08);flex:none">
+<div style="display:flex;align-items:center;gap:10px">
+<svg width="22" height="22" viewBox="0 0 96 96" style="color:#1D1D1F;display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">The Vault</span>
+</div>
+<div style="width:1px;height:20px;background:rgba(29,29,31,.12)"></div>
+<span style="font:400 13px 'Geist',sans-serif;color:#86868B">CE-02 · Access restriction ROW-7 · 148 days</span>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#F4F4F2;color:#86868B;cursor:text;width:216px" style-hover="background:#EEEEEB">
+<span style="font-size:13px">⌕</span>
+<span style="font:400 13px 'Geist',sans-serif">Search</span>
+<span style="flex:1"></span>
+<span style="font:500 10.5px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">⌘K</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;cursor:pointer" style-hover="background:#F4F4F2">
+<span style="font:500 13px 'Geist',sans-serif;color:#1D1D1F">2026-06</span>
+<span style="font-size:9px;color:#86868B">▾</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+<span style="font:500 12px 'Geist',sans-serif;color:#1D1D1F">M. Reyes</span>
+<span style="font:400 10.5px 'Geist',sans-serif;color:#86868B">Consolidator · V2</span>
+</div>
+<div style="width:32px;height:32px;border-radius:50%;background:#F4F4F2;display:flex;align-items:center;justify-content:center;font:600 11px 'Geist',sans-serif;color:#1D1D1F">MR</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:46px 56px 42px;flex:none">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Claim-ready coverage</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">88<span style="font-size:30px;color:#86868B">%</span></span>
+<div style="width:150px;height:3px;border-radius:2px;background:#ECECEA;margin-top:4px"><div style="width:88%;height:100%;border-radius:2px;background:#2E9E58"></div></div>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B">₱371.3M of ₱421.9M assembled</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Open gaps</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">24</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B;margin-top:auto">₱38.2M blocked · oldest 52 days</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Pending validations</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">14</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B;margin-top:auto">₱18.9M awaiting your countersign</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">Periods sealed</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#1D1D1F">1<span style="font-size:30px;color:#B0B0B4"> / 6</span></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B;margin-top:auto">2026-01 · sealed 30 Jun 2026</span>
+</div>
+</div>
+
+<div style="display:flex;gap:48px;padding:0 56px;flex:1;min-height:0">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:14px;flex:none;padding-bottom:14px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Evidence completeness</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#B0B0B4">CE-02 · documents filed vs required</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#B0B0B4">Muted = complete</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:#86868B"><span style="width:6px;height:6px;border-radius:50%;background:#BD7D22"></span>Partial</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:#86868B"><span style="width:6px;height:6px;border-radius:50%;background:#D9503F"></span>Critical</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:#86868B"><span style="width:10px;height:10px;border-radius:3px;background:#F4F4F2;border:1px solid rgba(29,29,31,.1)"></span>Sealed</span>
+</div>
+<div style="display:grid;grid-template-columns:190px repeat(6,1fr) 126px;border-bottom:1px solid rgba(29,29,31,.1);flex:none">
+<div style="height:48px;display:flex;align-items:flex-end;padding-bottom:8px"><span style="font:500 11px 'Geist',sans-serif;color:#86868B">Cost category</span></div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px;background:#F4F4F2;border-radius:12px 12px 0 0">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">2026-01</span>
+<span style="font:400 10px 'Geist',sans-serif;color:#86868B">Sealed · 30 Jun</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">2026-02</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">74/74</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">2026-03</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">72/75</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">2026-04</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">70/73</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">2026-05</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">65/72</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">2026-06</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">61/72</span>
+</div>
+<div style="height:48px;display:flex;align-items:flex-end;justify-content:flex-end;padding-bottom:8px"><span style="font:500 11px 'Geist',sans-serif;color:#86868B">Total · PHP</span></div>
+</div>
+<sc-for list="{{ rowsL }}" as="r" hint-placeholder-count="11">
+<div style="display:grid;grid-template-columns:190px repeat(6,1fr) 126px;align-items:stretch;border-bottom:1px solid rgba(29,29,31,.05)" style-hover="background:rgba(29,29,31,.02)">
+<div style="display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding-right:12px">
+<span style="font:500 13px 'Geist',sans-serif;color:#1D1D1F;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">{{ r.code }}</span>
+</div>
+<div style="{{ r.c1.st }}" style-hover="{{ r.c1.hov }}"><span style="{{ r.c1.txtSt }}">{{ r.c1.txt }}</span><span style="{{ r.c1.dotSt }}"></span></div>
+<div style="{{ r.c2.st }}" style-hover="{{ r.c2.hov }}"><span style="{{ r.c2.txtSt }}">{{ r.c2.txt }}</span><span style="{{ r.c2.dotSt }}"></span></div>
+<div style="{{ r.c3.st }}" style-hover="{{ r.c3.hov }}"><span style="{{ r.c3.txtSt }}">{{ r.c3.txt }}</span><span style="{{ r.c3.dotSt }}"></span></div>
+<div style="{{ r.c4.st }}" style-hover="{{ r.c4.hov }}"><span style="{{ r.c4.txtSt }}">{{ r.c4.txt }}</span><span style="{{ r.c4.dotSt }}"></span></div>
+<div style="{{ r.c5.st }}" style-hover="{{ r.c5.hov }}"><span style="{{ r.c5.txtSt }}">{{ r.c5.txt }}</span><span style="{{ r.c5.dotSt }}"></span></div>
+<div style="{{ r.c6.st }}" style-hover="{{ r.c6.hov }}"><span style="{{ r.c6.txtSt }}">{{ r.c6.txt }}</span><span style="{{ r.c6.dotSt }}"></span></div>
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F;display:flex;align-items:center;justify-content:flex-end">{{ r.total }}</span>
+</div>
+</sc-for>
+<div style="display:grid;grid-template-columns:190px repeat(6,1fr) 126px;align-items:stretch;flex:none">
+<div style="height:44px;display:flex;align-items:center"><span style="font:500 11px 'Geist',sans-serif;color:#86868B">Assembled</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px;background:#F4F4F2;border-radius:0 0 12px 12px"><span style="font:500 11px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">61,208,443.15</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">66,914,207.50</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">71,332,850.24</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">70,081,996.12</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">74,203,318.09</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#86868B">78,206,408.80</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end"><span style="font:600 12px 'Geist Mono',ui-monospace,monospace;color:#1D1D1F">421,947,223.90</span></div>
+</div>
+<span style="font:400 11.5px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4;margin-top:22px">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span>
+</div>
+
+<div style="width:400px;flex:none;display:flex;flex-direction:column;gap:26px;min-height:0">
+<div style="border-radius:18px;background:#F4F4F2;padding:26px 24px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;cursor:pointer;flex:none" style-hover="background:#EEEEEB">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid rgba(29,29,31,.18);display:flex;align-items:center;justify-content:center;font-size:16px;color:#1D1D1F;margin-bottom:2px">↓</div>
+<span style="font:600 14px 'Geist',sans-serif;color:#1D1D1F">Drop evidence</span>
+<span style="font:400 12px/1.5 'Geist',sans-serif;color:#86868B;max-width:280px">Invoices, payslips, leases, payment proofs — registered, hashed and filed automatically.</span>
+<span style="font:500 12px 'Geist',sans-serif;color:#1D1D1F;margin-top:2px">Browse files <span style="color:#B0B0B4">⌘U</span></span>
+</div>
+
+<div style="flex:none;display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F">Gaps</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B">24 open · ₱38.2M blocked</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:16px">
+<span style="{{ gapL.sevSt }}">{{ gapL.sev }}</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4">{{ gapL.id }}</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B">{{ gapL.daysTxt }}</span>
+</div>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#1D1D1F;margin-top:12px">{{ gapL.catName }} <span style="font:400 15px 'Geist',sans-serif;color:#86868B">· {{ gapL.period }}</span></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#86868B;margin-top:3px">Blocks ₱{{ gapL.blocks }} · {{ gapL.cat }}</span>
+<div style="display:flex;flex-direction:column;margin-top:12px">
+<sc-for list="{{ gapL.docs }}" as="d" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(29,29,31,.05)">
+<span style="{{ d.dotSt }}"></span>
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.nm }}</span>
+<span style="{{ d.tagSt }}">{{ d.tag }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0 16px;border-top:1px solid rgba(29,29,31,.05)">
+<div style="width:26px;height:26px;border-radius:50%;background:#F4F4F2;display:flex;align-items:center;justify-content:center;font:600 10px 'Geist',sans-serif;color:#1D1D1F;flex:none">{{ gapL.ini }}</div>
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F">{{ gapL.owner }} <span style="color:#86868B">· {{ gapL.dept }}</span></span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:#B0B0B4">since {{ gapL.since }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="flex:1;height:40px;border-radius:999px;background:#1D1D1F;color:#FCFCFB;display:flex;align-items:center;justify-content:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85">Request documents</div>
+<span style="font:500 13px 'Geist',sans-serif;color:#86868B;cursor:pointer;padding:8px 6px" style-hover="color:#1D1D1F">Escalate</span>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden">
+<div style="display:flex;align-items:baseline;gap:10px;padding-bottom:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#86868B">All gaps</span>
+<span style="flex:1"></span>
+<span style="font:500 12px 'Geist',sans-serif;color:#1D1D1F;cursor:pointer" style-hover="opacity:.6">View all →</span>
+</div>
+<sc-for list="{{ queueL }}" as="q" hint-placeholder-count="6">
+<div style="{{ q.st }}" style-hover="background:rgba(29,29,31,.035)" onClick="{{ q.pick }}">
+<span style="font:400 13px 'Geist',sans-serif;color:#1D1D1F;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.title }}</span>
+<span style="font:400 11.5px 'Geist Mono',ui-monospace,monospace;color:#B0B0B4;white-space:nowrap;flex:none">{{ q.sub }}</span>
+<span style="{{ q.daysSt }}">{{ q.daysTxt }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="height:40px;flex:none"></div>
+
+</div>
+</div>
+<div style="{{ specRowSt }}"><div style="display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px 14px;font:400 10px 'Red Hat Mono',monospace;color:rgba(236,234,228,.5);max-width:1512px">
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#FCFCFB;border-radius:2px"></span>#FCFCFB</span>
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#1D1D1F;border:1px solid rgba(255,255,255,.18);border-radius:2px"></span>#1D1D1F ink</span>
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#F4F4F2;border-radius:2px"></span>#F4F4F2 soft fill</span>
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#2E9E58;border-radius:2px"></span><span style="width:11px;height:11px;background:#BD7D22;border-radius:2px"></span><span style="width:11px;height:11px;background:#D9503F;border-radius:2px"></span>states only</span>
+<span style="opacity:.75">TYPE — Geist 200→600 (thin numerals, medium titles) · Geist Mono for codes &amp; amounts, right-aligned</span>
+<span style="opacity:.75">WHY IT'S ÉPURÉ — required modules only, exceptions carry the only color, whitespace and hairlines instead of cards, one black pill per screen</span>
+</div></div>
+</div>
+
+<div class="dv-opt" id="3b" style="{{ opt3bSt }}">
+<div style="display:flex;flex-direction:column;gap:7px;width:1512px">
+<div style="display:flex;align-items:baseline;gap:12px">
+<a class="dv-oid" href="#3b">3b</a>
+<span style="font:700 15px 'Bricolage Grotesque',sans-serif;color:#ECEAE4;letter-spacing:.08em">SHOWROOM · DARK</span>
+<span style="font:400 12.5px 'IBM Plex Sans',sans-serif;color:rgba(236,234,228,.55)">The same restraint after dark — neutral near-black, no neon, states re-tuned for low light.</span>
+</div>
+</div>
+<div class="dv-card">
+<div data-screen-label="3b SHOWROOM DARK cockpit" style="width:1512px;height:1072px;background:#101012;color:#F5F5F7;display:flex;flex-direction:column;overflow:hidden;font-family:'Geist',sans-serif">
+
+<div style="display:flex;align-items:center;gap:18px;height:76px;padding:0 56px;border-bottom:1px solid rgba(245,245,247,.1);flex:none">
+<div style="display:flex;align-items:center;gap:10px">
+<svg width="22" height="22" viewBox="0 0 96 96" style="color:#F5F5F7;display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em;color:#F5F5F7">The Vault</span>
+</div>
+<div style="width:1px;height:20px;background:rgba(245,245,247,.14)"></div>
+<span style="font:400 13px 'Geist',sans-serif;color:#98989D">CE-02 · Access restriction ROW-7 · 148 days</span>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:8px;height:34px;padding:0 14px;border-radius:999px;background:#1B1B1D;color:#98989D;cursor:text;width:216px" style-hover="background:#212124">
+<span style="font-size:13px">⌕</span>
+<span style="font:400 13px 'Geist',sans-serif">Search</span>
+<span style="flex:1"></span>
+<span style="font:500 10.5px 'Geist Mono',ui-monospace,monospace;color:#636368">⌘K</span>
+</div>
+<div style="display:flex;align-items:center;gap:6px;height:34px;padding:0 14px;border-radius:999px;cursor:pointer" style-hover="background:#1B1B1D">
+<span style="font:500 13px 'Geist',sans-serif;color:#F5F5F7">2026-06</span>
+<span style="font-size:9px;color:#98989D">▾</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:1px">
+<span style="font:500 12px 'Geist',sans-serif;color:#F5F5F7">M. Reyes</span>
+<span style="font:400 10.5px 'Geist',sans-serif;color:#98989D">Consolidator · V2</span>
+</div>
+<div style="width:32px;height:32px;border-radius:50%;background:#1B1B1D;display:flex;align-items:center;justify-content:center;font:600 11px 'Geist',sans-serif;color:#F5F5F7">MR</div>
+</div>
+</div>
+
+<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:24px;padding:46px 56px 42px;flex:none">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#98989D">Claim-ready coverage</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#F5F5F7">88<span style="font-size:30px;color:#98989D">%</span></span>
+<div style="width:150px;height:3px;border-radius:2px;background:#222225;margin-top:4px"><div style="width:88%;height:100%;border-radius:2px;background:#41BE73"></div></div>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D">₱371.3M of ₱421.9M assembled</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#98989D">Open gaps</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#F5F5F7">24</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D;margin-top:auto">₱38.2M blocked · oldest 52 days</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#98989D">Pending validations</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#F5F5F7">14</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D;margin-top:auto">₱18.9M awaiting your countersign</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#98989D">Periods sealed</span>
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em;color:#F5F5F7">1<span style="font-size:30px;color:#636368"> / 6</span></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D;margin-top:auto">2026-01 · sealed 30 Jun 2026</span>
+</div>
+</div>
+
+<div style="display:flex;gap:48px;padding:0 56px;flex:1;min-height:0">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:14px;flex:none;padding-bottom:14px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em;color:#F5F5F7">Evidence completeness</span>
+<span style="font:400 12px 'Geist',sans-serif;color:#636368">CE-02 · documents filed vs required</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:#636368">Muted = complete</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:#98989D"><span style="width:6px;height:6px;border-radius:50%;background:#D9A03C"></span>Partial</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:#98989D"><span style="width:6px;height:6px;border-radius:50%;background:#E5675B"></span>Critical</span>
+<span style="display:flex;align-items:center;gap:6px;font:400 11px 'Geist',sans-serif;color:#98989D"><span style="width:10px;height:10px;border-radius:3px;background:#1B1B1D;border:1px solid rgba(245,245,247,.12)"></span>Sealed</span>
+</div>
+<div style="display:grid;grid-template-columns:190px repeat(6,1fr) 126px;border-bottom:1px solid rgba(245,245,247,.12);flex:none">
+<div style="height:48px;display:flex;align-items:flex-end;padding-bottom:8px"><span style="font:500 11px 'Geist',sans-serif;color:#98989D">Cost category</span></div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px;background:#1B1B1D;border-radius:12px 12px 0 0">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">2026-01</span>
+<span style="font:400 10px 'Geist',sans-serif;color:#98989D">Sealed · 30 Jun</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">2026-02</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">74/74</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">2026-03</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">72/75</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">2026-04</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">70/73</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">2026-05</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">65/72</span>
+</div>
+<div style="height:48px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:2px;padding:8px 14px">
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">2026-06</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">61/72</span>
+</div>
+<div style="height:48px;display:flex;align-items:flex-end;justify-content:flex-end;padding-bottom:8px"><span style="font:500 11px 'Geist',sans-serif;color:#98989D">Total · PHP</span></div>
+</div>
+<sc-for list="{{ rowsD }}" as="r" hint-placeholder-count="11">
+<div style="display:grid;grid-template-columns:190px repeat(6,1fr) 126px;align-items:stretch;border-bottom:1px solid rgba(245,245,247,.06)" style-hover="background:rgba(245,245,247,.03)">
+<div style="display:flex;flex-direction:column;justify-content:center;gap:1px;min-width:0;padding-right:12px">
+<span style="font:500 13px 'Geist',sans-serif;color:#F5F5F7;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span>
+<span style="font:400 10px 'Geist Mono',ui-monospace,monospace;color:#636368">{{ r.code }}</span>
+</div>
+<div style="{{ r.c1.st }}" style-hover="{{ r.c1.hov }}"><span style="{{ r.c1.txtSt }}">{{ r.c1.txt }}</span><span style="{{ r.c1.dotSt }}"></span></div>
+<div style="{{ r.c2.st }}" style-hover="{{ r.c2.hov }}"><span style="{{ r.c2.txtSt }}">{{ r.c2.txt }}</span><span style="{{ r.c2.dotSt }}"></span></div>
+<div style="{{ r.c3.st }}" style-hover="{{ r.c3.hov }}"><span style="{{ r.c3.txtSt }}">{{ r.c3.txt }}</span><span style="{{ r.c3.dotSt }}"></span></div>
+<div style="{{ r.c4.st }}" style-hover="{{ r.c4.hov }}"><span style="{{ r.c4.txtSt }}">{{ r.c4.txt }}</span><span style="{{ r.c4.dotSt }}"></span></div>
+<div style="{{ r.c5.st }}" style-hover="{{ r.c5.hov }}"><span style="{{ r.c5.txtSt }}">{{ r.c5.txt }}</span><span style="{{ r.c5.dotSt }}"></span></div>
+<div style="{{ r.c6.st }}" style-hover="{{ r.c6.hov }}"><span style="{{ r.c6.txtSt }}">{{ r.c6.txt }}</span><span style="{{ r.c6.dotSt }}"></span></div>
+<span style="font:500 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7;display:flex;align-items:center;justify-content:flex-end">{{ r.total }}</span>
+</div>
+</sc-for>
+<div style="display:grid;grid-template-columns:190px repeat(6,1fr) 126px;align-items:stretch;flex:none">
+<div style="height:44px;display:flex;align-items:center"><span style="font:500 11px 'Geist',sans-serif;color:#98989D">Assembled</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px;background:#1B1B1D;border-radius:0 0 12px 12px"><span style="font:500 11px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">61,208,443.15</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">66,914,207.50</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">71,332,850.24</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">70,081,996.12</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">74,203,318.09</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end;padding:0 8px"><span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#98989D">78,206,408.80</span></div>
+<div style="height:44px;display:flex;align-items:center;justify-content:flex-end"><span style="font:600 12px 'Geist Mono',ui-monospace,monospace;color:#F5F5F7">421,947,223.90</span></div>
+</div>
+<span style="font:400 11.5px 'Geist Mono',ui-monospace,monospace;color:#636368;margin-top:22px">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span>
+</div>
+
+<div style="width:400px;flex:none;display:flex;flex-direction:column;gap:26px;min-height:0">
+<div style="border-radius:18px;background:#1B1B1D;padding:26px 24px 24px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;cursor:pointer;flex:none" style-hover="background:#212124">
+<div style="width:40px;height:40px;border-radius:50%;border:1px solid rgba(245,245,247,.22);display:flex;align-items:center;justify-content:center;font-size:16px;color:#F5F5F7;margin-bottom:2px">↓</div>
+<span style="font:600 14px 'Geist',sans-serif;color:#F5F5F7">Drop evidence</span>
+<span style="font:400 12px/1.5 'Geist',sans-serif;color:#98989D;max-width:280px">Invoices, payslips, leases, payment proofs — registered, hashed and filed automatically.</span>
+<span style="font:500 12px 'Geist',sans-serif;color:#F5F5F7;margin-top:2px">Browse files <span style="color:#636368">⌘U</span></span>
+</div>
+
+<div style="flex:none;display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:10px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em;color:#F5F5F7">Gaps</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D">24 open · ₱38.2M blocked</span>
+</div>
+<div style="display:flex;align-items:center;gap:8px;margin-top:16px">
+<span style="{{ gapD.sevSt }}">{{ gapD.sev }}</span>
+<span style="font:400 11px 'Geist Mono',ui-monospace,monospace;color:#636368">{{ gapD.id }}</span>
+<span style="flex:1"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D">{{ gapD.daysTxt }}</span>
+</div>
+<span style="font:600 17px 'Geist',sans-serif;letter-spacing:-.01em;color:#F5F5F7;margin-top:12px">{{ gapD.catName }} <span style="font:400 15px 'Geist',sans-serif;color:#98989D">· {{ gapD.period }}</span></span>
+<span style="font:400 12px 'Geist',sans-serif;color:#98989D;margin-top:3px">Blocks ₱{{ gapD.blocks }} · {{ gapD.cat }}</span>
+<div style="display:flex;flex-direction:column;margin-top:12px">
+<sc-for list="{{ gapD.docs }}" as="d" hint-placeholder-count="4">
+<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid rgba(245,245,247,.06)">
+<span style="{{ d.dotSt }}"></span>
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ d.nm }}</span>
+<span style="{{ d.tagSt }}">{{ d.tag }}</span>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:10px;padding:10px 0 16px;border-top:1px solid rgba(245,245,247,.06)">
+<div style="width:26px;height:26px;border-radius:50%;background:#1B1B1D;display:flex;align-items:center;justify-content:center;font:600 10px 'Geist',sans-serif;color:#F5F5F7;flex:none">{{ gapD.ini }}</div>
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7">{{ gapD.owner }} <span style="color:#98989D">· {{ gapD.dept }}</span></span>
+<span style="flex:1"></span>
+<span style="font:400 11.5px 'Geist',sans-serif;color:#636368">since {{ gapD.since }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:12px">
+<div style="flex:1;height:40px;border-radius:999px;background:#F5F5F7;color:#101012;display:flex;align-items:center;justify-content:center;font:600 13px 'Geist',sans-serif;cursor:pointer" style-hover="opacity:.85">Request documents</div>
+<span style="font:500 13px 'Geist',sans-serif;color:#98989D;cursor:pointer;padding:8px 6px" style-hover="color:#F5F5F7">Escalate</span>
+</div>
+</div>
+
+<div style="flex:1;min-height:0;display:flex;flex-direction:column;overflow:hidden">
+<div style="display:flex;align-items:baseline;gap:10px;padding-bottom:8px">
+<span style="font:500 12px 'Geist',sans-serif;color:#98989D">All gaps</span>
+<span style="flex:1"></span>
+<span style="font:500 12px 'Geist',sans-serif;color:#F5F5F7;cursor:pointer" style-hover="opacity:.6">View all →</span>
+</div>
+<sc-for list="{{ queueD }}" as="q" hint-placeholder-count="6">
+<div style="{{ q.st }}" style-hover="background:rgba(245,245,247,.05)" onClick="{{ q.pick }}">
+<span style="font:400 13px 'Geist',sans-serif;color:#F5F5F7;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.title }}</span>
+<span style="font:400 11.5px 'Geist Mono',ui-monospace,monospace;color:#636368;white-space:nowrap;flex:none">{{ q.sub }}</span>
+<span style="{{ q.daysSt }}">{{ q.daysTxt }}</span>
+</div>
+</sc-for>
+</div>
+</div>
+</div>
+<div style="height:40px;flex:none"></div>
+
+</div>
+</div>
+<div style="{{ specRowSt }}"><div style="display:flex;align-items:flex-start;flex-wrap:wrap;gap:8px 14px;font:400 10px 'Red Hat Mono',monospace;color:rgba(236,234,228,.5);max-width:1512px">
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#101012;border:1px solid rgba(255,255,255,.18);border-radius:2px"></span>#101012</span>
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#F5F5F7;border-radius:2px"></span>#F5F5F7 ink</span>
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#1B1B1D;border:1px solid rgba(255,255,255,.14);border-radius:2px"></span>#1B1B1D soft fill</span>
+<span style="display:inline-flex;align-items:center;gap:5px"><span style="width:11px;height:11px;background:#41BE73;border-radius:2px"></span><span style="width:11px;height:11px;background:#D9A03C;border-radius:2px"></span><span style="width:11px;height:11px;background:#E5675B;border-radius:2px"></span>states only</span>
+<span style="opacity:.75">TYPE — identical roles: Geist UI · Geist Mono data</span>
+<span style="opacity:.75">WHY IT'S ÉPURÉ — same layout token for token; neutral near-black, no neon, no glow — restraint at night</span>
+</div></div>
+</div>
+
+</div>
+<p class="dv-next">Try next: "pick a finish and bring the ledger back as a quiet drawer" · "denser board" · "design the seal moment for 2026-02"</p>
+</section>
+
+
+
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;focus&quot;: {&quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;all&quot;, &quot;3a&quot;, &quot;3b&quot;, &quot;2a&quot;, &quot;2b&quot;, &quot;1a&quot;, &quot;1b&quot;, &quot;1c&quot;], &quot;default&quot;: &quot;all&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Canvas&quot;}, &quot;showSpecs&quot;: {&quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Canvas&quot;}}">
+class Component extends DCLogic {
+  state = { selA: 'GAP-118', selB: 'GAP-118', selC: 'GAP-118', selP: 'GAP-118', selE: 'GAP-118', selL: 'GAP-118', selD: 'GAP-118' };
+
+  d() {
+    if (this._d) return this._d;
+    const CATS = [
+      ['5.2.1.1', 'Indirect Personnel', 'Indirect Personnel', 'A. Ramos', 'HR', '68,412,930.55'],
+      ['5.2.1.2', 'Site Facilities & Camp', 'Site Facilities', 'J. dela Cruz', 'Site Admin', '24,118,204.77'],
+      ['5.2.1.3', 'Equipment Standby', 'Equip. Standby', 'R. Dizon', 'Procurement', '91,730,112.08'],
+      ['5.2.1.4', 'Head Office Overheads', 'HO Overheads', 'M. Santos', 'Finance', '47,205,881.19'],
+      ['5.2.1.5', 'Insurances & Bonds', 'Insurances & Bonds', 'K. Villanueva', 'Finance', '12,914,662.30'],
+      ['5.2.1.6', 'Financing Charges', 'Financing', 'M. Santos', 'Finance', '33,481,970.02'],
+      ['5.2.1.7', 'Subcontractor Prolongation', 'Subcon Prolongation', 'L. Ocampo', 'Commercial', '58,240,155.63'],
+      ['5.2.1.8', 'Materials Escalation', 'Materials Escalation', 'T. Bautista', 'Procurement', '41,027,309.88'],
+      ['5.2.1.9', 'Demob / Remobilisation', 'Demob / Remob', 'J. dela Cruz', 'Site Admin', '9,318,442.10'],
+      ['5.2.1.10', 'Legal & Consultancy', 'Legal & Consultancy', 'P. Navarro', 'Legal', '6,842,551.25'],
+      ['5.2.1.11', 'Profit', 'Profit', 'L. Ocampo', 'Commercial', '28,655,004.13'],
+    ];
+    const GRID = [
+      [['S','12/12'],['G','12/12'],['G','12/12'],['G','11/11'],['A','11/12'],['A','11/12']],
+      [['S','8/8'],['G','8/8'],['G','8/8'],['A','6/7'],['G','8/8'],['A','7/8']],
+      [['S','8/8'],['G','8/8'],['R','7/9'],['A','9/10'],['A','8/9'],['R','6/8']],
+      [['S','6/6'],['G','6/6'],['G','6/6'],['G','6/6'],['A','5/6'],['A','5/6']],
+      [['S','4/4'],['G','4/4'],['G','4/4'],['G','4/4'],['G','4/4'],['G','4/4']],
+      [['S','5/5'],['G','5/5'],['G','5/5'],['A','4/5'],['G','5/5'],['A','4/5']],
+      [['S','13/13'],['G','13/13'],['A','12/13'],['G','12/12'],['R','8/10'],['R','9/11']],
+      [['S','8/8'],['G','8/8'],['G','8/8'],['G','8/8'],['A','7/8'],['A','7/8']],
+      [['S','4/4'],['G','4/4'],['G','4/4'],['G','4/4'],['G','4/4'],['A','3/4']],
+      [['S','4/4'],['G','4/4'],['G','4/4'],['G','4/4'],['A','3/4'],['G','4/4']],
+      [['S','2/2'],['G','2/2'],['G','2/2'],['G','2/2'],['G','2/2'],['A','1/2']],
+    ];
+    const PERIODS = [
+      { id: '2026-01', sealed: true, docs: '74/74', pct: 100, value: '61,208,443.15', vshort: '₱61.2M' },
+      { id: '2026-02', docs: '74/74', pct: 100, value: '66,914,207.50', vshort: '₱66.9M' },
+      { id: '2026-03', docs: '72/75', pct: 96, value: '71,332,850.24', vshort: '₱71.3M' },
+      { id: '2026-04', docs: '70/73', pct: 96, value: '70,081,996.12', vshort: '₱70.1M' },
+      { id: '2026-05', docs: '65/72', pct: 90, value: '74,203,318.09', vshort: '₱74.2M' },
+      { id: '2026-06', docs: '61/72', pct: 85, value: '78,206,408.80', vshort: '₱78.2M' },
+    ];
+    const LEDGER = [
+      ['ENT-2026-00421', '15 JUN', '.1.3', 'Crane lease — VLT-Kran GmbH · TC-3 standby', '1,310,924.40', '21,480.00 EUR @ 61.03 · BSP 15 JUN 2026', 1, 0, '3/3'],
+      ['ENT-2026-00418', '13 JUN', '.1.1', 'Site engineers payroll — May 2026', '2,845,110.00', '', 1, 1, '4/4'],
+      ['ENT-2026-00415', '12 JUN', '.1.8', 'Rebar escalation — BSP certificate #12', '4,102,730.99', '', 1, 0, '2/3'],
+      ['ENT-2026-00412', '11 JUN', '.1.6', 'Standby LC commission — Q2', '842,196.30', '', 1, 1, '2/2'],
+      ['ENT-2026-00409', '10 JUN', '.1.2', 'Camp B lease — Brgy. San Isidro · Jun', '918,400.00', '', 0, 0, '1/2'],
+      ['ENT-2026-00405', '09 JUN', '.1.7', 'Prolongation certificate #9 — TrackWorks JV', '6,220,381.75', '', 1, 0, '2/3'],
+      ['ENT-2026-00398', '08 JUN', '.1.5', 'CAR insurance extension premium', '1,742,006.88', '', 1, 1, '3/3'],
+      ['ENT-2026-00394', '06 JUN', '.1.4', 'HO overhead allocation — May · audited', '3,927,415.20', '', 1, 0, '2/2'],
+      ['ENT-2026-00391', '05 JUN', '.1.9', 'Batching plant remobilisation — ROW-7', '764,212.55', '', 1, 1, '3/3'],
+      ['ENT-2026-00388', '04 JUN', '.1.10', 'Delay analyst retainer — Jun', '486,306.80', '8,120.00 USD @ 59.89 · BSP 04 JUN 2026', 1, 0, '2/2'],
+      ['ENT-2026-00385', '03 JUN', '.1.3', 'Excavator EX-201 standby — wk 23', '402,118.60', '', 1, 1, '3/3'],
+      ['ENT-2026-00381', '02 JUN', '.1.2', 'Genset fuel — Camp B · May', '1,109,240.16', '', 1, 0, '2/2'],
+      ['ENT-2026-00377', '01 JUN', '.1.1', 'Security services — May', '386,120.00', '', 1, 1, '2/2'],
+      ['ENT-2026-00372', '30 MAY', '.1.7', 'Standby labour certificate #8 — TrackWorks JV', '2,204,551.10', '', 1, 1, '3/3'],
+    ];
+    const GAPS = {
+      'GAP-118': { id: 'GAP-118', sev: 'CRITICAL', cat: '5.2.1.3', catName: 'Equipment Standby', period: '2026-03', blocks: '4,918,220.13', owner: 'R. Dizon', dept: 'Procurement', ini: 'RD', ownerOpen: 6, since: '12 May 2026', days: 52, docs: [
+        { nm: 'Lease agreement — TC-3 tower crane', ref: 'VLT-Kran GmbH · 36-mo term', ok: false },
+        { nm: 'Proof of payment — LB-4471', ref: 'LandBank transfer advice', ok: false },
+        { nm: 'Invoice INV-7741', ref: '21,480.00 EUR @ 61.03 · BSP 15 Jun 2026', ok: true },
+        { nm: 'Standby log SL-118 — wk 10–13', ref: 'signed site diary extract', ok: true },
+      ]},
+      'GAP-121': { id: 'GAP-121', sev: 'CRITICAL', cat: '5.2.1.7', catName: 'Subcontractor Prolongation', period: '2026-05', blocks: '6,220,381.75', owner: 'L. Ocampo', dept: 'Commercial', ini: 'LO', ownerOpen: 5, since: '26 May 2026', days: 38, docs: [
+        { nm: 'Payment proof — prolongation cert #9', ref: 'TrackWorks JV · BDO advice', ok: false },
+        { nm: 'Signed rate build-up — cert #9', ref: 'agreed rates schedule', ok: false },
+        { nm: 'Invoice SUB-2291', ref: 'TrackWorks JV · 14 May 2026', ok: true },
+      ]},
+      'GAP-097': { id: 'GAP-097', sev: 'CRITICAL', cat: '5.2.1.7', catName: 'Subcontractor Prolongation', period: '2026-06', blocks: '5,104,772.90', owner: 'L. Ocampo', dept: 'Commercial', ini: 'LO', ownerOpen: 5, since: '01 Jun 2026', days: 32, docs: [
+        { nm: 'Payment proof — prolongation cert #10', ref: 'TrackWorks JV · BDO advice', ok: false },
+        { nm: 'Standby labour timesheets — Jun', ref: 'countersigned by RE', ok: false },
+        { nm: 'Invoice SUB-2308', ref: 'TrackWorks JV · 28 Jun 2026', ok: true },
+      ]},
+      'GAP-104': { id: 'GAP-104', sev: 'OPEN', cat: '5.2.1.8', catName: 'Materials Escalation', period: '2026-05', blocks: '1,872,400.00', owner: 'T. Bautista', dept: 'Procurement', ini: 'TB', ownerOpen: 3, since: '12 Jun 2026', days: 21, docs: [
+        { nm: 'BSP escalation certificate #13', ref: 'steel index · May 2026', ok: false },
+        { nm: 'Supplier quotation Q-8841', ref: 'AceSteel Mfg · baseline', ok: true },
+        { nm: 'Invoice INV-8102', ref: 'AceSteel Mfg · 30 May 2026', ok: true },
+      ]},
+      'GAP-133': { id: 'GAP-133', sev: 'OPEN', cat: '5.2.1.1', catName: 'Indirect Personnel', period: '2026-06', blocks: '2,845,110.00', owner: 'A. Ramos', dept: 'HR', ini: 'AR', ownerOpen: 2, since: '24 Jun 2026', days: 9, docs: [
+        { nm: 'Payslip batch 06-B — 41 staff', ref: 'June 2026 · site indirects', ok: false },
+        { nm: 'Payroll register — Jun', ref: 'signed by HR manager', ok: true },
+      ]},
+      'GAP-140': { id: 'GAP-140', sev: 'OPEN', cat: '5.2.1.11', catName: 'Profit', period: '2026-06', blocks: '4,775,834.02', owner: 'L. Ocampo', dept: 'Commercial', ini: 'LO', ownerOpen: 5, since: '29 Jun 2026', days: 4, docs: [
+        { nm: 'Profit calculation sheet — Jun', ref: 'per contract cl. 5.2.1.11', ok: false },
+        { nm: 'Basis memo PM-11', ref: 'tender margin build-up', ok: true },
+      ]},
+    };
+    const QUEUE = ['GAP-118', 'GAP-121', 'GAP-097', 'GAP-104', 'GAP-133', 'GAP-140'];
+    const TA = { mono: "'IBM Plex Mono',ui-monospace,monospace", green: '#5BA871', amber: '#D89B43', red: '#CE5748', seal: '#C9B37E', line: '#241F12', dim2: '#8F8568', accent: '#C9B37E', activeBg: 'rgba(201,179,126,.07)', n: 7 };
+    const TB = { mono: "'Spline Sans Mono',ui-monospace,monospace", green: '#3FAE7A', amber: '#DCA13E', red: '#E05555', seal: '#8FB8E8', line: '#1B222C', dim2: '#7E8B9E', accent: '#8FB8E8', activeBg: 'rgba(143,184,232,.08)', n: 14 };
+    const TC = { mono: "'Red Hat Mono',ui-monospace,monospace", green: '#47A868', amber: '#D79A38', red: '#D05045', seal: '#F4F2EA', line: '#1D1D21', dim2: '#8E8D86', accent: '#F4F2EA', activeBg: 'rgba(244,242,234,.06)', n: 0 };
+    const TP = { mono: "'IBM Plex Mono',ui-monospace,monospace", green: '#2E6B44', amber: '#9A6A17', red: '#AC3B2F', seal: '#1C1915', line: 'rgba(28,25,21,.12)', dim2: '#6E6659', accent: '#1C1915', activeBg: 'rgba(28,25,21,.05)', n: 7, ink: '#1C1915', faint: '#9A9181', wash: '#EFE7D3', sealEdge: 'rgba(28,25,21,.3)', sealTxt: 'rgba(28,25,21,.78)', redWash: 'rgba(172,59,47,.05)' };
+    const TE = { mono: "'IBM Plex Mono',ui-monospace,monospace", green: '#6FAF87', amber: '#C99B4A', red: '#D0685A', seal: '#EAE3D2', line: 'rgba(234,227,210,.12)', dim2: '#9C937F', accent: '#EAE3D2', activeBg: 'rgba(234,227,210,.06)', n: 7, ink: '#EAE3D2', faint: '#6E6757', wash: 'rgba(234,227,210,.08)', sealEdge: 'rgba(234,227,210,.32)', sealTxt: 'rgba(234,227,210,.82)', redWash: 'rgba(208,104,90,.07)' };
+    const TL = { mono: "'Geist Mono',ui-monospace,monospace", green: '#2E9E58', amber: '#BD7D22', red: '#D9503F', line: 'rgba(29,29,31,.08)', dim2: '#86868B', accent: '#1D1D1F', activeBg: 'rgba(29,29,31,.035)', ink: '#1D1D1F', faint: '#B0B0B4', fill: '#F4F4F2' };
+    const TD = { mono: "'Geist Mono',ui-monospace,monospace", green: '#41BE73', amber: '#D9A03C', red: '#E5675B', line: 'rgba(245,245,247,.1)', dim2: '#98989D', accent: '#F5F5F7', activeBg: 'rgba(245,245,247,.05)', ink: '#F5F5F7', faint: '#636368', fill: '#1B1B1D' };
+    this._d = { CATS, GRID, PERIODS, LEDGER, GAPS, QUEUE, TA, TB, TC, TP, TE, TL, TD };
+    return this._d;
+  }
+
+  pctOf(f) { const p = f.split('/'); return +p[1] ? Math.round(+p[0] / +p[1] * 100) : 100; }
+  missOf(f) { const p = f.split('/'); return (+p[1]) - (+p[0]); }
+
+  cellA(s, f) {
+    const t = this.d().TA, pc = this.pctOf(f), m = this.missOf(f);
+    const col = s === 'G' ? t.green : s === 'A' ? t.amber : s === 'R' ? t.red : t.seal;
+    return {
+      st: { position: 'relative', height: '36px', border: '1px solid ' + (s === 'S' ? 'rgba(201,179,126,.32)' : '#292315'), background: s === 'S' ? 'rgba(201,179,126,.05)' : s === 'R' ? 'rgba(206,87,72,.07)' : '#15110A', borderRadius: '2px', padding: '5px 8px 6px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', cursor: 'pointer' },
+      hov: { borderColor: 'rgba(201,179,126,.7)' },
+      txt: f,
+      txtSt: { font: (s === 'R' ? '600' : '400') + ' 10.5px ' + t.mono, color: s === 'G' ? '#94896C' : s === 'S' ? 'rgba(201,179,126,.8)' : s === 'A' ? '#E6D5AC' : '#F2DCD4', letterSpacing: '.04em' },
+      glyph: s === 'G' ? '✓' : s === 'S' ? '◈' : '−' + m,
+      glyphSt: { font: '600 9.5px ' + t.mono, color: col, opacity: s === 'G' ? 0.7 : 1 },
+      barO: { height: '3px', background: 'rgba(255,255,255,.07)', borderRadius: '2px', overflow: 'hidden' },
+      barI: { height: '100%', width: pc + '%', background: col, opacity: s === 'S' ? 0.6 : 0.95 },
+    };
+  }
+
+  cellB(s, f) {
+    const t = this.d().TB, pc = this.pctOf(f);
+    const col = s === 'G' ? t.green : s === 'A' ? t.amber : s === 'R' ? t.red : 'rgba(143,184,232,.6)';
+    return {
+      st: { height: '30px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 8px', borderLeft: '2px solid ' + col, background: s === 'S' ? 'rgba(143,184,232,.05)' : s === 'G' ? 'rgba(63,174,122,.05)' : s === 'A' ? 'rgba(220,161,62,.08)' : 'rgba(224,85,85,.10)', cursor: 'pointer', borderRadius: '1px' },
+      hov: { background: 'rgba(143,184,232,.12)' },
+      txt: s === 'S' ? '◈' : pc + '',
+      txtSt: { font: '600 11px ' + t.mono, color: s === 'S' ? 'rgba(143,184,232,.85)' : s === 'G' ? '#7FA893' : col },
+      glyph: s === 'S' ? 'SEALED' : f,
+      glyphSt: { font: '400 8.5px ' + t.mono, color: s === 'S' ? 'rgba(143,184,232,.55)' : '#5E6B7C', letterSpacing: '.06em' },
+      barO: { display: 'none' }, barI: { display: 'none' },
+    };
+  }
+
+  cellNews(s, f, t) {
+    const m = this.missOf(f);
+    const seal = s === 'S';
+    const st = { height: '33px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '6px', padding: '0 10px', cursor: 'pointer' };
+    if (seal) { st.background = t.wash; st.borderLeft = '1px solid ' + t.sealEdge; st.borderRight = '1px solid ' + t.sealEdge; }
+    else if (s === 'R') st.background = t.redWash;
+    return {
+      st,
+      hov: { background: seal ? t.wash : t.activeBg },
+      txt: f,
+      txtSt: { font: (s === 'R' ? '700' : s === 'A' ? '500' : '400') + ' 10.5px ' + t.mono, color: s === 'G' ? t.dim2 : seal ? t.sealTxt : t.ink, letterSpacing: '.02em' },
+      mark: seal ? '‡' : s === 'G' ? '✓' : '−' + m,
+      markSt: { font: '600 9.5px ' + t.mono, color: seal ? t.sealTxt : s === 'G' ? t.green : s === 'A' ? t.amber : t.red, opacity: s === 'G' ? 0.6 : 1, minWidth: '18px', textAlign: 'right' },
+    };
+  }
+
+  cellMin(s, f, t) {
+    const seal = s === 'S';
+    const st = { height: '42px', display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '7px', padding: '0 14px', cursor: 'pointer' };
+    if (seal) st.background = t.fill;
+    return {
+      st,
+      hov: { background: seal ? t.fill : t.activeBg },
+      txt: f,
+      txtSt: { font: (s === 'R' ? '600' : s === 'A' ? '500' : '400') + ' 12px ' + t.mono, color: seal ? t.dim2 : s === 'G' ? t.faint : t.ink },
+      dotSt: { width: '6px', height: '6px', borderRadius: '50%', flex: 'none', background: s === 'A' ? t.amber : s === 'R' ? t.red : 'transparent', display: (s === 'A' || s === 'R') ? 'block' : 'none' },
+    };
+  }
+
+  gapMin(id, t) {
+    const g = this.d().GAPS[id];
+    const sevCol = g.sev === 'CRITICAL' ? t.red : t.amber;
+    return {
+      id: g.id, sev: g.sev === 'CRITICAL' ? 'Critical' : 'Open',
+      sevSt: { font: "600 10.5px 'Geist',sans-serif", letterSpacing: '.01em', color: sevCol, background: sevCol + '1A', padding: '3px 10px', borderRadius: '999px' },
+      catName: g.catName, period: g.period, cat: g.cat, blocks: g.blocks,
+      daysTxt: 'open ' + g.days + ' days', since: g.since, owner: g.owner, dept: g.dept, ini: g.ini,
+      docs: g.docs.map((d) => ({
+        nm: d.nm,
+        tag: d.ok ? 'On file' : 'Missing',
+        tagSt: { font: "500 11.5px 'Geist',sans-serif", color: d.ok ? t.dim2 : t.red, flex: 'none' },
+        dotSt: { width: '6px', height: '6px', borderRadius: '50%', background: d.ok ? t.green : t.red, opacity: d.ok ? 0.45 : 1, flex: 'none' },
+      })),
+    };
+  }
+
+  queueMin(sel, t, pickKey) {
+    return this.d().QUEUE.map((id) => {
+      const g = this.d().GAPS[id];
+      const active = id === sel;
+      return {
+        id,
+        title: g.catName,
+        sub: g.period,
+        daysTxt: g.days + 'd',
+        daysSt: { font: '500 11px ' + t.mono, color: g.days >= 45 ? t.red : g.days >= 20 ? t.amber : t.faint, minWidth: '30px', textAlign: 'right', flex: 'none' },
+        st: { display: 'flex', alignItems: 'center', gap: '10px', padding: '9px 12px', margin: '0 -12px', borderRadius: '10px', background: active ? t.fill : 'transparent', cursor: 'pointer' },
+        pick: () => { const s = {}; s[pickKey] = id; this.setState(s); },
+      };
+    });
+  }
+
+  rowsFor(cellFn) {
+    const { CATS, GRID } = this.d();
+    return CATS.map((c, i) => {
+      const o = { code: c[0], name: c[1], total: c[5] };
+      GRID[i].forEach((cl, j) => { o['c' + (j + 1)] = cellFn(cl[0], cl[1]); });
+      return o;
+    });
+  }
+
+  vSt(ok, t) { return { font: '500 9px ' + t.mono, letterSpacing: '.06em', color: ok ? t.green : t.amber, opacity: ok ? 0.75 : 1 }; }
+
+  ledgerFor(t) {
+    return this.d().LEDGER.slice(0, t.n).map((l) => {
+      const full = l[8].split('/');
+      return {
+        ref: l[0], date: l[1], cat: '5.2' + l[2], desc: l[3], amt: l[4], fx: l[5] || '—',
+        v1: 'V1 ' + (l[6] ? '✓' : '◌'), v2: 'V2 ' + (l[7] ? '✓' : '◌'),
+        v1St: this.vSt(l[6], t), v2St: this.vSt(l[7], t),
+        docs: '▤ ' + l[8],
+        docsSt: { font: '500 9px ' + t.mono, color: full[0] === full[1] ? t.dim2 : t.amber, letterSpacing: '.04em' },
+      };
+    });
+  }
+
+  gapFor(id, t) {
+    const g = this.d().GAPS[id];
+    const sevCol = g.sev === 'CRITICAL' ? t.red : t.amber;
+    return {
+      id: g.id, sev: g.sev,
+      sevSt: { font: '600 8px ' + t.mono, letterSpacing: '.16em', color: sevCol, border: '1px solid ' + sevCol + '66', padding: '2px 6px', borderRadius: '2px', background: sevCol + '14' },
+      catName: g.catName, cat: g.cat, period: g.period, blocks: g.blocks,
+      daysTxt: g.days + ' DAYS OPEN', since: g.since, owner: g.owner, dept: g.dept, ini: g.ini,
+      own: 'OWNS ' + g.ownerOpen + ' OPEN',
+      docs: g.docs.map((d) => ({
+        nm: d.nm, ref: d.ref,
+        tag: d.ok ? 'ON FILE' : 'MISSING',
+        tagSt: { font: '600 8px ' + t.mono, letterSpacing: '.14em', color: d.ok ? t.green : t.red, opacity: d.ok ? 0.75 : 1, flex: 'none' },
+        dotSt: { width: '7px', height: '7px', borderRadius: '50%', background: d.ok ? t.green : t.red, opacity: d.ok ? 0.55 : 1, boxShadow: d.ok ? 'none' : '0 0 0 3px ' + t.red + '22', flex: 'none' },
+      })),
+    };
+  }
+
+  queueFor(sel, t, pickKey) {
+    return this.d().QUEUE.map((id) => {
+      const g = this.d().GAPS[id];
+      const active = id === sel;
+      const missFirst = g.docs.filter((d) => !d.ok)[0];
+      return {
+        id, title: g.catName + ' × ' + g.period,
+        sub: 'missing: ' + (missFirst ? missFirst.nm : '—'),
+        ini: g.ini, daysTxt: g.days + 'D',
+        daysSt: { font: '600 9.5px ' + t.mono, color: g.days >= 45 ? t.red : g.days >= 20 ? t.amber : t.dim2, letterSpacing: '.04em', minWidth: '32px', textAlign: 'right', flex: 'none' },
+        st: { display: 'flex', alignItems: 'center', gap: '10px', padding: '7px 10px 7px 8px', borderTop: '1px solid ' + t.line, cursor: 'pointer', background: active ? t.activeBg : 'transparent', borderLeft: active ? '2px solid ' + t.accent : '2px solid transparent' },
+        pick: () => { const s = {}; s[pickKey] = id; this.setState(s); },
+      };
+    });
+  }
+
+  valQ() {
+    const t = this.d().TB;
+    const rows = [
+      ['ENT-2026-00421', '1,310,924.40', 'R. Dizon', 'RD'],
+      ['ENT-2026-00415', '4,102,730.99', 'T. Bautista', 'TB'],
+      ['ENT-2026-00405', '6,220,381.75', 'L. Ocampo', 'LO'],
+      ['ENT-2026-00394', '3,927,415.20', 'M. Santos', 'MS'],
+      ['ENT-2026-00388', '486,306.80', 'P. Navarro', 'PN'],
+      ['ENT-2026-00381', '1,109,240.16', 'K. Villanueva', 'KV'],
+    ];
+    return rows.map((r) => ({ ref: r[0], amt: r[1], owner: r[2], ini: r[3] }));
+  }
+
+  colsC() {
+    const { CATS, GRID, PERIODS, TC } = this.d();
+    return [1, 2, 3, 4, 5].map((j) => {
+      const p = PERIODS[j];
+      const rows = CATS.map((c, i) => {
+        const s = GRID[i][j][0], f = GRID[i][j][1], pc = this.pctOf(f), m = this.missOf(f);
+        const col = s === 'G' ? TC.green : s === 'A' ? TC.amber : TC.red;
+        return {
+          code: '.' + (i + 1), name: c[2], frac: f,
+          sub: s === 'G' ? 'COMPLETE' : s === 'A' ? m + ' MISSING' : m + ' MISSING · CRITICAL',
+          subSt: { font: '500 7px ' + TC.mono, letterSpacing: '.12em', color: s === 'G' ? '#575650' : s === 'A' ? '#D79A38' : '#D05045', opacity: s === 'G' ? 1 : 0.9 },
+          fracSt: { font: (s === 'R' ? '600' : '400') + ' 9.5px ' + TC.mono, color: s === 'G' ? '#83827A' : s === 'A' ? '#E6CE9E' : '#F1D9D3', flex: 'none' },
+          st: { position: 'relative', display: 'flex', alignItems: 'center', gap: '7px', padding: '0 11px', borderTop: '1px solid #1D1D21', background: s === 'R' ? 'rgba(208,80,69,.07)' : s === 'A' ? 'rgba(215,154,56,.05)' : 'transparent', cursor: 'pointer' },
+          barI: { position: 'absolute', left: 0, bottom: '-1px', height: '2px', width: pc + '%', background: col, opacity: 0.85 },
+        };
+      });
+      const missing = GRID.reduce((n, row) => n + this.missOf(row[j][1]), 0);
+      const pcol = p.pct === 100 ? TC.green : p.pct >= 90 ? TC.amber : TC.red;
+      return {
+        id: p.id, pct: p.pct + '%',
+        pctSt: { font: '600 13px ' + TC.mono, color: pcol },
+        meterI: { height: '100%', width: p.pct + '%', background: pcol },
+        meta: p.docs + ' DOCS · ' + p.vshort,
+        rows,
+        foot: missing === 0 ? '◈ READY TO SEAL' : missing + ' DOCUMENTS TO GO',
+        footSt: missing === 0
+          ? { margin: '10px 10px 12px', padding: '8px 0', textAlign: 'center', font: '600 9.5px ' + TC.mono, letterSpacing: '.16em', color: '#141412', background: '#F4F2EA', borderRadius: '2px', cursor: 'pointer' }
+          : { margin: '10px 10px 12px', padding: '8px 0', textAlign: 'center', font: '500 9px ' + TC.mono, letterSpacing: '.16em', color: '#8E8D86', border: '1px solid #26262B', borderRadius: '2px' },
+      };
+    });
+  }
+
+  renderVals() {
+    const d = this.d();
+    const focus = this.props.focus ?? 'all';
+    const specs = this.props.showSpecs ?? true;
+    const off = { display: 'none' };
+    const cc = this.colsC();
+    return {
+      specRowSt: specs ? {} : off,
+      opt2aSt: focus === 'all' || focus === '2a' ? {} : off,
+      opt2bSt: focus === 'all' || focus === '2b' ? {} : off,
+      rowsP: this.rowsFor((s, f) => this.cellNews(s, f, d.TP)),
+      ledgerP: this.ledgerFor(d.TP),
+      gapP: this.gapFor(this.state.selP, d.TP),
+      queueP: this.queueFor(this.state.selP, d.TP, 'selP'),
+      rowsE: this.rowsFor((s, f) => this.cellNews(s, f, d.TE)),
+      ledgerE: this.ledgerFor(d.TE),
+      gapE: this.gapFor(this.state.selE, d.TE),
+      queueE: this.queueFor(this.state.selE, d.TE, 'selE'),
+      valQn: this.valQ().slice(0, 3),
+      opt3aSt: focus === 'all' || focus === '3a' ? {} : off,
+      opt3bSt: focus === 'all' || focus === '3b' ? {} : off,
+      rowsL: this.rowsFor((s, f) => this.cellMin(s, f, d.TL)),
+      gapL: this.gapMin(this.state.selL, d.TL),
+      queueL: this.queueMin(this.state.selL, d.TL, 'selL'),
+      rowsD: this.rowsFor((s, f) => this.cellMin(s, f, d.TD)),
+      gapD: this.gapMin(this.state.selD, d.TD),
+      queueD: this.queueMin(this.state.selD, d.TD, 'selD'),
+      opt1aSt: focus === 'all' || focus === '1a' ? {} : off,
+      opt1bSt: focus === 'all' || focus === '1b' ? {} : off,
+      opt1cSt: focus === 'all' || focus === '1c' ? {} : off,
+      rowsA: this.rowsFor(this.cellA.bind(this)),
+      ledgerA: this.ledgerFor(d.TA),
+      gapA: this.gapFor(this.state.selA, d.TA),
+      queueA: this.queueFor(this.state.selA, d.TA, 'selA'),
+      hovRowA: { background: 'rgba(201,179,126,.06)' },
+      hovLineA: { borderBottomColor: 'rgba(201,179,126,.6)' },
+      hovBrassA: { color: '#C9B37E' },
+      hovDropA: { background: 'rgba(201,179,126,.07)', borderColor: '#C9B37E' },
+      hovBtnA: { background: 'rgba(201,179,126,.14)' },
+      rowsB: this.rowsFor(this.cellB.bind(this)),
+      ledgerB: this.ledgerFor(d.TB),
+      valQ: this.valQ(),
+      gapB: this.gapFor(this.state.selB, d.TB),
+      queueB: this.queueFor(this.state.selB, d.TB, 'selB'),
+      hovRowB: { background: 'rgba(143,184,232,.07)' },
+      hovIceB: { color: '#8FB8E8' },
+      hovDropB: { background: 'rgba(143,184,232,.08)', borderColor: '#8FB8E8' },
+      hovBtnB: { opacity: 0.85 },
+      colC2: cc[0], colC3: cc[1], colC4: cc[2], colC5: cc[3], colC6: cc[4],
+      gapC: this.gapFor(this.state.selC, d.TC),
+      queueC: this.queueFor(this.state.selC, d.TC, 'selC'),
+      hovC: { background: 'rgba(244,242,234,.05)' },
+      hovBtnC: { opacity: 0.85 },
+      hovDropC: { background: 'rgba(244,242,234,.05)', borderColor: 'rgba(244,242,234,.6)' },
+    };
+  }
+}
+</script>
+</body>
+</html>

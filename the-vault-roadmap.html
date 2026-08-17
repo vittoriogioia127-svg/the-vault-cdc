@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Vault · Product Roadmap · v2</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;--fill:#F4F4F2;--fill-2:#EEEEEB;--hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);--critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;--pill-bg:#1D1D1F;--pill-ink:#FCFCFB;--sans:'Geist',sans-serif;--mono:'Geist Mono',monospace;}
+[data-theme="dark"]{--base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;--fill:#1B1B1D;--fill-2:#212124;--hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);--critical:#E5675B;--partial:#D9A03C;--success:#41BE73;--pill-bg:#F5F5F7;--pill-ink:#101012;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{background:var(--base);color:var(--ink);font-family:var(--sans);font-size:14px;line-height:1.55;transition:background .2s,color .2s;}
+.wrap{max-width:1000px;margin:0 auto;padding:60px 28px 110px;}
+.mono{font-family:var(--mono);font-variant-numeric:tabular-nums;}
+.mast{display:flex;align-items:flex-start;justify-content:space-between;gap:20px;border-bottom:1px solid var(--hair-strong);padding-bottom:30px;margin-bottom:20px;}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:18px;}
+.brand svg{width:26px;height:26px;color:var(--ink);flex:none;}
+.brand .wm{font-size:18px;font-weight:600;letter-spacing:-0.01em;}
+.kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--ink-2);margin-bottom:12px;}
+.mast h1{font-size:40px;font-weight:600;letter-spacing:-0.015em;margin-bottom:10px;}
+.mast .sub{color:var(--ink-2);max-width:540px;}
+.dateline{font-family:var(--mono);font-size:11px;color:var(--ink-3);margin-top:14px;}
+.toggle{border:1px solid var(--hair-strong);background:var(--fill);color:var(--ink);font-family:var(--mono);font-size:11px;padding:8px 16px;border-radius:999px;cursor:pointer;white-space:nowrap;}
+.toggle:hover{border-color:var(--ink-3);}
+.spine{display:flex;gap:5px;margin:26px 0 40px;}
+.seg{flex:1;height:4px;border-radius:2px;background:var(--fill-2);}
+.seg.done{background:var(--ink);}
+.seg.now{background:var(--ink);position:relative;}
+.seg.now::after{content:"";position:absolute;inset:-4px -2px;border:1px solid var(--ink-3);border-radius:4px;}
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:40px;}
+.kpi{border:1px solid var(--hair);border-radius:12px;padding:20px 22px;background:var(--base);}
+.kpi .l{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin-bottom:10px;}
+.kpi .fig{font-weight:200;font-size:44px;line-height:1;margin-bottom:8px;}
+.kpi .fig small{font-size:20px;color:var(--ink-3);}
+.kpi .n{font-size:13px;color:var(--ink);font-weight:500;}
+.kpi .n span{color:var(--ink-2);font-weight:400;}
+.kpi.crit{border-color:color-mix(in srgb,var(--critical) 40%,var(--hair));}
+.legend{display:flex;gap:20px;flex-wrap:wrap;align-items:center;font-size:12px;color:var(--ink-2);margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--hair);}
+.legend .rule{margin-right:auto;}
+.dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-right:7px;vertical-align:1px;}
+.phase{display:grid;grid-template-columns:52px 1fr 150px;gap:18px;align-items:start;padding:20px 0;border-bottom:1px solid var(--hair-soft);}
+.phase:last-child{border-bottom:none;}
+.phase.now{padding-left:16px;margin-left:-16px;border-left:2px solid var(--ink);}
+.pnum{font-family:var(--mono);font-size:13px;color:var(--ink-3);padding-top:2px;}
+.phase.now .pnum{color:var(--ink);}
+.pname{font-size:16px;font-weight:600;letter-spacing:-0.01em;margin-bottom:4px;}
+.pdesc{color:var(--ink-2);max-width:560px;margin-bottom:8px;}
+.pmeta{font-family:var(--mono);font-size:10.5px;letter-spacing:.03em;color:var(--ink-3);text-transform:uppercase;}
+.pstat{justify-self:end;padding-top:2px;text-align:right;}
+.chip{display:inline-flex;align-items:center;font-family:var(--mono);font-size:10px;font-weight:500;letter-spacing:.04em;padding:5px 12px;border-radius:999px;white-space:nowrap;text-transform:uppercase;}
+.chip.done{background:var(--fill);color:var(--ink-2);}
+.chip.active{background:var(--pill-bg);color:var(--pill-ink);}
+.chip.plain{color:var(--ink-3);}
+.chip.crit{color:var(--critical);}.chip.crit .dot{background:var(--critical);}
+.chip.gated{color:var(--partial);}.chip.gated .dot{background:var(--partial);}
+.gates{margin-top:44px;border:1px solid var(--hair);border-radius:12px;padding:22px 24px;background:var(--fill);}
+.gates h3{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);font-weight:500;margin-bottom:14px;}
+.gate{display:flex;gap:12px;padding:9px 0;border-bottom:1px solid var(--hair-soft);font-size:13px;}
+.gate:last-child{border-bottom:none;}
+.gate b{font-weight:600;min-width:150px;}
+.gate span{color:var(--ink-2);}
+footer{margin-top:48px;border-top:1px solid var(--hair);padding-top:16px;font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+@media(max-width:720px){.summary{grid-template-columns:1fr;}.phase{grid-template-columns:40px 1fr;}.pstat{grid-column:2;justify-self:start;text-align:left;margin-top:8px;}.mast{flex-direction:column;}}
+@media print{.toggle{display:none;}.phase{break-inside:avoid;}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="mast">
+    <div>
+      <div class="brand"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg><span class="wm">The Vault</span></div>
+      <div class="kicker">Product Roadmap · v2.0 · post extraction-engine pivot</div>
+      <h1>Roadmap</h1>
+      <p class="sub">From a validated design language to an extraction engine and a group platform. Ten phases, two gates. Muted is done, colour marks what needs attention.</p>
+      <div class="dateline">As of 07 Jul 2026 · owner V. Gioia · grounded in the EOT001 price file</div>
+    </div>
+    <button class="toggle" onclick="const h=document.documentElement;const t=h.dataset.theme==='light'?'dark':'light';h.dataset.theme=t;localStorage.setItem('vault-rm-theme',t);this.textContent=t==='light'?'View dark':'View light';">View dark</button>
+  </div>
+  <div class="spine">
+    <div class="seg done"></div><div class="seg done"></div><div class="seg now"></div>
+    <div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  </div>
+  <div class="summary">
+    <div class="kpi"><div class="l">Progress</div><div class="fig">2<small>/10</small></div><div class="n">phases complete <span>· design language locked</span></div></div>
+    <div class="kpi"><div class="l">Active now</div><div class="fig">02</div><div class="n">Prototype <span>· multi-role shell, simulated extraction</span></div></div>
+    <div class="kpi crit"><div class="l">Critical path</div><div class="fig">03</div><div class="n">Real model and config <span>· Sharizal price file</span></div></div>
+  </div>
+  <div class="legend">
+    <span class="rule">How to read: done stays quiet, the active phase carries the pill, colour flags a gate.</span>
+    <span><span class="dot" style="background:var(--partial)"></span>Gated</span>
+    <span><span class="dot" style="background:var(--critical)"></span>Critical path</span>
+  </div>
+
+  <div class="phase done"><div class="pnum">00</div><div><div class="pname">Discovery and scope</div><div class="pdesc">Problem framed, the ledger-versus-claim model locked, stakeholders aligned. Then re-based on the real EOT001 price file.</div><div class="pmeta">Output · CDC v0.3 · Owner · Vittorio</div></div><div class="pstat"><span class="chip done">Complete</span></div></div>
+
+  <div class="phase done"><div class="pnum">01</div><div><div class="pname">Design language</div><div class="pdesc">Showroom chosen and frozen, mark locked, five core screens plus the desktop shell and role switcher.</div><div class="pmeta">Output · Design Language v1.1, token contract</div></div><div class="pstat"><span class="chip done">Complete</span></div></div>
+
+  <div class="phase now"><div class="pnum">02</div><div><div class="pname">Clickable prototype</div><div class="pdesc">One desktop app, each role their space, a single reconciled dataset, and the vision simulated: drop a file, watch it extract and file itself, watch a period seal.</div><div class="pmeta">Output · standalone mockup · Gate · demo-ready</div></div><div class="pstat"><span class="chip active">In progress</span></div></div>
+
+  <div class="phase"><div class="pnum">03</div><div><div class="pname">Real cost model and config</div><div class="pdesc">Load the A to G taxonomy, the per-element ownership, and the configurable substantiation matrix from the price file. The first project configuration, corrected by the process referent.</div><div class="pmeta">Owner · Sharizal · Feeds · the whole engine</div></div><div class="pstat"><span class="chip crit"><span class="dot"></span>Critical path</span></div></div>
+
+  <div class="phase"><div class="pnum">04</div><div><div class="pname">Stakeholder validation</div><div class="pdesc">Demo to the business owner, the finance sponsor and the process referent. Confirm scope, secure the decision.</div><div class="pmeta">Decision gate · GO for development</div></div><div class="pstat"><span class="chip plain">Planned</span></div></div>
+
+  <div class="phase"><div class="pnum">05</div><div><div class="pname">Compliance review</div><div class="pdesc">Cyber and data review on the skeleton, hosting region, before any real HR or payroll data enters the tool. Parallel from now, gates the pilot.</div><div class="pmeta">Owner · Vittorio and compliance · Gates · pilot</div></div><div class="pstat"><span class="chip gated"><span class="dot"></span>Gated</span></div></div>
+
+  <div class="phase"><div class="pnum">06</div><div><div class="pname">Build the core</div><div class="pdesc">The workflow that earns the vision: structured drop, department validation gate, per-staff filing, completeness roll-up, claim assembly, seal, evidence integrity, role-based access with HR isolation.</div><div class="pmeta">Starts · after GO · Output · working tool on test data</div></div><div class="pstat"><span class="chip plain">Planned</span></div></div>
+
+  <div class="phase"><div class="pnum">07</div><div><div class="pname">Extraction engine, phased</div><div class="pdesc">The hard core. Structured payroll Excel first, template-based and feasible. Then assisted mapping. Then PDF and OCR for invoices and payslips. This is what kills the manual files.</div><div class="pmeta">Phased · A workflow, B Excel, C documents</div></div><div class="pstat"><span class="chip plain">Planned</span></div></div>
+
+  <div class="phase"><div class="pnum">08</div><div><div class="pname">Pilot</div><div class="pdesc">One cost head end to end on real Staff Cost, one claim assembled, test or anonymized data. Prove it before opening to all departments.</div><div class="pmeta">Gated by · compliance · Output · validated pilot</div></div><div class="pstat"><span class="chip plain">Planned</span></div></div>
+
+  <div class="phase"><div class="pnum">09</div><div><div class="pname">Group platform</div><div class="pdesc">Project onboarding by configuration. A new project loads its own cost organization, its accepted sources and its rules, and the same engine serves it. The Vault becomes a Colas group tool.</div><div class="pmeta">Horizon · config library, multi-project</div></div><div class="pstat"><span class="chip plain">Horizon</span></div></div>
+
+  <div class="gates">
+    <h3>The two gates that govern everything</h3>
+    <div class="gate"><b>Config gate</b><span>Phase 03. The taxonomy, the ownership and the accepted sources come from Sharizal's price file and must be confirmed by him. Nothing downstream is final until the first configuration is validated.</span></div>
+    <div class="gate"><b>GO gate</b><span>Phase 04. The stakeholder demo converts the prototype into a mandate. No development starts before it. The design language is frozen so this gate is about scope and value, not aesthetics.</span></div>
+  </div>
+
+  <footer><span>THE VAULT · PRODUCT ROADMAP · V2.0</span><span>SHOWROOM EDITION · EXTRACTION ENGINE · 2026</span></footer>
+</div>
+<script>(function(){var t=localStorage.getItem('vault-rm-theme');if(t){document.documentElement.dataset.theme=t;var b=document.querySelector('.toggle');if(b)b.textContent=t==='light'?'View dark':'View light';}})();</script>
+</body>
+</html>

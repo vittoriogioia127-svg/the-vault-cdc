@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>The Vault — Claim assembly</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+--base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;
+--fill:#F4F4F2;--fill-2:#EEEEEB;
+--hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);
+--critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;
+--pill-bg:#1D1D1F;--pill-ink:#FCFCFB;
+--focus:0 0 0 3px rgba(29,29,31,.12);
+}
+[data-theme="dark"]{
+--base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;
+--fill:#1B1B1D;--fill-2:#212124;
+--hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);
+--critical:#E5675B;--partial:#D9A03C;--success:#41BE73;
+--pill-bg:#F5F5F7;--pill-ink:#101012;
+--focus:0 0 0 3px rgba(245,245,247,.14);
+}
+html,body{margin:0;padding:0;background:#FCFCFB}
+*{box-sizing:border-box}
+::selection{background:var(--hair-strong)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-3)}
+*{scrollbar-width:thin;scrollbar-color:var(--hair-strong) transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" data-screen-label="Claim assembly" style="min-width:1280px;height:100vh;background:var(--base);color:var(--ink);font-family:'Geist',sans-serif;display:flex;flex-direction:column">
+
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Claim assembly</span>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--hair-strong);border-radius:999px">
+<span onClick="{{ setLight }}" style="{{ segLight }}">Light</span>
+<span onClick="{{ setDark }}" style="{{ segDark }}">Dark</span>
+</div>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">M. Reyes</span>
+<div style="width:24px;height:24px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">MR</div>
+</div>
+
+<div style="flex:none;display:flex;align-items:flex-end;gap:24px;padding:22px 28px 20px;border-bottom:1px solid var(--hair)">
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase">Claim assembly</span>
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">CE-02</span>
+<span style="width:4px;height:4px;border-radius:999px;background:var(--ink-3)"></span>
+<span style="font:600 20px 'Geist',sans-serif;letter-spacing:-.01em">Access restriction ROW-7</span>
+</div>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-2)">148 days · window 2026-01 to 2026-06 · selecting ledger lines into a defensible dossier</span>
+</div>
+<span style="flex:1"></span>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.12em;color:var(--ink-2);text-transform:uppercase">Assembled total</span>
+<span style="font:200 44px/1 'Geist',sans-serif;letter-spacing:-.03em">{{ totalShort }}</span>
+<span style="font:500 12px 'Geist Mono',monospace;color:var(--ink-2)">₱ {{ totalFull }} · {{ selCount }} lines</span>
+</div>
+</div>
+
+<div style="flex:1;display:flex;min-height:0">
+
+<div style="flex:1;display:flex;flex-direction:column;min-width:0;border-right:1px solid var(--hair)">
+<div style="flex:none;display:flex;align-items:center;gap:12px;padding:16px 24px;border-bottom:1px solid var(--hair)">
+<span style="font:600 13px 'Geist',sans-serif;color:var(--ink)">Candidate ledger</span>
+<span style="flex:1"></span>
+<sc-for list="{{ chips }}" as="ch" hint-placeholder-count="3">
+<span onClick="{{ ch.pick }}" style="{{ ch.style }}">{{ ch.label }}</span>
+</sc-for>
+</div>
+<div style="flex:1;overflow-y:auto">
+<sc-for list="{{ candidates }}" as="c" hint-placeholder-count="12">
+<div onClick="{{ c.toggle }}" style="{{ c.rowStyle }}" style-hover="background:var(--hair-soft)">
+<span style="{{ c.box }}"><sc-if value="{{ c.selected }}" hint-placeholder-val="{{ false }}"><svg width="10" height="10" viewBox="0 0 12 12" style="display:block"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:400 13px 'Geist',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ c.desc }}</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ c.code }} · {{ c.period }} · {{ c.person }}</span>
+</div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none">
+<span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">{{ c.amount }}</span>
+<span style="display:flex;align-items:center;gap:5px"><span style="width:6px;height:6px;border-radius:999px;background:{{ c.eviColor }}"></span><span style="font:400 11px 'Geist Mono',monospace;color:{{ c.eviColor }}">{{ c.eviLabel }}</span></span>
+</div>
+</div>
+</sc-for>
+<div style="height:24px"></div>
+</div>
+</div>
+
+<div style="width:600px;flex:none;display:flex;flex-direction:column;min-height:0;background:var(--fill)">
+<div style="flex:none;display:flex;gap:18px;padding:20px 24px;border-bottom:1px solid var(--hair)">
+<div style="width:112px;height:152px;flex:none;background:#FCFCFB;border:1px solid rgba(29,29,31,.14);border-radius:4px;padding:11px;display:flex;flex-direction:column;color:#1D1D1F">
+<div style="display:flex;align-items:center;gap:6px"><svg width="12" height="12" viewBox="0 0 96 96" style="color:#1D1D1F;display:block;flex:none"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg><span style="font:600 9px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span></div>
+<div style="height:1px;background:rgba(29,29,31,.1);margin-top:8px"></div>
+<span style="font:400 6px 'Geist Mono',monospace;letter-spacing:.1em;color:#86868B;margin-top:12px">CLAIM DOSSIER · CE-02</span>
+<span style="font:600 10px/1.15 'Geist',sans-serif;letter-spacing:-.01em;margin-top:5px">Access restriction ROW-7</span>
+<span style="flex:1"></span>
+<span style="font:200 20px/1 'Geist',sans-serif;letter-spacing:-.02em">{{ totalShort }}</span>
+<span style="font:400 6px 'Geist Mono',monospace;letter-spacing:.08em;color:#86868B;margin-top:6px">LIGHT EDITION PRINT MASTER</span>
+</div>
+<div style="display:flex;flex-direction:column;gap:8px;min-width:0;flex:1">
+<div style="display:flex;align-items:center;gap:10px"><span style="font:600 15px 'Geist',sans-serif;letter-spacing:-.01em;color:var(--ink)">Dossier in progress</span><span style="flex:1"></span><span style="{{ readyChip }}">{{ readyLabel }}</span></div>
+<span style="font:400 11.5px/1.5 'Geist',sans-serif;color:var(--ink-2)">Selected lines grouped by category. Each carries its eligibility basis and who confirmed it. The cover exports as a light-edition print object.</span>
+<span style="flex:1"></span>
+<sc-if value="{{ exported }}" hint-placeholder-val="{{ false }}"><span style="font:400 11px 'Geist Mono',monospace;color:var(--success)">Exported · 04 Jul 2026 · light edition</span></sc-if>
+</div>
+</div>
+
+<sc-if value="{{ blocking }}" hint-placeholder-val="{{ false }}">
+<div style="flex:none;margin:16px 24px 0;padding:13px 16px;border:1px solid var(--critical);border-radius:12px;display:flex;align-items:flex-start;gap:11px">
+<span style="width:7px;height:7px;border-radius:999px;background:var(--critical);margin-top:5px;flex:none"></span>
+<span style="font:400 12.5px/1.5 'Geist',sans-serif;color:var(--ink)"><span style="font-weight:600">{{ holeCount }} selected line with missing evidence.</span> A claim cannot ship with holes. Remove it or attach the file before export.</span>
+</div>
+</sc-if>
+
+<div style="flex:1;overflow-y:auto;padding:16px 24px 12px">
+<sc-for list="{{ groups }}" as="g" hint-placeholder-count="4">
+<div style="margin-bottom:18px">
+<div style="display:flex;align-items:baseline;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--hair)">
+<span style="font:500 12px 'Geist Mono',monospace;color:var(--ink)">{{ g.code }}</span>
+<span style="font:500 13px 'Geist',sans-serif;color:var(--ink)">{{ g.cat }}</span>
+<span style="flex:1"></span>
+<span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">₱ {{ g.subtotal }}</span>
+</div>
+<sc-for list="{{ g.lines }}" as="l" hint-placeholder-count="2">
+<div style="display:flex;align-items:flex-start;gap:12px;padding:11px 2px;border-bottom:1px solid var(--hair-soft)">
+<span style="width:6px;height:6px;border-radius:999px;background:{{ l.eviColor }};margin-top:5px;flex:none"></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<div style="display:flex;align-items:center;gap:8px"><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2)">{{ l.ref }}</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ l.period }}</span></div>
+<span style="font:400 12px/1.45 'Geist',sans-serif;color:var(--ink-2)">{{ l.basis }} · confirmed {{ l.confirmedBy }}</span>
+</div>
+<span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink);flex:none">{{ l.amount }}</span>
+<span onClick="{{ l.remove }}" style="cursor:pointer;font:400 13px 'Geist',sans-serif;color:var(--ink-3);flex:none;line-height:1" style-hover="color:var(--ink)">✕</span>
+</div>
+</sc-for>
+</div>
+</sc-for>
+<sc-if value="{{ empty }}" hint-placeholder-val="{{ false }}"><span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-3)">No lines selected. Pick candidate lines on the left to assemble the dossier.</span></sc-if>
+</div>
+
+<div style="flex:none;display:flex;align-items:center;gap:14px;padding:16px 24px;border-top:1px solid var(--hair)">
+<span onClick="{{ exportDossier }}" tabindex="0" style="{{ pillStyle }}" style-focus="box-shadow:var(--focus)">Export dossier</span>
+<sc-if value="{{ attempted }}" hint-placeholder-val="{{ false }}"><span style="font:400 11.5px 'Geist',sans-serif;color:var(--critical)">Resolve the flagged line first</span></sc-if>
+<span style="flex:1"></span>
+<span onClick="{{ save }}" tabindex="0" style="cursor:pointer;font:500 12.5px 'Geist',sans-serif;color:var(--ink-2);padding:8px 12px;border-radius:8px" style-hover="background:var(--fill-2);color:var(--ink)" style-focus="box-shadow:var(--focus)">Save</span>
+<span onClick="{{ removeSelection }}" tabindex="0" style="cursor:pointer;font:500 12.5px 'Geist',sans-serif;color:var(--ink-2);padding:8px 12px;border-radius:8px" style-hover="background:var(--fill-2);color:var(--ink)" style-focus="box-shadow:var(--focus)">Remove selection</span>
+</div>
+</div>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1400,&quot;height&quot;:900}}">
+class Component extends DCLogic {
+  state = {
+    theme: 'light', filter: 'all', exported: false, attempted: false,
+    selected: ['ENT-2026-00352', 'ENT-2026-00361', 'ENT-2026-00344', 'ENT-2026-00358', 'ENT-2026-00349', 'ENT-2026-00350', 'ENT-2026-00377', 'ENT-2026-00331', 'ENT-2026-00369', 'ENT-2026-00357', 'ENT-2026-00359', 'ENT-2026-00376']
+  };
+
+  _fmt(n) { if (!isFinite(n)) return '0.00'; return n.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); }
+  _num(s) { return parseFloat(String(s).replace(/[^0-9.]/g, '')) || 0; }
+  _short(n) { return n >= 1e6 ? '₱' + (n / 1e6).toFixed(1) + 'M' : '₱' + this._fmt(n); }
+
+  setTheme(t) { this.setState({ theme: t }); }
+  setFilter(f) { this.setState({ filter: f }); }
+  toggle(ref) { this.setState(s => { const has = s.selected.includes(ref); return { selected: has ? s.selected.filter(x => x !== ref) : [...s.selected, ref], exported: false, attempted: false }; }); }
+  removeSelection() { this.setState({ selected: [], exported: false, attempted: false }); }
+  save() {}
+  exportDossier() {
+    const holes = this._lines().filter(l => this.state.selected.includes(l.ref) && l.evi === 'missing');
+    if (holes.length) this.setState({ attempted: true }); else this.setState({ exported: true, attempted: false });
+  }
+
+  _seg(active) {
+    return active
+      ? 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:4px 12px;border-radius:999px;background:var(--fill-2);color:var(--ink)'
+      : 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:4px 12px;border-radius:999px;color:var(--ink-2)';
+  }
+  _chip(active) {
+    return active
+      ? 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:5px 12px;border-radius:999px;background:var(--fill-2);color:var(--ink)'
+      : 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:5px 12px;border-radius:999px;color:var(--ink-2)';
+  }
+  _evi(e) {
+    if (e === 'missing') return { color: 'var(--critical)', label: 'missing' };
+    if (e === 'partial') return { color: 'var(--partial)', label: 'partial' };
+    return { color: 'var(--ink-2)', label: 'verified' };
+  }
+
+  _lines() {
+    return [
+      { ref: 'ENT-2026-00352', code: '5.2.1.4', cat: 'Plant & Equipment', period: '2026-03', person: 'R. Dizon', amount: '84,120,400.00', evi: 'verified', desc: 'Idle plant standby, tower cranes and access equipment', basis: 'Off-hire log matches restricted-access dates', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00361', code: '5.2.1.4', cat: 'Plant & Equipment', period: '2026-05', person: 'R. Dizon', amount: '62,540,760.50', evi: 'verified', desc: 'Extended plant standby into second quarter', basis: 'Continuation of ROW-7 restriction', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00344', code: '5.2.1.1', cat: 'Indirect Personnel', period: '2026-02', person: 'M. Reyes', amount: '38,910,220.00', evi: 'verified', desc: 'Standby site management team', basis: 'Team retained through the 148-day window', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00358', code: '5.2.1.1', cat: 'Indirect Personnel', period: '2026-04', person: 'M. Reyes', amount: '27,650,118.10', evi: 'verified', desc: 'Management standby, second phase', basis: 'Timesheets tie to access log', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00349', code: '5.2.1.2', cat: 'Site Staff', period: '2026-03', person: 'L. Cruz', amount: '44,280,000.00', evi: 'verified', desc: 'Retained site staff salaries', basis: 'Payroll continuity during prolongation', confirmedBy: 'L. Cruz' },
+      { ref: 'ENT-2026-00350', code: '5.2.1.5', cat: 'Temporary Works', period: '2026-03', person: 'R. Dizon', amount: '31,900,000.00', evi: 'verified', desc: 'Temporary works maintained', basis: 'Maintained under restricted access', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00377', code: '5.2.1.9', cat: 'Head Office Overhead', period: '2026-06', person: 'P. Villanueva', amount: '40,220,415.00', evi: 'missing', desc: 'Head office overhead, Hudson formula', basis: 'Contract clause 8.5, formula method', confirmedBy: 'pending' },
+      { ref: 'ENT-2026-00331', code: '5.2.1.8', cat: 'Insurances & Bonds', period: '2026-01', person: 'M. Reyes', amount: '21,000,000.00', evi: 'verified', desc: 'Extended insurance and bond premiums', basis: 'Premiums extended for the delay period', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00369', code: '5.2.1.10', cat: 'Finance Charges', period: '2026-05', person: 'A. Santos', amount: '18,040,338.60', evi: 'verified', desc: 'Financing cost on delayed certification', basis: 'Interest on late payment certificate', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00357', code: '5.2.1.3', cat: 'Accommodation & Welfare', period: '2026-04', person: 'J. Tan', amount: '12,315,000.00', evi: 'partial', desc: 'Camp accommodation and welfare', basis: 'Welfare extended 148 days', confirmedBy: 'J. Tan' },
+      { ref: 'ENT-2026-00359', code: '5.2.1.7', cat: 'Utilities & Services', period: '2026-04', person: 'K. Dizon', amount: '6,486,930.20', evi: 'verified', desc: 'Comms, network and utilities', basis: 'Power and comms during extension', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00376', code: '5.2.1.11', cat: 'Profit', period: '2026-06', person: 'M. Reyes', amount: '34,440,916.10', evi: 'verified', desc: 'Profit on prolongation cost', basis: 'Applied per contract profit rate', confirmedBy: 'M. Reyes' },
+      { ref: 'ENT-2026-00345', code: '5.2.1.6', cat: 'Site Establishment', period: '2026-02', person: 'J. Tan', amount: '9,048,220.75', evi: 'verified', desc: 'Site offices kept operational', basis: 'Lease continued through window', confirmedBy: 'J. Tan' },
+      { ref: 'ENT-2026-00368', code: '5.2.1.7', cat: 'Utilities & Services', period: '2026-05', person: 'K. Dizon', amount: '3,910,500.00', evi: 'partial', desc: 'Utilities, later period', basis: 'One meter reading outstanding', confirmedBy: 'pending' },
+      { ref: 'ENT-2026-00360', code: '5.2.1.3', cat: 'Accommodation & Welfare', period: '2026-05', person: 'J. Tan', amount: '8,720,000.00', evi: 'verified', desc: 'Camp welfare, later period', basis: 'Welfare continued into May', confirmedBy: 'M. Reyes' }
+    ];
+  }
+
+  renderVals() {
+    const lines = this._lines();
+    const sel = this.state.selected;
+    const F = this.state.filter;
+    const passF = (l) => F === 'all' ? true : F === 'verified' ? l.evi === 'verified' : (l.evi === 'missing' || l.evi === 'partial');
+
+    const candidates = lines.filter(passF).map(l => {
+      const selected = sel.includes(l.ref);
+      const ev = this._evi(l.evi);
+      return {
+        desc: l.desc, code: l.code, period: l.period, person: l.person, amount: l.amount,
+        eviColor: ev.color, eviLabel: ev.label, selected,
+        toggle: () => this.toggle(l.ref),
+        rowStyle: 'display:flex;align-items:center;gap:14px;padding:13px 24px;border-bottom:1px solid var(--hair);cursor:pointer;' + (selected ? 'background:var(--fill)' : ''),
+        box: 'width:20px;height:20px;border-radius:5px;flex:none;display:flex;align-items:center;justify-content:center;' + (selected ? 'background:var(--fill-2);border:1px solid var(--hair-strong)' : 'background:transparent;border:1px solid var(--hair-strong)')
+      };
+    });
+
+    const selectedLines = lines.filter(l => sel.includes(l.ref));
+    const total = selectedLines.reduce((a, l) => a + this._num(l.amount), 0);
+    const holes = selectedLines.filter(l => l.evi === 'missing');
+
+    const order = [];
+    const map = {};
+    selectedLines.forEach(l => { if (!map[l.code]) { map[l.code] = { code: l.code, cat: l.cat, sub: 0, lines: [] }; order.push(l.code); } const g = map[l.code]; g.sub += this._num(l.amount); const ev = this._evi(l.evi); g.lines.push({ ref: l.ref, period: l.period, amount: l.amount, basis: l.basis, confirmedBy: l.confirmedBy, eviColor: ev.color, remove: () => this.toggle(l.ref) }); });
+    const groups = order.sort().map(code => ({ code, cat: map[code].cat, subtotal: this._fmt(map[code].sub), lines: map[code].lines }));
+
+    const blocking = holes.length > 0;
+    const chips = [['all', 'All'], ['verified', 'Verified'], ['gaps', 'Has gaps']].map(([v, label]) => ({ label, pick: () => this.setFilter(v), style: this._chip(this.state.filter === v) }));
+
+    const pillReady = 'cursor:pointer;display:flex;align-items:center;gap:8px;height:38px;padding:0 20px;border-radius:999px;font:500 13px \'Geist\',sans-serif;background:var(--pill-bg);color:var(--pill-ink)';
+    const pillBlocked = 'cursor:pointer;display:flex;align-items:center;gap:8px;height:38px;padding:0 20px;border-radius:999px;font:500 13px \'Geist\',sans-serif;background:var(--pill-bg);color:var(--pill-ink);opacity:.4';
+
+    return {
+      theme: this.state.theme,
+      segLight: this._seg(this.state.theme === 'light'), segDark: this._seg(this.state.theme === 'dark'),
+      setLight: () => this.setTheme('light'), setDark: () => this.setTheme('dark'),
+      totalShort: this._short(total), totalFull: this._fmt(total), selCount: String(selectedLines.length),
+      chips, candidates,
+      groups, empty: selectedLines.length === 0,
+      blocking, holeCount: String(holes.length),
+      readyChip: blocking
+        ? 'font:500 11px \'Geist\',sans-serif;color:var(--critical);display:flex;align-items:center;gap:6px'
+        : 'font:500 11px \'Geist\',sans-serif;color:var(--ink-2);display:flex;align-items:center;gap:6px',
+      readyLabel: blocking ? (holes.length + ' hole') : 'Complete',
+      exported: this.state.exported, attempted: this.state.attempted,
+      pillStyle: blocking ? pillBlocked : pillReady,
+      exportDossier: () => this.exportDossier(), save: () => this.save(), removeSelection: () => this.removeSelection()
+    };
+  }
+}
+</script>
+</body>
+</html>

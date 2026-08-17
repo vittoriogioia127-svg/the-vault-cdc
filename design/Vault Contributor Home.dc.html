@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>The Vault — My monthly close</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@200;400;500;600&family=Geist+Mono:wght@400;500&display=swap">
+<style>
+:root{
+--base:#FCFCFB;--ink:#1D1D1F;--ink-2:#86868B;--ink-3:#B0B0B4;
+--fill:#F4F4F2;--fill-2:#EEEEEB;
+--hair:rgba(29,29,31,.08);--hair-strong:rgba(29,29,31,.12);--hair-soft:rgba(29,29,31,.05);
+--critical:#D9503F;--partial:#BD7D22;--success:#2E9E58;
+--pill-bg:#1D1D1F;--pill-ink:#FCFCFB;
+--focus:0 0 0 3px rgba(29,29,31,.12);
+}
+[data-theme="dark"]{
+--base:#101012;--ink:#F5F5F7;--ink-2:#98989D;--ink-3:#636368;
+--fill:#1B1B1D;--fill-2:#212124;
+--hair:rgba(245,245,247,.08);--hair-strong:rgba(245,245,247,.14);--hair-soft:rgba(245,245,247,.05);
+--critical:#E5675B;--partial:#D9A03C;--success:#41BE73;
+--pill-bg:#F5F5F7;--pill-ink:#101012;
+--focus:0 0 0 3px rgba(245,245,247,.14);
+}
+html,body{margin:0;padding:0;background:#FCFCFB}
+*{box-sizing:border-box}
+input,select,textarea{font-family:'Geist',sans-serif;outline:none;color:inherit}
+::selection{background:var(--hair-strong)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--hair-strong);border-radius:999px;border:3px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background:var(--ink-3)}
+*{scrollbar-width:thin;scrollbar-color:var(--hair-strong) transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+</style>
+</helmet>
+
+<div data-theme="{{ theme }}" data-screen-label="Contributor home" style="min-width:1280px;min-height:100vh;background:var(--base);color:var(--ink);font-family:'Geist',sans-serif;display:flex;flex-direction:column">
+
+<div style="height:48px;flex:none;display:flex;align-items:center;gap:12px;padding:0 20px;border-bottom:1px solid var(--hair)">
+<svg width="20" height="20" viewBox="0 0 96 96" style="color:var(--ink);display:block;flex:none" role="img" aria-label="The Vault"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"></path><circle cx="48" cy="48" r="7" fill="currentColor"></circle></svg>
+<span style="font:600 14px 'Geist',sans-serif;letter-spacing:-.01em">The Vault</span>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:400 12px 'Geist Mono',monospace;color:var(--ink-2)">Home</span>
+<span style="flex:1"></span>
+<div style="display:flex;align-items:center;gap:2px;padding:2px;border:1px solid var(--hair-strong);border-radius:999px">
+<span onClick="{{ setLight }}" style="{{ segLight }}">Light</span>
+<span onClick="{{ setDark }}" style="{{ segDark }}">Dark</span>
+</div>
+<div style="width:1px;height:16px;background:var(--hair-strong)"></div>
+<span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">L. Cruz</span>
+<div style="width:24px;height:24px;border-radius:999px;background:var(--fill);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center;font:500 10px 'Geist Mono',monospace;color:var(--ink-2)">LC</div>
+</div>
+
+<div style="flex:1;overflow-y:auto">
+<div style="max-width:940px;margin:0 auto;padding:52px 32px 96px">
+
+<div style="display:flex;align-items:flex-start;gap:40px">
+<div style="display:flex;flex-direction:column;gap:12px;flex:1">
+<span style="font:500 11px 'Geist Mono',monospace;letter-spacing:.16em;color:var(--ink-2);text-transform:uppercase">My monthly close</span>
+<span style="font:600 30px/1.1 'Geist',sans-serif;letter-spacing:-.02em">Period 2026-06</span>
+<span style="font:400 13.5px 'Geist',sans-serif;color:var(--ink-2)">L. Cruz · HR-Payroll · open and in progress</span>
+</div>
+<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;padding-top:4px">
+<span style="font:200 56px/1 'Geist',sans-serif;letter-spacing:-.03em">{{ daysLeft }}</span>
+<span style="font:500 11px 'Geist',sans-serif;color:var(--ink-2)">days before close</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">closes 08 Jul 2026</span>
+</div>
+</div>
+
+<div style="margin-top:26px;display:flex;align-items:center;gap:14px">
+<div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:67%;height:100%;background:var(--ink-3)"></div></div>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--ink-2)">{{ doneCount }} of {{ totalCount }} items complete</span>
+<span style="width:4px;height:4px;border-radius:999px;background:var(--ink-3)"></span>
+<span style="font:400 12px 'Geist',sans-serif;color:var(--critical)">2 need documents</span>
+</div>
+
+<div style="margin-top:52px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:26px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em">Your categories</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:var(--ink-3)">Muted is complete. Colour marks a gap.</span>
+</div>
+<div style="margin-top:8px;display:flex;flex-direction:column">
+<sc-for list="{{ items }}" as="it" hint-placeholder-count="6">
+<div style="display:flex;align-items:center;gap:16px;padding:17px 4px;border-top:1px solid var(--hair)">
+<span style="{{ it.box }}"><sc-if value="{{ it.check }}" hint-placeholder-val="{{ false }}"><svg width="11" height="11" viewBox="0 0 12 12" style="display:block"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if></span>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1">
+<span style="font:500 14px 'Geist',sans-serif;color:var(--ink)">{{ it.name }}</span>
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-3)">{{ it.meta }}</span>
+</div>
+<span style="width:150px;flex:none;text-align:right;font:500 13px 'Geist Mono',monospace;color:var(--ink)">{{ it.amount }}</span>
+<span style="width:186px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">
+<sc-if value="{{ it.dot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;border-radius:999px;background:{{ it.statusColor }};flex:none"></span></sc-if>
+<span style="font:400 12.5px 'Geist',sans-serif;color:{{ it.statusColor }}">{{ it.status }}</span>
+</span>
+</div>
+</sc-for>
+</div>
+
+<div style="margin-top:52px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:26px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em">Quick actions</span>
+</div>
+<div style="margin-top:18px;display:flex;align-items:center;gap:12px">
+<span onClick="{{ addEntry }}" tabindex="0" style="cursor:pointer;display:flex;align-items:center;gap:8px;height:40px;padding:0 20px;background:var(--pill-bg);color:var(--pill-ink);border-radius:999px;font:500 13px 'Geist',sans-serif" style-hover="opacity:.9" style-focus="box-shadow:var(--focus)"><span style="font:400 16px 'Geist Mono',monospace;line-height:1">+</span><span>Add&nbsp;entry</span></span>
+<span tabindex="0" style="cursor:pointer;display:flex;align-items:center;gap:9px;height:40px;padding:0 18px;border:1px solid var(--hair-strong);border-radius:999px;font:500 13px 'Geist',sans-serif;color:var(--ink)" style-hover="background:var(--fill)" style-focus="box-shadow:var(--focus)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" style="display:block"><rect x="4" y="4" width="16" height="16" rx="2" stroke="var(--ink-2)" stroke-width="1.6"></rect><path d="M9 4 V20 M4 12 H20" stroke="var(--ink-3)" stroke-width="1.2"></path></svg><span>Bulk&nbsp;import&nbsp;Excel&nbsp;or&nbsp;CSV</span></span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">or drop files below</span>
+</div>
+<div onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" onClick="{{ simulate }}" tabindex="0" onKeyDown="{{ onDropKey }}" style="{{ dropStyle }}" style-focus="box-shadow:var(--focus)">
+<div style="width:34px;height:34px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" style="display:block"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path><path d="M4 19 H20" stroke="var(--ink-3)" stroke-width="1.6" stroke-linecap="round"></path></svg></div>
+<div style="display:flex;flex-direction:column;gap:2px;flex:1">
+<span style="font:500 13.5px 'Geist',sans-serif;color:var(--ink)">{{ dropTitle }}</span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2)">PDF, XLSX, images · hashed on drop · click to simulate</span>
+</div>
+</div>
+<sc-if value="{{ hasFiles }}" hint-placeholder-val="{{ false }}">
+<div style="margin-top:10px;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ files }}" as="f" hint-placeholder-count="1">
+<div style="{{ f.cardStyle }};display:flex;align-items:center;gap:14px;padding:12px 16px;background:var(--fill);border-radius:12px">
+<div style="width:9px;height:9px;border-radius:2px;background:{{ f.tick }};flex:none"></div>
+<div style="display:flex;flex-direction:column;gap:3px;min-width:0;flex:1"><span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ f.name }}</span><span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-2)">sha256 · {{ f.hashShown }}<sc-if value="{{ f.typing }}" hint-placeholder-val="{{ false }}"><span style="color:var(--ink-3)">▍</span></sc-if></span></div>
+<span style="font:400 11px 'Geist Mono',monospace;color:{{ f.stateColor }};flex:none">{{ f.stateLabel }}</span>
+<span onClick="{{ f.remove }}" style="cursor:pointer;font:400 13px 'Geist',sans-serif;color:var(--ink-3);flex:none" style-hover="color:var(--ink)">✕</span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+<sc-if value="{{ showRejected }}" hint-placeholder-val="{{ true }}">
+<div style="margin-top:52px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:26px">
+<span style="font:600 16px 'Geist',sans-serif;letter-spacing:-.01em">Recently rejected</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist',sans-serif;color:var(--ink-3)">Fix and resubmit before close</span>
+</div>
+<div style="margin-top:14px;display:flex;flex-direction:column;gap:10px">
+<sc-for list="{{ rejected }}" as="r" hint-placeholder-count="2">
+<div style="display:flex;flex-direction:column;gap:8px;padding:15px 18px;background:var(--fill);border-radius:12px">
+<div style="display:flex;align-items:center;gap:12px">
+<span style="font:400 11.5px 'Geist Mono',monospace;color:var(--ink-2)">{{ r.ref }}</span>
+<span style="font:500 13px 'Geist',sans-serif;color:var(--ink)">{{ r.cat }}</span>
+<span style="flex:1"></span>
+<span style="font:500 12.5px 'Geist Mono',monospace;color:var(--ink)">₱ {{ r.amount }}</span>
+</div>
+<div style="display:flex;align-items:center;gap:10px">
+<span style="font:500 10px 'Geist Mono',monospace;letter-spacing:.06em;color:var(--critical);text-transform:uppercase">Rejected</span>
+<span style="font:400 12.5px 'Geist',sans-serif;color:var(--ink-2)">{{ r.reason }}</span>
+<span style="flex:1"></span>
+<span style="font:400 11px 'Geist Mono',monospace;color:var(--ink-3)">{{ r.by }} · {{ r.on }}</span>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-if>
+
+</div>
+</div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:900},&quot;daysLeft&quot;:{&quot;editor&quot;:&quot;int&quot;,&quot;default&quot;:4,&quot;min&quot;:0,&quot;max&quot;:31,&quot;tsType&quot;:&quot;number&quot;,&quot;unit&quot;:&quot;days&quot;,&quot;section&quot;:&quot;Home&quot;},&quot;showRejected&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Home&quot;}}">
+class Component extends DCLogic {
+  state = { theme: 'light', files: [], dragging: false };
+  _fid = 0; _typer = null;
+
+  componentWillUnmount() { if (this._typer) clearInterval(this._typer); }
+
+  _hash() { const h = '0123456789abcdef'; let s = ''; for (let i = 0; i < 16; i++) s += h[Math.floor(Math.random() * 16)]; return s; }
+  setTheme(t) { this.setState({ theme: t }); }
+
+  onDragOver(e) { e.preventDefault(); if (!this.state.dragging) this.setState({ dragging: true }); }
+  onDragLeave(e) { e.preventDefault(); this.setState({ dragging: false }); }
+  onDrop(e) { e.preventDefault(); this.setState({ dragging: false }); const fs = e.dataTransfer && e.dataTransfer.files; if (fs && fs.length) { for (const f of fs) this.addFile(f.name); } else { this.simulate(); } }
+  onDropKey(e) { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); this.simulate(); } }
+  simulate() { const names = ['Payslip_batch_Jun2026.pdf', 'SSS_R3_remittance.pdf', 'Overtime_summary_Jun.xlsx', 'Camp_welfare_invoice.pdf', 'PhilHealth_RF1.pdf']; this.addFile(names[this.state.files.length % names.length]); }
+  addFile(name) {
+    const f = { id: ++this._fid, name, hash: this._hash(), typed: 0, mount: false };
+    this.setState(s => ({ files: [...s.files, f] }));
+    requestAnimationFrame(() => this.setState(s => ({ files: s.files.map(x => x.id === f.id ? { ...x, mount: true } : x) })));
+    if (!this._typer) this._typer = setInterval(() => this._tick(), 24);
+  }
+  _tick() { this.setState(s => { let any = false; const files = s.files.map(f => { if (f.typed < f.hash.length) { any = true; return { ...f, typed: f.typed + 1 }; } return f; }); if (!any && this._typer) { clearInterval(this._typer); this._typer = null; } return { files }; }); }
+  removeFile(id) { this.setState(s => ({ files: s.files.filter(f => f.id !== id) })); }
+
+  _seg(active) {
+    return active
+      ? 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:4px 12px;border-radius:999px;background:var(--fill-2);color:var(--ink)'
+      : 'cursor:pointer;font:500 11px \'Geist\',sans-serif;padding:4px 12px;border-radius:999px;color:var(--ink-2)';
+  }
+
+  _items() {
+    return [
+      { name: 'Indirect Personnel', meta: '5.2.1.1 · 4 files', amount: '1,310,924.40', state: 'complete' },
+      { name: 'Site Staff', meta: '5.2.1.2 · 6 files', amount: '2,845,110.00', state: 'complete' },
+      { name: 'Accommodation & Welfare', meta: '5.2.1.3 · 1 of 3 files', amount: '731,500.00', state: 'critical', status: '2 documents missing' },
+      { name: 'Payroll register', meta: 'Jun 2026 · 6 files', amount: '', state: 'complete', status: 'Attached' },
+      { name: 'Statutory remittances', meta: 'SSS / PhilHealth / Pag-IBIG', amount: '486,930.20', state: 'partial', status: '1 document missing' },
+      { name: 'Overtime & night differential', meta: 'Jun 2026 · 3 files', amount: '392,180.00', state: 'complete' }
+    ];
+  }
+
+  renderVals() {
+    const raw = this._items();
+    const items = raw.map(it => {
+      const complete = it.state === 'complete';
+      const color = it.state === 'critical' ? 'var(--critical)' : it.state === 'partial' ? 'var(--partial)' : 'var(--ink-2)';
+      return {
+        name: it.name, meta: it.meta, amount: it.amount ? ('₱ ' + it.amount) : '',
+        check: complete, dot: !complete,
+        status: it.status || 'Complete', statusColor: color,
+        box: 'width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;' + (complete ? 'background:var(--fill-2);border:1px solid var(--hair)' : 'background:transparent;border:1.5px solid ' + color)
+      };
+    });
+    const done = raw.filter(i => i.state === 'complete').length;
+
+    const files = this.state.files.map(f => ({
+      name: f.name, hashShown: f.hash.slice(0, f.typed), typing: f.typed < f.hash.length,
+      tick: f.typed >= f.hash.length ? 'var(--success)' : 'var(--ink-3)',
+      stateColor: f.typed >= f.hash.length ? 'var(--ink-2)' : 'var(--ink-3)',
+      stateLabel: f.typed >= f.hash.length ? 'hashed' : 'reading',
+      remove: () => this.removeFile(f.id),
+      cardStyle: 'transition:opacity .18s ease-out, transform .18s ease-out;' + (f.mount ? 'opacity:1;transform:none' : 'opacity:0;transform:translateY(7px)')
+    }));
+
+    const dropBase = 'margin-top:16px;display:flex;align-items:center;gap:14px;padding:18px 20px;border-radius:18px;cursor:pointer;transition:background .16s ease-out, border-color .16s ease-out;';
+    const dropStyle = dropBase + (this.state.dragging ? 'border:1.5px solid var(--ink);background:var(--fill)' : 'border:1.5px dashed var(--hair-strong);background:transparent');
+
+    return {
+      theme: this.state.theme,
+      segLight: this._seg(this.state.theme === 'light'), segDark: this._seg(this.state.theme === 'dark'),
+      setLight: () => this.setTheme('light'), setDark: () => this.setTheme('dark'),
+      daysLeft: String(this.props.daysLeft ?? 4),
+      items, doneCount: String(done), totalCount: String(raw.length),
+      addEntry: () => {},
+      onDragOver: (e) => this.onDragOver(e), onDragLeave: (e) => this.onDragLeave(e), onDrop: (e) => this.onDrop(e), onDropKey: (e) => this.onDropKey(e), simulate: () => this.simulate(),
+      dragging: this.state.dragging, dropStyle, dropTitle: this.state.dragging ? 'Release to hash and attach' : 'Drop evidence here',
+      hasFiles: this.state.files.length > 0, files,
+      showRejected: this.props.showRejected ?? true,
+      rejected: [
+        { ref: 'ENT-2026-00408', cat: 'Accommodation & Welfare', amount: '731,500.00', reason: 'Invoice date falls outside the period window', by: 'M. Reyes', on: '01 Jul 2026' },
+        { ref: 'ENT-2026-00397', cat: 'Site Staff', amount: '120,400.00', reason: 'Missing second approval signature', by: 'M. Reyes', on: '27 Jun 2026' }
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>
