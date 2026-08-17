@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The Vault - Pitch</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Geist:wght@200..700&family=Geist+Mono:wght@200..700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   THE VAULT - DESIGN TOKENS (FROZEN)
+   Direction: Showroom. Do not edit values. Do not add tokens.
+   ============================================================ */
+:root{
+  --base:#FCFCFB;
+  --ink:#1D1D1F;
+  --ink-2:#86868B;
+  --ink-3:#B0B0B4;
+  --fill:#F4F4F2;
+  --fill-2:#EEEEEB;
+  --hair:rgba(29,29,31,.08);
+  --hair-strong:rgba(29,29,31,.12);
+  --hair-soft:rgba(29,29,31,.05);
+  --critical:#D9503F;
+  --partial:#BD7D22;
+  --success:#2E9E58;
+  --pill-bg:#1D1D1F;
+  --pill-ink:#FCFCFB;
+  --sans:'Geist',sans-serif;
+  --mono:'Geist Mono',monospace;
+}
+[data-theme="dark"]{
+  --base:#101012;
+  --ink:#F5F5F7;
+  --ink-2:#98989D;
+  --ink-3:#636368;
+  --fill:#1B1B1D;
+  --fill-2:#212124;
+  --hair:rgba(245,245,247,.08);
+  --hair-strong:rgba(245,245,247,.14);
+  --hair-soft:rgba(245,245,247,.05);
+  --critical:#E5675B;
+  --partial:#D9A03C;
+  --success:#41BE73;
+  --pill-bg:#F5F5F7;
+  --pill-ink:#101012;
+}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{height:100%;overflow:hidden;background:var(--base);}
+body{font-family:var(--sans);color:var(--ink);-webkit-font-smoothing:antialiased;}
+.m{font-family:var(--mono);}
+
+.stage{position:fixed;left:50%;top:50%;width:1440px;height:810px;transform:translate(-50%,-50%) scale(1);background:var(--base);overflow:hidden;}
+.slide{position:absolute;inset:0;padding:96px 96px 56px;display:flex;flex-direction:column;opacity:0;pointer-events:none;transition:opacity 150ms linear;}
+.slide.on{opacity:1;}
+@media (prefers-reduced-motion: reduce){.slide{transition:none;}}
+
+.zone{position:fixed;top:0;bottom:0;width:33.333vw;z-index:5;}
+.zone.zl{left:0;}
+.zone.zr{right:0;}
+
+.chrome{position:fixed;top:18px;right:22px;display:flex;align-items:center;gap:14px;z-index:10;}
+.counter{font-family:var(--mono);font-size:11px;letter-spacing:.08em;color:var(--ink-2);}
+.seg{display:flex;gap:2px;background:var(--fill);border:1px solid var(--hair);border-radius:999px;padding:3px;}
+.seg button{font-family:var(--mono);font-size:11px;color:var(--ink-2);background:transparent;border:none;padding:5px 12px;border-radius:999px;cursor:pointer;}
+.seg button.on{background:var(--pill-bg);color:var(--pill-ink);}
+
+.mark{position:absolute;top:44px;left:96px;color:var(--ink-3);}
+.mark svg{width:16px;height:16px;display:block;}
+.s01 .mark{color:var(--ink);}
+.s01 .mark svg{width:30px;height:30px;}
+
+.hd{font-size:46px;font-weight:500;letter-spacing:-0.02em;line-height:1.15;max-width:1080px;}
+.bd{font-size:19px;line-height:1.55;color:var(--ink-2);max-width:820px;margin-top:20px;}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--ink-2);}
+.foot{margin-top:auto;padding-top:18px;border-top:1px solid var(--hair);font-size:14px;color:var(--ink-2);}
+.card{background:var(--fill);border:1px solid var(--hair);border-radius:14px;}
+.adot{display:inline-block;width:8px;height:8px;border-radius:999px;background:var(--partial);flex:none;}
+.lnum{font-family:var(--mono);font-size:12px;color:var(--ink-3);letter-spacing:.06em;flex:none;}
+.pill{display:inline-flex;align-items:center;background:var(--pill-bg);color:var(--pill-ink);border-radius:999px;padding:13px 28px;font-size:16px;font-weight:500;}
+.big{font-family:var(--mono);font-weight:200;font-variant-numeric:tabular-nums;font-size:132px;line-height:1;color:var(--ink);}
+.hr{border-top:1px solid var(--hair);margin:28px 0;}
+
+.cover{flex:1;display:flex;flex-direction:column;justify-content:center;}
+.cover h1{font-size:148px;font-weight:500;letter-spacing:-0.035em;line-height:1;}
+.cover .sub{font-size:27px;color:var(--ink-2);margin-top:26px;}
+.cfoot{font-family:var(--mono);font-size:13px;color:var(--ink-2);}
+
+.row3{display:flex;gap:16px;margin-top:44px;}
+.qc{flex:1;padding:28px;font-size:20px;font-weight:500;}
+
+.layers{display:flex;flex-direction:column;gap:12px;margin-top:40px;}
+.layer{display:flex;align-items:center;gap:18px;padding:24px 28px;background:var(--fill);border:1px solid var(--hair);border-radius:14px;}
+.ltxt{font-size:20px;font-weight:500;}
+.ltag{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.ttx{font-family:var(--mono);font-size:11px;letter-spacing:.14em;color:var(--partial);}
+
+.stages{display:flex;align-items:stretch;gap:12px;margin-top:38px;}
+.scard{flex:1;display:flex;flex-direction:column;gap:10px;padding:22px 24px;background:var(--fill);border:1px solid var(--hair);border-radius:12px;}
+.stx{font-size:18px;font-weight:500;}
+.arr{flex:none;width:26px;height:1px;background:var(--ink-3);position:relative;align-self:center;}
+.arr::after{content:'';position:absolute;right:-1px;top:-3.5px;width:0;height:0;border-left:5px solid var(--ink-3);border-top:4px solid transparent;border-bottom:4px solid transparent;}
+.bands{display:flex;flex-direction:column;gap:10px;margin-top:34px;}
+.band{padding:17px 26px;border:1px solid var(--hair);border-radius:12px;font-size:16px;font-weight:500;}
+.band.b1{background:var(--fill);}
+.band.b2{background:var(--fill-2);}
+
+.conds{display:flex;flex-direction:column;gap:10px;margin-top:38px;}
+.cond{display:flex;align-items:center;gap:18px;padding:19px 28px;background:var(--fill);border:1px solid var(--hair);border-radius:12px;font-size:19px;font-weight:500;}
+.arrv{width:1px;height:26px;background:var(--ink-3);position:relative;margin:18px auto 0;}
+.arrv::after{content:'';position:absolute;bottom:-1px;left:-3.5px;width:0;height:0;border-top:5px solid var(--ink-3);border-left:4px solid transparent;border-right:4px solid transparent;}
+.pillwrap{margin-top:16px;text-align:center;}
+.cap{font-size:15px;line-height:1.55;color:var(--ink-2);max-width:720px;margin:24px auto 0;text-align:center;}
+
+.g6{display:flex;gap:90px;margin-top:44px;align-items:flex-start;}
+.casc{flex:1;display:flex;flex-direction:column;gap:14px;align-items:flex-start;}
+.chip{display:inline-flex;padding:15px 22px;background:var(--fill);border:1px solid var(--hair);border-radius:10px;font-family:var(--mono);font-size:14px;color:var(--ink);}
+.c1{margin-left:44px;}
+.c2{margin-left:88px;}
+.c3{margin-left:132px;}
+.stats{width:470px;flex:none;}
+.scap{font-size:15px;line-height:1.5;color:var(--ink-2);margin-top:12px;}
+.split{font-family:var(--mono);font-size:13px;color:var(--ink-2);margin-top:14px;}
+
+.g7{display:flex;gap:90px;flex:1;align-items:flex-start;}
+.g7 .left{flex:1;}
+.g7 .hd{font-size:42px;max-width:700px;}
+.rail{width:300px;flex:none;margin-top:8px;}
+.r7{padding:24px 0;border-top:1px solid var(--hair);}
+.rbig{font-family:var(--mono);font-weight:200;font-variant-numeric:tabular-nums;font-size:88px;line-height:1;color:var(--ink);}
+.rlab{font-size:15px;color:var(--ink-2);margin-top:8px;}
+
+.lc{align-items:stretch;}
+.lcc{flex:1;padding:28px;}
+.lct{font-size:20px;font-weight:500;}
+.lfig{font-family:var(--mono);font-weight:200;font-variant-numeric:tabular-nums;font-size:36px;margin-top:18px;}
+.lline{font-size:15px;line-height:1.55;color:var(--ink-2);margin-top:16px;}
+
+.s09 .kick{margin-top:40px;}
+.chips9{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px;}
+.chip9{padding:11px 20px;background:var(--fill);border:1px solid var(--hair);border-radius:999px;font-size:15px;}
+.l9{font-size:17px;color:var(--ink-2);margin-top:28px;}
+.mband{margin-top:36px;padding:21px 28px;background:var(--fill-2);border:1px solid var(--hair);border-radius:12px;font-size:17px;}
+
+.g10{display:flex;gap:80px;margin-top:32px;}
+.l10{flex:0 0 470px;}
+.bd10{font-size:17px;line-height:1.6;color:var(--ink-2);}
+.r10s{flex:1;}
+.urows{margin-top:16px;}
+.urow{display:flex;align-items:baseline;gap:16px;padding:13px 0;border-top:1px solid var(--hair);}
+.urow:first-child{border-top:none;}
+.utx{font-size:15px;flex:1;}
+.utag{font-family:var(--mono);font-size:11px;letter-spacing:.12em;color:var(--ink-2);flex:none;}
+.close10{margin-top:auto;padding-top:20px;border-top:1px solid var(--hair);font-size:18px;color:var(--ink);}
+
+.rows11{margin-top:48px;}
+.r11{position:relative;display:flex;align-items:flex-start;gap:20px;padding:27px 0;border-top:1px solid var(--hair);}
+.r11 p{font-size:22px;line-height:1.4;max-width:1020px;}
+.r11 .lnum{margin-top:8px;}
+.d11{position:absolute;left:-26px;top:39px;}
+
+.gates{display:flex;gap:16px;margin-top:32px;}
+.gate{flex:1;padding:24px 28px;}
+.gt{font-size:19px;font-weight:500;display:flex;align-items:center;gap:10px;}
+.gl{font-size:15px;color:var(--ink-2);margin-top:9px;}
+.s12 .kick{margin-top:32px;}
+.phases{display:flex;gap:12px;margin-top:14px;}
+.pcard{flex:1;padding:19px 22px;background:var(--fill);border:1px solid var(--hair);border-radius:12px;}
+.ptx{font-size:16px;font-weight:500;margin-top:8px;}
+.pillwrap.end{margin-top:auto;text-align:left;}
+</style>
+</head>
+<body>
+
+<div class="chrome">
+  <div class="counter" id="counter">01 / 12</div>
+  <div class="seg" id="langSeg">
+    <button type="button" data-l="fr">FR</button>
+    <button type="button" data-l="en" class="on">EN</button>
+  </div>
+  <div class="seg" id="themeSeg">
+    <button type="button" data-t="light" class="on">Light</button>
+    <button type="button" data-t="dark">Dark</button>
+  </div>
+</div>
+<div class="zone zl" id="zoneL"></div>
+<div class="zone zr" id="zoneR"></div>
+
+<div class="stage" id="stage">
+
+<section class="slide s01 on">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <div class="cover">
+    <h1>The Vault</h1>
+    <p class="sub" data-i18n="s01sub">Every cost, proven.</p>
+  </div>
+  <div class="cfoot" data-i18n="s01foot">Colas Rail, MMSP EOT001 pilot</div>
+</section>
+
+<section class="slide s02">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s02h">Claims worth hundreds of millions of <span class="m">PHP</span> rest on manual substantiation.</h2>
+  <p class="bd" data-i18n="s02b">Today the cost data of an <span class="m">EOT</span> claim is fragmented across departments, reassembled by hand when an event occurs, and gaps surface too late.</p>
+  <div class="row3">
+    <div class="card qc" data-i18n="s02c1">Slow</div>
+    <div class="card qc" data-i18n="s02c2">Hard to trace</div>
+    <div class="card qc" data-i18n="s02c3">Financially exposed</div>
+  </div>
+  <div class="foot" data-i18n="s02foot">The process is the problem, never the people.</div>
+</section>
+
+<section class="slide s03">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s03h">Three layers of documents, one person holding them together.</h2>
+  <div class="layers">
+    <div class="layer"><span class="lnum">01</span><span class="ltxt" data-i18n="s03l1">Source files</span></div>
+    <div class="layer"><span class="lnum">02</span><span class="ltxt" data-i18n="s03l2">Working files</span><span class="ltag"><span class="adot"></span><span class="ttx" data-i18n="s03tag">MANUAL EFFORT</span></span></div>
+    <div class="layer"><span class="lnum">03</span><span class="ltxt" data-i18n="s03l3">Evidences</span></div>
+  </div>
+  <div class="foot" data-i18n="s03foot">The working layer is human today.</div>
+</section>
+
+<section class="slide s04">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s04h">Drop. Extract. Substantiate. Validate.</h2>
+  <p class="bd" data-i18n="s04b">Departments drop their source files, the tool files each cost down to the person, ties it to its proof, and routes it through validation.</p>
+  <div class="stages">
+    <div class="scard"><span class="lnum">01</span><span class="stx" data-i18n="s04s1">Drop</span></div>
+    <span class="arr"></span>
+    <div class="scard"><span class="lnum">02</span><span class="stx" data-i18n="s04s2">Extract</span></div>
+    <span class="arr"></span>
+    <div class="scard"><span class="lnum">03</span><span class="stx" data-i18n="s04s3">Substantiate</span></div>
+    <span class="arr"></span>
+    <div class="scard"><span class="lnum">04</span><span class="stx" data-i18n="s04s4">Validate</span></div>
+  </div>
+  <div class="bands">
+    <div class="band b1" data-i18n="s04band1">Claim dossiers</div>
+    <div class="band b2" data-i18n="s04band2">Permanent cost register</div>
+  </div>
+  <div class="foot" data-i18n="s04foot">A permanent cost register, with claim dossiers assembled on top.</div>
+</section>
+
+<section class="slide s05">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s05h">Three conditions, one door.</h2>
+  <div class="conds">
+    <div class="cond"><span class="lnum">01</span><span data-i18n="s05c1">Source deposited</span></div>
+    <div class="cond"><span class="lnum">02</span><span data-i18n="s05c2">Evidence on file</span></div>
+    <div class="cond"><span class="lnum">03</span><span data-i18n="s05c3">Validator sign-off</span></div>
+  </div>
+  <div class="arrv"></div>
+  <div class="pillwrap"><span class="pill" data-i18n="s05pill">Complete</span></div>
+  <p class="cap" data-i18n="s05cap">Complete is a fact, not a document count. What is complete stays quiet, colour marks only the exception.</p>
+</section>
+
+<section class="slide s06">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s06h">Down to one person, one element, one month.</h2>
+  <div class="g6">
+    <div class="casc">
+      <div class="chip">Cost Head A</div>
+      <div class="chip c1">Category</div>
+      <div class="chip c2">Cost Element</div>
+      <div class="chip c3">Staff x Origin x Currency x Month</div>
+    </div>
+    <div class="stats">
+      <div class="big">40</div>
+      <p class="scap" data-i18n="s06cap1">cost elements mapped across Salary, Contribution and Fringe Benefit</p>
+      <p class="split">16 Salary / 6 Contribution / 18 Fringe Benefit</p>
+      <div class="hr"></div>
+      <div class="big">39</div>
+      <p class="scap" data-i18n="s06cap2">active on the pilot</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide s07">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <div class="g7">
+    <div class="left">
+      <h2 class="hd" data-i18n="s07h">The rulebook is written by the person who runs the process today.</h2>
+      <p class="bd" data-i18n="s07b">The substantiation configuration, what proves each of the <span class="m">40</span> cost elements, who provides it and how often, was returned fully verdicted by the Cost Controller in <span class="m">48</span> hours. The tool encodes the real process, validated at element level, not an assumption.</p>
+    </div>
+    <div class="rail">
+      <div class="r7"><div class="rbig">40</div><div class="rlab" data-i18n="s07r1">cost elements</div></div>
+      <div class="r7"><div class="rbig">48</div><div class="rlab" data-i18n="s07r2">hours</div></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide s08">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s08h">Notice, versions, seal.</h2>
+  <div class="row3 lc">
+    <div class="card lcc">
+      <div class="lct" data-i18n="s08t1">Notice</div>
+      <div class="lfig" data-i18n="s08fig">28 days</div>
+      <p class="lline" data-i18n="s08l1">Each contractual event carries its notice countdown (<span class="m">28 days</span> on this contract, configurable).</p>
+    </div>
+    <div class="card lcc">
+      <div class="lct" data-i18n="s08t2">Versions</div>
+      <p class="lline" data-i18n="s08l2">A sealed claim is never altered: reopening creates the next version with a mandatory reason and a line-level diff.</p>
+    </div>
+    <div class="card lcc">
+      <div class="lct" data-i18n="s08t3">Seal</div>
+      <p class="lline" data-i18n="s08l3">Every client submission is traced with its disclosure profile.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide s09">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s09h">Configuration, not code.</h2>
+  <div class="kick" data-i18n="s09k">CONFIGURATION OBJECTS PER PROJECT</div>
+  <div class="chips9">
+    <span class="chip9" data-i18n="s09c1">taxonomy</span>
+    <span class="chip9" data-i18n="s09c2">owners</span>
+    <span class="chip9" data-i18n="s09c3">sources</span>
+    <span class="chip9" data-i18n="s09c4">proof rules</span>
+    <span class="chip9" data-i18n="s09c5">notice periods</span>
+    <span class="chip9" data-i18n="s09c6">disclosure profiles</span>
+  </div>
+  <p class="l9" data-i18n="s09line">Any Colas project onboards by loading its configuration.</p>
+  <div class="mband" data-i18n="s09band"><span class="m">MMSP</span> is the first configuration loaded, not a bespoke tool.</div>
+</section>
+
+<section class="slide s10">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s10h">From claims defense to cost intelligence.</h2>
+  <div class="g10">
+    <div class="l10">
+      <p class="bd10" data-i18n="s10b">Every cost in the register is dated, attributed, categorised and proven. That discipline produces a clean financial dataset as a byproduct: a cost control data foundation.</p>
+    </div>
+    <div class="r10s">
+      <div class="kick" data-i18n="s10k">WHAT IT UNLOCKS</div>
+      <div class="urows">
+        <div class="urow"><span class="lnum">01</span><span class="utx" data-i18n="s10r1">A utility invoice deviating from its own history</span><span class="utag">FLAG</span></div>
+        <div class="urow"><span class="lnum">02</span><span class="utx" data-i18n="s10r2">A duplicate invoice</span><span class="utag">FLAG</span></div>
+        <div class="urow"><span class="lnum">03</span><span class="utx" data-i18n="s10r3">A cost per staff outlier against its package</span><span class="utag">FLAG</span></div>
+        <div class="urow"><span class="lnum">04</span><span class="utx" data-i18n="s10r4">Evidence aging without validation</span><span class="utag">FLAG</span></div>
+        <div class="urow"><span class="lnum">05</span><span class="utx" data-i18n="s10r5">Period-on-period variance</span><span class="utag">REPORT</span></div>
+        <div class="urow"><span class="lnum">06</span><span class="utx" data-i18n="s10r6">Cross-project comparison once several projects are onboarded</span><span class="utag">REPORT</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="close10" data-i18n="s10close">None of this is built for the pilot; all of it becomes possible because the register exists.</div>
+</section>
+
+<section class="slide s11">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s11h">Role-based, isolated, tamper-evident.</h2>
+  <div class="rows11">
+    <div class="r11"><span class="lnum">01</span><p data-i18n="s11r1">Nominative HR and payroll data isolated at the data level per role.</p></div>
+    <div class="r11"><span class="lnum">02</span><p data-i18n="s11r2">Every document fingerprinted on upload, write-once history, any later change detectable.</p></div>
+    <div class="r11"><span class="adot d11"></span><span class="lnum">03</span><p data-i18n="s11r3">Production with real HR data is gated on cyber sign-off; the pilot runs on test data until then.</p></div>
+  </div>
+</section>
+
+<section class="slide s12">
+  <div class="mark"><svg viewBox="0 0 96 96"><path d="M20 22h15v8h-7v36h7v8h-15zM76 22h-15v8h7v36h-7v8h15z" fill="currentColor"/><circle cx="48" cy="48" r="7" fill="currentColor"/></svg></div>
+  <h2 class="hd" data-i18n="s12h">Two gates govern everything.</h2>
+  <div class="gates">
+    <div class="card gate">
+      <div class="gt" data-i18n="s12g1t">Configuration gate</div>
+      <p class="gl" data-i18n="s12g1l">Substantially closed with the process referent.</p>
+    </div>
+    <div class="card gate">
+      <div class="gt"><span class="adot"></span><span data-i18n="s12g2t">Mandate gate</span></div>
+      <p class="gl" data-i18n="s12g2l">This room.</p>
+    </div>
+  </div>
+  <div class="kick" data-i18n="s12k">THEN THE PHASED BUILD</div>
+  <div class="phases">
+    <div class="pcard"><span class="lnum">01</span><div class="ptx" data-i18n="s12p1">Core workflow</div></div>
+    <div class="pcard"><span class="lnum">02</span><div class="ptx" data-i18n="s12p2">Extraction deepening by stages</div></div>
+    <div class="pcard"><span class="lnum">03</span><div class="ptx" data-i18n="s12p3">Pilot on one cost head</div></div>
+    <div class="pcard"><span class="lnum">04</span><div class="ptx" data-i18n="s12p4">Group onboarding</div></div>
+  </div>
+  <div class="pillwrap end"><span class="pill" id="askPill">The ask: the mandate to build the pilot.</span></div>
+</section>
+
+</div>
+
+<script>
+const ASK_VARIANT = 'A';
+
+var ASK = {
+  A: { en: 'The ask: the mandate to build the pilot.',
+       fr: 'La demande: le mandat pour construire le pilote.' },
+  B: { en: 'The ask: sponsor The Vault as a group platform beyond <span class="m">MMSP</span>.',
+       fr: 'La demande: sponsoriser The Vault comme plateforme groupe au-dela de <span class="m">MMSP</span>.' }
+};
+
+var COPY = {
+en: {
+  s01sub: 'Every cost, proven.',
+  s01foot: 'Colas Rail, MMSP EOT001 pilot',
+  s02h: 'Claims worth hundreds of millions of <span class="m">PHP</span> rest on manual substantiation.',
+  s02b: 'Today the cost data of an <span class="m">EOT</span> claim is fragmented across departments, reassembled by hand when an event occurs, and gaps surface too late.',
+  s02c1: 'Slow',
+  s02c2: 'Hard to trace',
+  s02c3: 'Financially exposed',
+  s02foot: 'The process is the problem, never the people.',
+  s03h: 'Three layers of documents, one person holding them together.',
+  s03l1: 'Source files',
+  s03l2: 'Working files',
+  s03l3: 'Evidences',
+  s03tag: 'MANUAL EFFORT',
+  s03foot: 'The working layer is human today.',
+  s04h: 'Drop. Extract. Substantiate. Validate.',
+  s04b: 'Departments drop their source files, the tool files each cost down to the person, ties it to its proof, and routes it through validation.',
+  s04s1: 'Drop',
+  s04s2: 'Extract',
+  s04s3: 'Substantiate',
+  s04s4: 'Validate',
+  s04band1: 'Claim dossiers',
+  s04band2: 'Permanent cost register',
+  s04foot: 'A permanent cost register, with claim dossiers assembled on top.',
+  s05h: 'Three conditions, one door.',
+  s05c1: 'Source deposited',
+  s05c2: 'Evidence on file',
+  s05c3: 'Validator sign-off',
+  s05pill: 'Complete',
+  s05cap: 'Complete is a fact, not a document count. What is complete stays quiet, colour marks only the exception.',
+  s06h: 'Down to one person, one element, one month.',
+  s06cap1: 'cost elements mapped across Salary, Contribution and Fringe Benefit',
+  s06cap2: 'active on the pilot',
+  s07h: 'The rulebook is written by the person who runs the process today.',
+  s07b: 'The substantiation configuration, what proves each of the <span class="m">40</span> cost elements, who provides it and how often, was returned fully verdicted by the Cost Controller in <span class="m">48</span> hours. The tool encodes the real process, validated at element level, not an assumption.',
+  s07r1: 'cost elements',
+  s07r2: 'hours',
+  s08h: 'Notice, versions, seal.',
+  s08t1: 'Notice',
+  s08t2: 'Versions',
+  s08t3: 'Seal',
+  s08fig: '28 days',
+  s08l1: 'Each contractual event carries its notice countdown (<span class="m">28 days</span> on this contract, configurable).',
+  s08l2: 'A sealed claim is never altered: reopening creates the next version with a mandatory reason and a line-level diff.',
+  s08l3: 'Every client submission is traced with its disclosure profile.',
+  s09h: 'Configuration, not code.',
+  s09k: 'CONFIGURATION OBJECTS PER PROJECT',
+  s09c1: 'taxonomy',
+  s09c2: 'owners',
+  s09c3: 'sources',
+  s09c4: 'proof rules',
+  s09c5: 'notice periods',
+  s09c6: 'disclosure profiles',
+  s09line: 'Any Colas project onboards by loading its configuration.',
+  s09band: '<span class="m">MMSP</span> is the first configuration loaded, not a bespoke tool.',
+  s10h: 'From claims defense to cost intelligence.',
+  s10b: 'Every cost in the register is dated, attributed, categorised and proven. That discipline produces a clean financial dataset as a byproduct: a cost control data foundation.',
+  s10k: 'WHAT IT UNLOCKS',
+  s10r1: 'A utility invoice deviating from its own history',
+  s10r2: 'A duplicate invoice',
+  s10r3: 'A cost per staff outlier against its package',
+  s10r4: 'Evidence aging without validation',
+  s10r5: 'Period-on-period variance',
+  s10r6: 'Cross-project comparison once several projects are onboarded',
+  s10close: 'None of this is built for the pilot; all of it becomes possible because the register exists.',
+  s11h: 'Role-based, isolated, tamper-evident.',
+  s11r1: 'Nominative HR and payroll data isolated at the data level per role.',
+  s11r2: 'Every document fingerprinted on upload, write-once history, any later change detectable.',
+  s11r3: 'Production with real HR data is gated on cyber sign-off; the pilot runs on test data until then.',
+  s12h: 'Two gates govern everything.',
+  s12g1t: 'Configuration gate',
+  s12g1l: 'Substantially closed with the process referent.',
+  s12g2t: 'Mandate gate',
+  s12g2l: 'This room.',
+  s12k: 'THEN THE PHASED BUILD',
+  s12p1: 'Core workflow',
+  s12p2: 'Extraction deepening by stages',
+  s12p3: 'Pilot on one cost head',
+  s12p4: 'Group onboarding'
+},
+fr: {
+  s01sub: 'Chaque cout, prouve.',
+  s01foot: 'Colas Rail, pilote MMSP EOT001',
+  s02h: 'Des claims de plusieurs centaines de millions de <span class="m">PHP</span> reposent sur une substantiation manuelle.',
+  s02b: 'Aujourd\'hui, les donnees de cout d\'un claim <span class="m">EOT</span> sont fragmentees entre les departements, rassemblees a la main quand un evenement survient, et les trous apparaissent trop tard.',
+  s02c1: 'Lent',
+  s02c2: 'Difficile a tracer',
+  s02c3: 'Financierement expose',
+  s02foot: 'Le probleme est le process, jamais les personnes.',
+  s03h: 'Trois couches de documents, une personne pour les tenir ensemble.',
+  s03l1: 'Fichiers sources',
+  s03l2: 'Fichiers de travail',
+  s03l3: 'Preuves',
+  s03tag: 'EFFORT MANUEL',
+  s03foot: 'La couche du milieu est humaine aujourd\'hui.',
+  s04h: 'Deposer. Extraire. Substantifier. Valider.',
+  s04b: 'Les departements deposent leurs fichiers sources, l\'outil classe chaque cout jusqu\'a la personne, le relie a sa preuve, et le fait passer par la validation.',
+  s04s1: 'Deposer',
+  s04s2: 'Extraire',
+  s04s3: 'Substantifier',
+  s04s4: 'Valider',
+  s04band1: 'Dossiers de claim',
+  s04band2: 'Registre de couts permanent',
+  s04foot: 'Un registre de couts permanent, et des dossiers de claim assembles par-dessus.',
+  s05h: 'Trois conditions, une porte.',
+  s05c1: 'Source deposee',
+  s05c2: 'Preuve au dossier',
+  s05c3: 'Validation signee',
+  s05pill: 'Complet',
+  s05cap: 'Complet est un fait, pas un nombre de documents. Ce qui est complet reste silencieux, la couleur ne marque que l\'exception.',
+  s06h: 'Jusqu\'a une personne, un element, un mois.',
+  s06cap1: 'elements de cout repartis entre Salary, Contribution et Fringe Benefit',
+  s06cap2: 'actifs sur le pilote',
+  s07h: 'Le livre de regles est ecrit par celui qui fait tourner le process aujourd\'hui.',
+  s07b: 'La configuration de substantiation, ce qui prouve chacun des <span class="m">40</span> elements de cout, qui le fournit et a quelle frequence, a ete retournee entierement verdictee par le Cost Controller en <span class="m">48</span> heures. L\'outil encode le process reel, valide element par element, pas une hypothese.',
+  s07r1: 'elements de cout',
+  s07r2: 'heures',
+  s08h: 'Notice, versions, sceau.',
+  s08t1: 'Notice',
+  s08t2: 'Versions',
+  s08t3: 'Sceau',
+  s08fig: '28 jours',
+  s08l1: 'Chaque evenement contractuel porte son compte a rebours de notice (<span class="m">28 jours</span> sur ce contrat, configurable).',
+  s08l2: 'Un claim scelle n\'est jamais modifie: le rouvrir cree la version suivante avec une raison obligatoire et un diff ligne a ligne.',
+  s08l3: 'Chaque soumission au client est tracee avec son profil de divulgation.',
+  s09h: 'De la configuration, pas du code.',
+  s09k: 'OBJETS DE CONFIGURATION PAR PROJET',
+  s09c1: 'taxonomie',
+  s09c2: 'responsables',
+  s09c3: 'sources',
+  s09c4: 'regles de preuve',
+  s09c5: 'delais de notice',
+  s09c6: 'profils de divulgation',
+  s09line: 'N\'importe quel projet Colas embarque en chargeant sa configuration.',
+  s09band: '<span class="m">MMSP</span> est la premiere configuration chargee, pas un outil sur mesure.',
+  s10h: 'De la defense des claims a l\'intelligence des couts.',
+  s10b: 'Chaque cout du registre est date, attribue, categorise et prouve. Cette discipline produit un jeu de donnees financieres propre comme sous-produit: une fondation de donnees de cost control.',
+  s10k: 'CE QUE CA DEBLOQUE',
+  s10r1: 'Une facture d\'electricite qui devie de son propre historique',
+  s10r2: 'Une facture en doublon',
+  s10r3: 'Un cout par personne aberrant par rapport a son package',
+  s10r4: 'Une preuve qui vieillit sans validation',
+  s10r5: 'La variance periode sur periode',
+  s10r6: 'La comparaison inter-projets une fois plusieurs projets embarques',
+  s10close: 'Rien de tout cela n\'est construit pour le pilote; tout devient possible parce que le registre existe.',
+  s11h: 'Des roles, une isolation, une trace inalterable.',
+  s11r1: 'Les donnees RH et paie nominatives sont isolees au niveau de la donnee, par role.',
+  s11r2: 'Chaque document recoit une empreinte au depot, historique write-once, toute alteration ulterieure est detectable.',
+  s11r3: 'La production avec des donnees RH reelles est conditionnee a la validation cyber; le pilote tourne sur donnees de test d\'ici la.',
+  s12h: 'Deux gates gouvernent tout.',
+  s12g1t: 'Gate de configuration',
+  s12g1l: 'Substantiellement ferme avec le referent process.',
+  s12g2t: 'Gate du mandat',
+  s12g2l: 'Cette salle.',
+  s12k: 'PUIS LA CONSTRUCTION PAR PHASES',
+  s12p1: 'Le coeur du workflow',
+  s12p2: 'L\'extraction approfondie par paliers',
+  s12p3: 'Le pilote sur un cost head',
+  s12p4: 'L\'embarquement groupe'
+}
+};
+
+var LS = {
+  g: function(k){ try { return localStorage.getItem(k); } catch(e) { return null; } },
+  s: function(k,v){ try { localStorage.setItem(k,v); } catch(e) {} }
+};
+
+var slides = document.querySelectorAll('.slide');
+var N = slides.length;
+var current = 0;
+var lang = 'en';
+
+function applyLang(l){
+  lang = (l === 'fr') ? 'fr' : 'en';
+  document.documentElement.lang = lang;
+  var nodes = document.querySelectorAll('[data-i18n]');
+  for (var i = 0; i < nodes.length; i++) {
+    var v = COPY[lang][nodes[i].getAttribute('data-i18n')];
+    if (v !== undefined) nodes[i].innerHTML = v;
+  }
+  document.getElementById('askPill').innerHTML = ASK[ASK_VARIANT][lang];
+  var bs = document.querySelectorAll('#langSeg button');
+  for (var j = 0; j < bs.length; j++) bs[j].classList.toggle('on', bs[j].getAttribute('data-l') === lang);
+  LS.s('vault-pitch-lang', lang);
+}
+
+function applyTheme(t){
+  t = (t === 'dark') ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', t);
+  var bs = document.querySelectorAll('#themeSeg button');
+  for (var j = 0; j < bs.length; j++) bs[j].classList.toggle('on', bs[j].getAttribute('data-t') === t);
+  LS.s('vault-pitch-theme', t);
+}
+
+function go(n){
+  current = Math.max(0, Math.min(N - 1, n));
+  for (var i = 0; i < N; i++) slides[i].classList.toggle('on', i === current);
+  var nn = String(current + 1);
+  if (nn.length < 2) nn = '0' + nn;
+  document.getElementById('counter').textContent = nn + ' / ' + N;
+}
+
+function fit(){
+  var s = Math.min(window.innerWidth / 1440, window.innerHeight / 810);
+  document.getElementById('stage').style.transform = 'translate(-50%,-50%) scale(' + s + ')';
+}
+
+window.addEventListener('keydown', function(e){
+  if (e.ctrlKey || e.altKey || e.metaKey) return;
+  if (e.key === 'ArrowRight') go(current + 1);
+  else if (e.key === 'ArrowLeft') go(current - 1);
+  else if (e.key === 'Home') go(0);
+  else if (e.key === 'End') go(N - 1);
+});
+document.getElementById('zoneR').addEventListener('click', function(){ go(current + 1); });
+document.getElementById('zoneL').addEventListener('click', function(){ go(current - 1); });
+
+var lb = document.querySelectorAll('#langSeg button');
+for (var i = 0; i < lb.length; i++) lb[i].addEventListener('click', function(){ applyLang(this.getAttribute('data-l')); });
+var tb = document.querySelectorAll('#themeSeg button');
+for (var k = 0; k < tb.length; k++) tb[k].addEventListener('click', function(){ applyTheme(this.getAttribute('data-t')); });
+window.addEventListener('resize', fit);
+
+applyLang(LS.g('vault-pitch-lang') === 'fr' ? 'fr' : 'en');
+applyTheme(LS.g('vault-pitch-theme') === 'dark' ? 'dark' : 'light');
+fit();
+go(0);
+</script>
+</body>
+</html>
