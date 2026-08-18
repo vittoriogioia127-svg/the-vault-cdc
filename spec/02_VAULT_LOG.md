@@ -2,6 +2,28 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-18 - P3.0 closed green and pushed; four smoke defects triaged into corrective sprint P3.0.1
+P3.0 Phase B landed as commit 1d99df0 (one file, +1257/-67): VAULT_CONFIG embedded verbatim with derived
+lookups, S20 read-only at #/admin/rules, every ref renumbered to the validated taxonomy, the cockpit
+matrix at 39 active rows with the recomputed gap total (23, correct by construction after ruling 3), the
+gap panel parameterized by element, owed list, attach form, validator checklist and export reasoning all
+config-driven, periods recomputed to /39 preserving story states, real names as config facts only. Build
+validated through a Node harness executing the real render path per role after headless Chrome dump-dom
+proved unreliable on the build machine. Vittorio's 16-gesture physical pass: green across the board,
+pushed.
+Four defects surfaced in the smoke, triaged: (1) the main pane carried a max-width centering content on
+large screens, a P2.1 inheritance; ruled full-width, The Vault is a data tool, tables and matrix take the
+viewport, prose blocks alone keep a reading measure. (2) The enriched sealed month header overflows its
+cell; ruled containment, fixed header height, 10px mono secondary line, ellipsis, text-flow only. (3) The
+one functional P3.0 bug: the gap panel header always renders the current period regardless of the clicked
+month while the amount is month-correct; ruled period pass-through everywhere the panel shows a period.
+(4) Native OS selects on S05 break the DA, a pre-existing gap; ruled a token-styled dropdown component
+(popover list on surface, hairline, keyboard complete), fixed now rather than P3.2 because P3.1 animates
+the drop journey through these controls. Corrective sprint P3.0.1 issued as one targeted prompt, four
+items, one additive commit, per the P2 recovery precedent.
+Sequencing: P3.1 (living extraction journey) charters immediately after P3.0.1 lands green.
+Sharizal thread still open: the one-line relaunch is ready from yesterday if the call never happened.
+
 ## 2026-08-17 - the-vault-pitch.html delivered (commit 85bc455): the deck is presentable
 Phase B of the pitch build completed on main, one additive file, 626 insertions, tree clean. All eight
 acceptance items PASS: navigation with clamping and click zones, 78 i18n keys at exact three-way parity
