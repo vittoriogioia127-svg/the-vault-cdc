@@ -35,7 +35,7 @@ html,body{margin:0;padding:0;background:var(--base);color:var(--ink);font-family
 input,select,textarea{font-family:var(--sans);outline:none;color:inherit}
 input::placeholder,textarea::placeholder{color:var(--ink-3)}
 
-.app{width:1440px;height:100vh;margin:0 auto;display:flex;flex-direction:column;overflow:hidden;background:var(--base)}
+.app{width:100%;height:100vh;display:flex;flex-direction:column;overflow:hidden;background:var(--base)}
 .topbar{height:52px;flex:none;display:flex;align-items:center;gap:14px;padding:0 20px;border-bottom:1px solid var(--hair)}
 .tb-chip{display:flex;align-items:center;gap:6px;height:28px;padding:0 12px;border-radius:999px;background:var(--fill);font:500 12px var(--mono);color:var(--ink-2);cursor:default}
 .tb-search{display:flex;align-items:center;gap:8px;height:30px;padding:0 14px;border-radius:999px;background:var(--fill);color:var(--ink-3);width:220px;cursor:text}
@@ -105,6 +105,13 @@ input::placeholder,textarea::placeholder{color:var(--ink-3)}
 .inp{width:100%;background:var(--fill);border:1px solid var(--hair-strong);border-radius:8px;color:var(--ink);font:400 13px var(--sans);padding:10px 12px}
 .inp:focus{border-color:var(--ink)}
 textarea.inp{resize:vertical}
+.dd{position:relative}
+.ddb{display:flex;align-items:center;gap:10px;cursor:pointer;outline:none}
+.ddb:focus{border-color:var(--ink)}
+.ddp{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--base);border:1px solid var(--hair-strong);border-radius:8px;padding:4px;z-index:40;max-height:240px;overflow-y:auto}
+.ddi{display:flex;align-items:center;padding:8px 10px;border-radius:6px;font:400 13px var(--sans);color:var(--ink);cursor:pointer}
+.ddi:hover,.ddi.hi{background:var(--fill)}
+.ddi.sel,.ddi.sel span{font-weight:500}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 </style>
 </head>
@@ -131,7 +138,8 @@ function ROLES_OK(r){return ['contributor','validator','consolidator','auditor',
 /* ephemeral UI state (in-session only) */
 var ui={ homeStage:'owed', gapOpen:false, validated:false, drawer:null, sealed:false,
          resolved:false, profile:'notice', exported:false, unsealed:false, notified:false,
-         requestSent:false, manualStage:'form', railCollapsed:false, kpiDone:false };
+         requestSent:false, manualStage:'form', railCollapsed:false, kpiDone:false,
+         dd:{open:null,hi:0,focus:null}, manualEl:'1.3.10', manualPeriod:'2026-06', manualOrigin:'Mainby' };
 
 /* ============================ personas & roles ============================ */
 var ROLES={
@@ -1344,8 +1352,8 @@ var MX_AMT={'1.1.1':'336,410,556.20','1.1.2':'19,700,879.68','1.1.4':'12,844,410
  '1.3.12':'14,530,220.40','1.3.13':'7,481,006.44','1.3.14':'4,102,730.99','1.3.18':'2,218,400.00'};
 var MX_MISS={'1.3.13':{2:1,3:1,6:2},'1.3.6':{3:2,6:1},'1.2.6':{3:1},'1.3.1':{4:1},'1.3.10':{4:1,6:1},'1.1.4':{4:1},'1.3.12':{5:1,6:1},'1.3.4':{5:1,6:1},'1.2.3':{5:1},'1.3.14':{5:1},'1.1.10':{5:1},'1.1.1':{6:1},'1.2.1':{6:1},'1.2.5':{6:1},'1.3.18':{6:1}};
 var MX_CRIT={'1.3.6':3,'1.3.12':5};
-var GAP_META={'1.3.6':{id:'GAP-118',month:'2026-03',monthN:3,blocks:'4,918,220.13',age:'open 52 days'},
-              '1.3.14':{id:'GAP-121',month:'2026-05',monthN:5,blocks:'4,102,730.99',age:'open 34 days'}};
+var GAP_META={'1.3.6':{id:'GAP-118',blocks:'4,918,220.13',age:'open 52 days'},
+              '1.3.14':{id:'GAP-121',blocks:'4,102,730.99',age:'open 34 days'}};
 
 /* claim lines (6) — sum reconciles to PHP 421,947,223.90 */
 var CLAIM_LINES=[
@@ -1454,6 +1462,7 @@ function render(){
   var m=document.getElementById('main');
   m.scrollTop=0;
   m.innerHTML='<div class="view">'+viewFor(route)+'</div>';
+  if(ui.dd.focus){ var fe=document.getElementById('dd-'+ui.dd.focus); if(fe&&fe.focus) fe.focus(); }
   if(route==='#/cockpit') runKpiCountup();
 }
 
@@ -1552,7 +1561,7 @@ function buildMatrixRows(){
         if(req===0){ val='—'; txt='font:400 11.5px '+mono+';color:var(--ink-3)'; }
         else if(miss===0){ val=filed+'/'+req; txt='font:400 11.5px '+mono+';color:var(--ink-3)'; }
         else { val=filed+'/'+req; txt='font:500 11.5px '+mono+';color:var(--ink)'; dot='<span class="dot" style="width:5px;height:5px;background:var(--'+(crit?'critical':'partial')+')"></span>'; }
-        html+='<div style="'+cell+(m===1?'background:var(--fill)':'')+'"><span style="'+txt+'">'+val+'</span>'+dot+'</div>';
+        html+='<div '+(miss>0?'data-act="gap" data-arg="'+el.ref+':'+m+'" ':'')+'style="'+cell+(m===1?'background:var(--fill)':'')+(miss>0?';cursor:pointer':'')+'"><span style="'+txt+'">'+val+'</span>'+dot+'</div>';
       }
       html+='<span style="font:400 11.5px '+mono+';color:var(--ink-2);display:flex;align-items:center;justify-content:flex-end;font-variant-numeric:tabular-nums">'+(MX_AMT[el.ref]||'—')+'</span></div>';
     });
@@ -1566,7 +1575,7 @@ function vCockpit(){
   var mono='var(--mono)';
   var mxHeadCols='';
   var months=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'], ratios=['Sealed · 30 Jun','38/39','35/39','36/39','33/39','29/39'];
-  months.forEach(function(mn,i){ mxHeadCols+='<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px;'+(i===0?'background:var(--fill);border-radius:10px 10px 0 0':'')+'"><span style="font:500 11.5px '+mono+';color:var(--ink)">'+mn+'</span><span style="font:400 9.5px '+(i===0?'var(--sans)':mono)+';color:var(--ink-'+(i===0?'2':'3')+')">'+ratios[i]+'</span></div>'; });
+  months.forEach(function(mn,i){ mxHeadCols+='<div style="height:40px;min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px;'+(i===0?'background:var(--fill);border-radius:10px 10px 0 0':'')+'"><span style="font:500 11.5px '+mono+';color:var(--ink)">'+mn+'</span><span style="font:400 10px '+mono+';color:var(--ink-'+(i===0?'2':'3')+');max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+ratios[i]+'</span></div>'; });
   var gap=ui.gapOpen? gapPanel(ui.gapOpen):'';
   return '<div class="wrap" style="position:relative;padding-right:'+(ui.gapOpen?'452px':'40px')+'">'+
    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-bottom:20px">'+
@@ -1583,10 +1592,14 @@ function vCockpit(){
    gap+
   '</div>';
 }
-function gapPanel(ref){
+function gapPanel(key){
+  /* key = 'ref:m' — m is the clicked month column (1..6); non-month contexts default to 6 (current period) */
+  var parts=String(key).split(':'), ref=parts[0], m=parts[1]?parseInt(parts[1],10):6;
+  if(!(m>=1&&m<=6)) m=6;
   var el=CFG_BY_REF[ref]; if(!el) return '';
-  var meta=GAP_META[ref]||{id:'GAP · '+ref,month:'2026-06',monthN:6,blocks:MX_AMT[ref]||'—',age:'open this period'};
-  var missN=(MX_MISS[ref]&&MX_MISS[ref][meta.monthN])||0;
+  var month='2026-0'+m;
+  var meta=GAP_META[ref]||{id:'GAP · '+ref,blocks:MX_AMT[ref]||'—',age:'open this period'};
+  var missN=(MX_MISS[ref]&&MX_MISS[ref][m])||0;
   var rows='';
   cfgReq(el).forEach(function(p,i){
     var missing=i<missN;
@@ -1603,7 +1616,7 @@ function gapPanel(ref){
     : '<div style="display:flex;flex-direction:column;margin-top:24px">'+rows+'</div>';
   return '<div style="position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);padding:26px 30px;display:flex;flex-direction:column;overflow-y:auto">'+
    '<div style="display:flex;align-items:center;gap:10px"><span class="chip crit">Critical</span><span class="mono" style="color:var(--ink-3)">'+meta.id+'</span><span style="flex:1"></span><span class="sub">'+meta.age+'</span><span class="qbtn" data-act="gapClose" style="padding:2px 6px">✕</span></div>'+
-   '<span style="font:600 18px var(--sans);letter-spacing:-.01em;margin-top:16px">'+ref+' '+el.name+' <span style="font:400 15px var(--sans);color:var(--ink-2)">· '+meta.month+'</span></span>'+
+   '<span style="font:600 18px var(--sans);letter-spacing:-.01em;margin-top:16px">'+ref+' '+el.name+' <span style="font:400 15px var(--sans);color:var(--ink-2)">· '+month+'</span></span>'+
    '<span class="eyebrow" style="color:var(--ink-3);margin-top:22px">Blocks</span>'+
    '<span style="font:200 32px/1 var(--sans);letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums">PHP '+meta.blocks+'</span>'+
    body+
@@ -1668,7 +1681,7 @@ function vHome(){
       previewRow('E.R.','1.1.1 Basic Salary','Local','84,120.00')+previewRow('J.D.','1.1.1 Basic Salary','Local','61,480.00')+previewRow('M.T.','1.1.2 13th Month','Local','7,010.00')+previewRow('S.L.','1.2.1 SSS','Local','2,880.00')+previewRow('K.B.','1.1.1 Basic Salary','Local','96,340.00')+'</div>';
   }
   var hint = stage==='owed'?'Colour marks what is owed. Drop the payroll file to file this period.':(stage==='loading'?'Registering and extracting — no shimmer, just counts.':'Filed and quiet. Nothing celebratory; the calm is the point.');
-  return '<div class="wrap" style="max-width:940px;margin:0 auto">'+
+  return '<div class="wrap">'+
     head('My monthly close','Period 2026-06','A. Cruz · Account · open and in progress',right)+
     '<div style="margin-top:14px;display:flex;align-items:center;gap:14px"><div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:'+(stage==='owed'?'50%':(stage==='loading'?'60%':'83%'))+';height:100%;background:var(--ink-3)"></div></div><span class="sub">'+(stage==='filed'?'5 of 6 items filed':'3 of 6 items complete')+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+(stage==='owed'?'<span style="color:var(--partial)">3 owed this period</span>':'2 extracted · awaiting validation')+'</span></div>'+
     '<div style="margin-top:20px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:14px"><span class="h2">Your categories</span><span style="flex:1"></span><span style="font:400 11px var(--sans);color:var(--ink-3)">'+hint+'</span></div>'+
@@ -1678,22 +1691,46 @@ function vHome(){
 }
 function previewRow(s,e,o,a){ return '<div style="display:flex;align-items:center;gap:12px;padding:8px 4px;border-bottom:1px solid var(--hair-soft)"><span style="width:70px;font:500 12px var(--mono)">'+s+'</span><span style="flex:1;font:400 12.5px var(--sans)">'+e+'</span><span style="width:100px;font:400 11.5px var(--mono);color:var(--ink-2)">'+o+'</span><span style="width:140px;text-align:right;font:500 12px var(--mono)">'+a+'</span><span style="width:100px;text-align:right;font:400 11.5px var(--mono);color:var(--ink-2)">extracted</span></div>'; }
 
+/* ============================ DA dropdowns (no native selects) ============================ */
+var DD_DEFS={
+  mel:{ get:function(){ return ui.manualEl; },
+        set:function(v){ ui.manualEl=v; ui.manualStage='form'; },
+        options:function(){ return CFG_ACTIVE.filter(function(e){ return e.mode==='Manual entry'; }).map(function(e){
+          return {v:e.ref, html:'<span style="font:400 12px var(--mono);color:var(--ink-2);margin-right:8px">'+e.ref+'</span>'+e.name}; }); } },
+  mper:{ get:function(){ return ui.manualPeriod; },
+         set:function(v){ ui.manualPeriod=v; },
+         options:function(){ return ['2026-06','2026-05'].map(function(p){
+           return {v:p, html:'<span style="font:400 12.5px var(--mono)">'+p+'</span>'}; }); } },
+  mori:{ get:function(){ return ui.manualOrigin; },
+         set:function(v){ ui.manualOrigin=v; },
+         options:function(){ return ['Mainby','Local','HBased','COrigin'].map(function(o){ return {v:o, html:o}; }); } }
+};
+function ddField(id){
+  var d=DD_DEFS[id], val=d.get(), opts=d.options(), open=ui.dd.open===id, selHtml='', list='';
+  opts.forEach(function(o){ if(o.v===val) selHtml=o.html; });
+  if(open){
+    opts.forEach(function(o,i){ list+='<div class="ddi'+(i===ui.dd.hi?' hi':'')+(o.v===val?' sel':'')+'" role="option" data-act="ddPick" data-arg="'+id+':'+i+'">'+o.html+'</div>'; });
+    list='<div class="ddp" role="listbox">'+list+'</div>';
+  }
+  return '<div class="dd"><div class="inp ddb" id="dd-'+id+'" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="'+(open?'true':'false')+'" data-act="ddToggle" data-arg="'+id+'"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+selHtml+'</span><span style="font-size:9px;color:var(--ink-3)">▾</span></div>'+list+'</div>';
+}
+
 /* ============================ S05 manual entry ============================ */
 function vManual(){
   var stage=ui.manualStage;
   var attached = stage!=='form';
   var submitted = stage==='submitted';
-  var elM=CFG_BY_REF['1.3.10'], plines='';
+  var elM=CFG_BY_REF[ui.manualEl], plines='';
   elM.proofs.forEach(function(p){
     plines+='<div style="display:flex;align-items:baseline;gap:10px;padding:4px 0"><span style="font:500 11px var(--mono);color:'+(p.level==='Required'?'var(--ink)':'var(--ink-3)')+';width:64px;flex:none">'+p.level+'</span><span style="font:400 12px var(--sans);color:var(--ink);flex:1">'+p.doc+'</span><span style="font:400 10.5px var(--mono);color:var(--ink-3)">'+p.granularity+(p.provider?' · '+p.provider:'')+'</span></div>';
   });
   var proofBox='<div style="margin-top:20px;padding:12px 16px;background:var(--fill);border-radius:10px"><span class="mono" style="color:var(--ink-2)">Proofs for '+elM.ref+' '+elM.name+' · from config</span><div style="margin-top:8px">'+plines+'</div><span class="mono" style="color:var(--ink-3)">'+(elM.notarised?'Notarization required.':'Notarization not required.')+'</span></div>';
-  return '<div class="wrap" style="max-width:820px;margin:0 auto">'+
-   head('Manual element','1.3.10 School Fees','Invoice-mode element · manual with evidence','')+
+  return '<div class="wrap">'+
+   head('Manual element',elM.ref+' '+elM.name,'Invoice-mode element · manual with evidence','')+
    '<div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
-     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Element</span><input class="inp" value="1.3.10 School Fees" readonly></label>'+
-     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Period</span><select class="inp"><option>2026-06</option><option>2026-05</option></select></label>'+
-     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Origin</span><select class="inp"><option>Mainby</option><option>Local</option><option>HBased</option><option>COrigin</option></select></label>'+
+     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Element</span>'+ddField('mel')+'</div>'+
+     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Period</span>'+ddField('mper')+'</div>'+
+     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Origin</span>'+ddField('mori')+'</div>'+
      '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Amount · EUR</span><input class="inp" style="font-family:var(--mono)" value="94,500.00"></label>'+
    '</div>'+
    proofBox+
@@ -1723,9 +1760,9 @@ function vQueue(){
   });
   var right='<div style="display:flex;align-items:flex-start;gap:14px"><span class="num">'+n+'</span><div style="display:flex;flex-direction:column;gap:3px;padding-top:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">pending</span><span class="mono" style="color:var(--ink-3)">PHP 18.9M awaiting countersign</span></div></div>';
   var body= n===0
-    ? '<div style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px"><span class="sub">Queue clear. Nothing awaits validation.</span></div>'
+    ? '<div style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px"><span class="sub" style="max-width:720px;text-align:center">Queue clear. Nothing awaits validation.</span></div>'
     : '<div style="margin-top:22px"><div class="thead"><span style="width:22px"></span><span style="flex:1" class="th">Element / staff</span><span style="width:150px;text-align:right" class="th">Amount · PHP</span><span style="width:120px;text-align:right" class="th">Status</span><span style="width:56px"></span></div>'+rows+'<div style="padding:12px 4px"><span class="mono" style="color:var(--ink-3)">…9 more pending</span></div></div>';
-  return '<div class="wrap" style="max-width:1120px;margin:0 auto">'+head('Validation queue','A - Staff Cost','Every extracted cost faces its source before it counts.',right)+body+'</div>';
+  return '<div class="wrap">'+head('Validation queue','A - Staff Cost','Every extracted cost faces its source before it counts.',right)+body+'</div>';
 }
 function vQueueItem(){
   var validated=ui.validated;
@@ -1740,7 +1777,7 @@ function vQueueItem(){
   var trace = validated
     ? '<div class="trow"><span style="width:20px;height:20px;border-radius:6px;background:var(--fill-2);border:1px solid var(--hair);display:flex;align-items:center;justify-content:center"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--ink-2)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg></span><span class="sub">1.1.1 Basic Salary · E.R. · Local · 2026-06</span><span style="flex:1"></span><span class="amt">84,120.00</span><span class="mono" style="color:var(--ink-3)">validated just now · R. Santos</span></div>'
     : '';
-  return '<div class="wrap" style="max-width:1120px;margin:0 auto">'+
+  return '<div class="wrap">'+
    '<div style="display:flex;align-items:center;gap:12px"><span class="qbtn" data-act="nav" data-arg="#/queue">&larr; Queue</span></div>'+
    head('The gate','Validate against evidence','Extracted cost, left. Its source, right.','')+
    '<div style="margin-top:24px;display:flex;gap:24px">'+
@@ -1825,7 +1862,7 @@ function vPeriods(){
      checkRow('All owed categories filed','29 / 39 elements','part')+
      checkRow('Pending validations cleared','14 awaiting countersign','part')+
      checkRow('No critical gaps open','1 critical · GAP-118','crit')+
-     '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Seal is available once the checklist is quiet.</span></div>'+
+     '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3);display:inline-block;max-width:720px">Seal is available once the checklist is quiet.</span></div>'+
    '</div>'+
   '</div>';
 }
@@ -1879,7 +1916,7 @@ function vClaims(){
   });
   return '<div class="wrap">'+head('Claims','Contractual events','Notice clocks first. A missed clock is the most expensive state in the app.','')+
    '<div style="margin-top:22px;display:flex;flex-direction:column;gap:16px">'+cards+'</div>'+
-   (role==='consolidator'?'':'<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Read-only for your role. Consolidator owns the claim lifecycle.</span></div>')+
+   (role==='consolidator'?'':'<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3);display:inline-block;max-width:720px">Read-only for your role. Consolidator owns the claim lifecycle.</span></div>')+
   '</div>';
 }
 
@@ -1896,7 +1933,7 @@ function vEvent(){
       '<div class="card" data-act="attach" style="margin-top:14px;border:1.5px dashed var(--hair-strong);cursor:pointer;display:flex;align-items:center;gap:12px"><span class="sub" style="color:var(--ink)">Attach proof of notice</span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">PDF · hashed on drop</span></div>'+
       '<div style="margin-top:18px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="notify">Serve notice</button><span class="sub" style="color:var(--ink-3)">14 days remain on the notice clock</span></div></div>';
   var right='<div style="text-align:right"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Notice clock</span><div style="font:200 44px/1 var(--sans);color:'+(notified?'var(--ink-3)':'var(--partial)')+';font-variant-numeric:tabular-nums;margin-top:6px">'+(notified?'served':'14<span style="font-size:20px"> days</span>')+'</div><span class="mono" style="color:var(--ink-3)">due 29 Jul 2026</span></div>';
-  return '<div class="wrap" style="max-width:1000px;margin:0 auto">'+
+  return '<div class="wrap">'+
    '<span class="qbtn" data-act="nav" data-arg="#/claims">&larr; Claims</span>'+
    head('EOT001 · ROW-7 access restriction','Identify &rarr; Notify &rarr; Build','148 days · window 2026-01 to 2026-06 · identified 01 Jul 2026',right)+
    timeline+composer+
@@ -2009,7 +2046,7 @@ function vUsers(){
   });
   return '<div class="wrap">'+head('Users &amp; roles','Six roles','Assign a role · HR isolation badge marks nominative access','<button class="pill sm" data-act="noop">Invite user</button>')+
    '<div style="margin-top:22px"><div class="thead"><span style="width:26px"></span><span style="flex:1" class="th">User</span><span style="width:220px" class="th">Role</span><span style="width:180px" class="th">HR access</span><span style="width:80px;text-align:right" class="th">Status</span></div>'+rows+'</div>'+
-   '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">HR isolation strips nominative columns from any view a role is not authorized for.</span></div>'+
+   '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3);display:inline-block;max-width:720px">HR isolation strips nominative columns from any view a role is not authorized for.</span></div>'+
   '</div>';
 }
 
@@ -2058,11 +2095,11 @@ function vRules(){
       '</div>';
     });
   });
-  return '<div class="wrap" style="max-width:1120px;margin:0 auto">'+
+  return '<div class="wrap">'+
    head('Substantiation matrix','A - Staff Cost','What makes a cost complete · validated by '+VAULT_CONFIG.validatedBy+' on '+VAULT_CONFIG.validatedOn+' · read-only, the editor arrives after the pilot',
     '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="num">'+VAULT_CONFIG.activeElements+'</span><span style="font:500 11px var(--sans);color:var(--ink-2)">active elements</span><span class="mono" style="color:var(--ink-3)">'+VAULT_CONFIG.mappedElements+' mapped · 1 excluded</span></div>')+
    html+
-   '<div style="margin-top:20px"><span class="sub" style="color:var(--ink-3)">Every owed list, attach form, validator checklist, gap panel and export rule reads from this matrix.</span></div>'+
+   '<div style="margin-top:20px"><span class="sub" style="color:var(--ink-3);display:inline-block;max-width:720px">Every owed list, attach form, validator checklist, gap panel and export rule reads from this matrix.</span></div>'+
   '</div>';
 }
 
@@ -2088,7 +2125,7 @@ function repFilter(k,v){ return '<div style="display:flex;align-items:center;jus
 function vEvidence(){
   if(role==='contributor'){
     return '<div class="wrap">'+head('Evidence','My uploads','Own uploads · registered and hashed on drop','')+
-     '<div style="margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px"><span class="sub">No evidence uploaded yet. Drop your first source.</span><button class="pill" data-act="nav" data-arg="#/home">Go to my close</button></div>'+
+     '<div style="margin-top:60px;display:flex;flex-direction:column;align-items:center;gap:18px;padding:40px"><span class="sub" style="max-width:720px;text-align:center">No evidence uploaded yet. Drop your first source.</span><button class="pill" data-act="nav" data-arg="#/home">Go to my close</button></div>'+
     '</div>';
   }
   var nominative = role!=='reader';
@@ -2115,7 +2152,7 @@ function vReaderDash(){
      '<div class="trow"><span class="sub" style="flex:1;color:var(--ink)">1.2 Contribution</span><span class="amt">89,696,484.16</span></div>'+
      '<div class="trow"><span class="sub" style="flex:1;color:var(--ink)">1.3 Fringe Benefit</span><span class="amt">85,650,503.83</span></div>'+
    '</div>'+
-   '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Nominative columns are hidden for this role · HR isolation.</span></div>'+
+   '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3);display:inline-block;max-width:720px">Nominative columns are hidden for this role · HR isolation.</span></div>'+
   '</div>';
 }
 
@@ -2138,7 +2175,7 @@ function runKpiCountup(){
 function setTheme(v){ theme=v; try{localStorage.setItem(LS_THEME,v);}catch(e){} render(); }
 function setRole(v){ role=v; try{localStorage.setItem(LS_ROLE,v);}catch(e){}
   /* reset flow states that are role-specific so a fresh role starts clean */
-  ui.gapOpen=false; ui.drawer=null; ui.kpiDone=false;
+  ui.gapOpen=false; ui.drawer=null; ui.kpiDone=false; ui.dd.open=null; ui.dd.focus=null;
   /* the process map is legible to every role: stay on it so the highlight
      follows the switcher. Otherwise land on the role's home. */
   var dest = location.hash==='#/process' ? '#/process' : ROLES[role].landing;
@@ -2148,7 +2185,7 @@ var HANDLERS={
   nav:function(a){ nav(a); },
   role:function(a){ setRole(a); },
   theme:function(a){ setTheme(a); },
-  gap:function(a){ var r=a||'1.3.6'; if(ui.gapOpen!==r) ui.requestSent=false; ui.gapOpen=r; render(); },
+  gap:function(a){ var p=String(a||'1.3.6').split(':'), key=p[0]+':'+(p[1]||'6'); if(ui.gapOpen!==key) ui.requestSent=false; ui.gapOpen=key; render(); },
   gapClose:function(){ ui.gapOpen=false; render(); },
   request:function(){ ui.requestSent=true; render(); },
   drop:function(){ ui.homeStage = ui.homeStage==='owed'?'loading':(ui.homeStage==='loading'?'filed':'owed'); render(); },
@@ -2162,6 +2199,17 @@ var HANDLERS={
   notify:function(){ ui.notified=true; render(); },
   profile:function(a){ ui.profile=a; render(); },
   export:function(){ ui.exported=true; render(); },
+  ddToggle:function(a){
+    if(ui.dd.open===a){ ui.dd.open=null; }
+    else { var d=DD_DEFS[a]; if(!d) return; var val=d.get(), idx=0; d.options().forEach(function(o,i){ if(o.v===val) idx=i; }); ui.dd.open=a; ui.dd.hi=idx; }
+    ui.dd.focus=a; render();
+  },
+  ddPick:function(a){
+    var i=String(a).indexOf(':'), id=String(a).slice(0,i), n=parseInt(String(a).slice(i+1),10);
+    var d=DD_DEFS[id]; if(!d) return;
+    var o=d.options()[n]; if(o) d.set(o.v);
+    ui.dd.open=null; ui.dd.focus=id; render();
+  },
   unsealOpen:function(){ ui.unsealed='modal'; render(); },
   unsealCancel:function(){ ui.unsealed=false; render(); },
   unsealConfirm:function(){
@@ -2172,9 +2220,30 @@ var HANDLERS={
   noop:function(){}
 };
 document.getElementById('app').addEventListener('click',function(e){
-  var t=e.target.closest('[data-act]'); if(!t) return;
-  var a=t.getAttribute('data-act'), arg=t.getAttribute('data-arg');
-  if(HANDLERS[a]){ e.stopPropagation(); HANDLERS[a](arg); }
+  var t=e.target.closest('[data-act]');
+  var a=t?t.getAttribute('data-act'):null, arg=t?t.getAttribute('data-arg'):null;
+  /* click outside an open dropdown closes it; a data-act click still runs after */
+  if(ui.dd.open && a!=='ddToggle' && a!=='ddPick'){ ui.dd.open=null; ui.dd.focus=null; render(); }
+  if(!t||!HANDLERS[a]) return;
+  e.stopPropagation(); HANDLERS[a](arg);
+});
+document.addEventListener('keydown',function(e){
+  var k=e.key;
+  if(ui.dd.open){
+    var opts=DD_DEFS[ui.dd.open].options();
+    if(k==='ArrowDown'||k==='ArrowUp'){
+      e.preventDefault();
+      ui.dd.hi=(ui.dd.hi+(k==='ArrowDown'?1:opts.length-1))%opts.length;
+      var items=document.querySelectorAll('.ddi');
+      for(var i=0;i<items.length;i++){ items[i].classList.toggle('hi',i===ui.dd.hi); }
+      if(items[ui.dd.hi]&&items[ui.dd.hi].scrollIntoView) items[ui.dd.hi].scrollIntoView({block:'nearest'});
+    } else if(k==='Enter'){ e.preventDefault(); HANDLERS.ddPick(ui.dd.open+':'+ui.dd.hi); }
+    else if(k==='Escape'){ e.preventDefault(); ui.dd.open=null; render(); }
+    else if(k===' '){ e.preventDefault(); }
+  } else {
+    var ae=document.activeElement;
+    if(ae&&ae.classList&&ae.classList.contains('ddb')&&(k==='Enter'||k===' ')){ e.preventDefault(); HANDLERS.ddToggle(ae.getAttribute('data-arg')); }
+  }
 });
 
 /* ============================ boot ============================ */
