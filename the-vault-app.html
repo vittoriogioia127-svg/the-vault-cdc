@@ -189,7 +189,7 @@ var ROUTE_SEC={
   '#/periods':'periods','#/periods/seal':'periods',
   '#/claims':'claims','#/claims/eot001':'claims','#/claims/eot001/build':'claims','#/claims/eot001/v2':'claims','#/claims/eot001/submit':'claims',
   '#/evidence':'evidence','#/reports':'reports',
-  '#/admin/users':'admin','#/admin/config':'admin'
+  '#/admin/users':'admin','#/admin/config':'admin','#/admin/rules':'admin'
 };
 /* route -> roles allowed to view it (matrix guard) */
 var ROUTE_ROLES={
@@ -203,7 +203,7 @@ var ROUTE_ROLES={
   '#/claims/eot001':['consolidator','auditor'],
   '#/claims/eot001/build':['consolidator'],'#/claims/eot001/v2':['consolidator'],'#/claims/eot001/submit':['consolidator'],
   '#/evidence':CAN.evidence,'#/reports':CAN.reports,
-  '#/admin/users':['admin'],'#/admin/config':['admin']
+  '#/admin/users':['admin'],'#/admin/config':['admin'],'#/admin/rules':['admin']
 };
 
 /* rail item list per role */
@@ -226,15 +226,1126 @@ function railItems(r){
   return items;
 }
 
-/* ============================ data (real taxonomy, frozen numbers) ============================ */
-/* cockpit matrix — ported from the demo; totals reconcile to KPIs (24 gaps) */
-var MX_G=[
- ['1.1','Salary','370,224,245.88',[['1.1.1','Basic Salary',3,'336,410,556.20'],['1.1.2','13th Month',1,'19,700,879.68'],['1.1.4','Per Diem Allowance',2,'12,844,410.00'],['1.1.10','Phone Allowance',1,'1,268,400.00']]],
- ['1.2','Contribution','89,696,484.16',[['1.2.1','SSS',2,'31,240,118.55'],['1.2.3','PHIC',2,'6,412,850.25'],['1.2.5','HDMF',2,'3,820,600.00'],['1.2.6','Withholding Tax',2,'48,222,915.36']]],
- ['1.3','Fringe Benefit','85,650,503.83',[['1.3.1','Phone Bill',2,'934,280.10'],['1.3.4','Medical Insurance',2,'21,264,545.12'],['1.3.6','Accomodation Rental',3,'29,509,320.78'],['1.3.10','School Fees',2,'5,610,000.00'],['1.3.13','Flight',2,'14,530,220.40'],['1.3.14','Expenses Claim',3,'7,481,006.44'],['1.3.17','IT Cost (softwares)',2,'4,102,730.99'],['1.3.18','Training',2,'2,218,400.00']]]
-];
-var MX_MISS={'1.3.14':{2:1,3:1,6:2},'1.3.6':{3:2,6:1},'1.2.6':{3:1},'1.3.1':{4:1},'1.3.10':{4:1,6:1},'1.1.4':{4:1},'1.3.13':{5:2,6:1},'1.3.4':{5:1,6:1},'1.2.3':{5:1},'1.3.17':{5:1},'1.1.10':{5:1},'1.1.1':{6:1},'1.2.1':{6:1},'1.2.5':{6:1},'1.3.18':{6:1}};
-var MX_CRIT={'1.3.6':3,'1.3.13':5};
+/* ============================ config (single source of truth) ============================ */
+/* MMSP EOT001 Staff Cost configuration, verbatim from the Cost Controller's validated return
+   of 2026-08-13. Every substantiation surface reads from this object, never from literals. */
+var VAULT_CONFIG={
+  "project": "MMSP EOT001",
+  "costHead": "A",
+  "costHeadName": "Staff Cost",
+  "validatedBy": "Mohd Sharizal Isa (Cost Controller)",
+  "validatedOn": "2026-08-13",
+  "categories": [
+    "1.1 Salary",
+    "1.2 Contribution",
+    "1.3 Fringe Benefit"
+  ],
+  "activeElements": 39,
+  "mappedElements": 40,
+  "elements": [
+    {
+      "ref": "1.1.1",
+      "name": "Basic Salary",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month), Colas Origin Package (COrigin) and Host/Home Based Package (HBased); PDF for invoices for Mainby (Quarterly invoice), VIE Staff, Remote Staff",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip for Local, Colas Origin and Host/Home Based Package",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Invoice for Staff Mainby, Remote and VIE",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": true,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Not sure if payslip for Mainby, Remote Staff and VIE are available. Substantiate with invoices. Submission of evidence can be either payroll record or payslip. Contract Team will advice once confirm by client."
+    },
+    {
+      "ref": "1.1.2",
+      "name": "13th Month",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Computed",
+      "comesFrom": "Computed from Basic Salary base (formulated in Power Query, no separate file)",
+      "depositedBy": "Sharizal Isa (Cost Control)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Justify in the submission letter and details claim summary (subject to change)",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": null
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [
+        "to_discuss"
+      ],
+      "note": "13th month salary only shown in the December payslip but for the purpose of the claims we calculated every months to avoid the duration gap and calculated provision being made internally."
+    },
+    {
+      "ref": "1.1.3",
+      "name": "Performance Bonus",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Computed",
+      "comesFrom": "Computed from Basic Salary base (formulated in Power Query, no separate file)",
+      "depositedBy": "Sharizal Isa (Cost Control)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Justify in the submission letter and details claim summary (subject to change)",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": null
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [
+        "to_discuss"
+      ],
+      "note": "Bonus only shown in the March payslip but for the purpose of the claims we calculated every months to avoid the duration gap and calculated provision being made internally."
+    },
+    {
+      "ref": "1.1.4",
+      "name": "Per Diem Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Local only",
+      "flags": [],
+      "note": "Per diem allowance is applicable to local staff only."
+    },
+    {
+      "ref": "1.1.5",
+      "name": "Living Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Host/Home Based Package (HBased)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "HBased only",
+      "flags": [],
+      "note": "Living allowance is applicable to Host/Home Based staff only."
+    },
+    {
+      "ref": "1.1.6",
+      "name": "Expat Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Colas Origin Package (COrigin); PDF for invoices for Mainby (Quarterly invoice)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Invoice for Staff Mainby",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Refer item 1.1.1"
+    },
+    {
+      "ref": "1.1.7",
+      "name": "Paid Holidays",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "PDF for invoices for Mainby (Quarterly invoice)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "Invoice for Staff Mainby",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Mainby only",
+      "flags": [],
+      "note": "Paid holidays is applicable to Mainby staff only."
+    },
+    {
+      "ref": "1.1.8",
+      "name": "Double Foyer",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Colas Origin Package (COrigin)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "COrigin only",
+      "flags": [],
+      "note": "Double Foyer is applicable to Colas Origin staff only."
+    },
+    {
+      "ref": "1.1.9",
+      "name": "Household Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Colas Origin Package (COrigin)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "COrigin only",
+      "flags": [],
+      "note": "Household Allowance is applicable to Colas Origin staff only."
+    },
+    {
+      "ref": "1.1.10",
+      "name": "Phone Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month) and Host/Home Based Package (HBased)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Local + 1 HBased staff (Muhammad Azri)",
+      "flags": [],
+      "note": "Phone allowance provided to Local staff and only 1 staff in Host/Home Based Package i.e. Muhammad Azri."
+    },
+    {
+      "ref": "1.1.11",
+      "name": "Accommodation Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month) and Host/Home Based Package (HBased)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Selected Local + HBased",
+      "flags": [],
+      "note": "Housing allowance provided to selected Local staff and Host Based Package."
+    },
+    {
+      "ref": "1.1.12",
+      "name": "Transport Allowance",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month) and Host/Home Based Package (HBased)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Notarized payroll record",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Selected Local + HBased",
+      "flags": [],
+      "note": "Tranport allowance provided to selected Local staff and Host Based Package."
+    },
+    {
+      "ref": "1.1.13",
+      "name": "Adjustment",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Host/Home Based Package (HBased)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "1 HBased staff (Simon Bennette)",
+      "flags": [],
+      "note": "Adjustment only found in one Home Based Staff i.e. Simon Bennette"
+    },
+    {
+      "ref": "1.1.14",
+      "name": "Mainby Admin Fees",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "PDF for invoices for Mainby (Quarterly invoice)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "Agency invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Sufficient to substantiate with Mainby invoice only"
+    },
+    {
+      "ref": "1.1.15",
+      "name": "Provisional Charges",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "PDF for invoices for Mainby (Quarterly invoice)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "Agency invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Sufficient to substantiate with Mainby invoice only"
+    },
+    {
+      "ref": "1.1.16",
+      "name": "End of Contract Deposit",
+      "category": "1.1 Salary",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "PDF for invoices for Mainby (Quarterly invoice)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "Agency invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Sufficient to substantiate with Mainby invoice only"
+    },
+    {
+      "ref": "1.2.1",
+      "name": "SSS",
+      "category": "1.2 Contribution",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month), Colas Origin Package (COrigin), Host/Home Based Package (HBased) and payroll summary for Mainby",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Electronic Contribution Collection List",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Proof of payment / remittance receipt",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "SSS Payment Slip",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "This is statutory contribution and government mandated employee benefit. It is applicable to everyone. It won't be challenged."
+    },
+    {
+      "ref": "1.2.2",
+      "name": "SSS-ee",
+      "category": "1.2 Contribution",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month), Colas Origin Package (COrigin), Host/Home Based Package (HBased) and payroll summary for Mainby",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Electronic Contribution Collection List",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Proof of payment / remittance receipt",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "SSS Payment Slip",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "This is statutory contribution and government mandated employee benefit. It is applicable to everyone. It won't be challenged."
+    },
+    {
+      "ref": "1.2.3",
+      "name": "PHIC",
+      "category": "1.2 Contribution",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month), Colas Origin Package (COrigin), Host/Home Based Package (HBased) and payroll summary for Mainby",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Employee Premium Remittance Statement",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Proof of payment / remittance receipt",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Statement of Premium Account (SPA)",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "This is statutory contribution and government mandated employee benefit. It is applicable to everyone. It won't be challenged."
+    },
+    {
+      "ref": "1.2.4",
+      "name": "PHIC-ee",
+      "category": "1.2 Contribution",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month), Colas Origin Package (COrigin), Host/Home Based Package (HBased) and payroll summary for Mainby",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Employee Premium Remittance Statement",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Proof of payment / remittance receipt",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Statement of Premium Account (SPA)",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "This is statutory contribution and government mandated employee benefit. It is applicable to everyone. It won't be challenged."
+    },
+    {
+      "ref": "1.2.5",
+      "name": "HDMF",
+      "category": "1.2 Contribution",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Local Package (2 files per month)",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Excel document of Monthly Contributions (PAGIBIG) File Writer",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Selected employees with a housing loan",
+      "flags": [],
+      "note": "This is statutory contribution and government mandated employee benefit. It is applicable to selected employee taken the housing loan."
+    },
+    {
+      "ref": "1.2.6",
+      "name": "Withholding Tax",
+      "category": "1.2 Contribution",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Colas Origin Package (COrigin), Host/Home Based Package (HBased) and payroll summary for Mainby",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "BIR Form 1601-C",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Janelle Tumblod"
+        },
+        {
+          "doc": "BIR filing reference",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Janelle Tumblod"
+        },
+        {
+          "doc": "BIR EFPS payment confirmation",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Janelle Tumblod"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "COrigin, Mainby + 1 HBased staff (Simon Bennette)",
+      "flags": [],
+      "note": "Withholding taxes borne by Colas Rail for all Colas Origin, Mainby staff and 1 Home Based Staff i.e. Simon Bennette"
+    },
+    {
+      "ref": "1.3.1",
+      "name": "Phone Bill",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Telco billing statement",
+      "depositedBy": "Jeanette Tuhao (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Telco invoice / billing statement",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Jeanette Tuhao (Account)"
+        },
+        {
+          "doc": "Official receipt / proof of payment",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Jeanette Tuhao (Account)"
+        },
+        {
+          "doc": "Line-to-staff allocation list",
+          "level": "Optional",
+          "granularity": "Per staff",
+          "provider": "Jeanette Tuhao (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.2",
+      "name": "Pension Scheme",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel for audited payroll file for Host/Home Based Package (HBased) and PDF invoices for Mainby",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Staff payslip for Host/Home Based Package",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Invoice for Staff Mainby",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "Mainby + selected HBased",
+      "flags": [],
+      "note": "Pension scheme provided to Mainby staff and selected Home Based Package."
+    },
+    {
+      "ref": "1.3.3",
+      "name": "Life Insurance",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Insurer billing / policy schedule",
+      "depositedBy": "Donna Dalida (HR)",
+      "frequency": "Annual",
+      "proofs": [
+        {
+          "doc": "Insurer invoice",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Policy schedule with covered member list",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.4",
+      "name": "Medical Insurance",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Insurer billing / policy schedule",
+      "depositedBy": "Donna Dalida (HR)",
+      "frequency": "Annual",
+      "proofs": [
+        {
+          "doc": "Insurer invoice",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        },
+        {
+          "doc": "Covered member list",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Ella Baral (HR)"
+        },
+        {
+          "doc": "Official receipt / proof of payment",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.5",
+      "name": "Medical Claim",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Philcare's Fund Utilization Report, Philcare Service Invoice",
+      "depositedBy": "Donna Dalida (HR)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Philcare's Fund Utilization Report, Philcare Service Invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Dalida (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.6",
+      "name": "Accomodation Rental",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Admin excel working file for Subscription Order",
+      "depositedBy": "Donna Marie Velo (Admin)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Lease agreement",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Marie Velo (Admin)"
+        },
+        {
+          "doc": "Bi-annual invoice / official receipt",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Marie Velo (Admin)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Lease is the cost incurred every 6 months but for the purpose of the claim we cost it monthly based on subscription form."
+    },
+    {
+      "ref": "1.3.7",
+      "name": "Accomodation Association Dues",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Admin excel working file for Subscription Order",
+      "depositedBy": "Donna Marie Velo (Admin)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Lease agreement",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Marie Velo (Admin)"
+        },
+        {
+          "doc": "Bi-annual invoice / official receipt",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donna Marie Velo (Admin)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Lease is the cost incurred every 6 months but for the purpose of the claim we cost it monthly based on subscription form."
+    },
+    {
+      "ref": "1.3.8",
+      "name": "Accomodation Furnitures",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Official receipt / delivery note",
+      "depositedBy": "Jeanette Tuhao (Account)",
+      "frequency": "One-off (new joiner)",
+      "proofs": [
+        {
+          "doc": "Official receipt / delivery note",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Jeanette Tuhao (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.9",
+      "name": "Utility (Power / Water)",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Utility billing statement",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Utility bill",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.10",
+      "name": "School Fees",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "School invoice",
+      "depositedBy": "Jeanette Tuhao (Account)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "School invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Jeanette Tuhao (Account)"
+        },
+        {
+          "doc": "Official receipt",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Jeanette Tuhao (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.11",
+      "name": "Visa",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Approved expense claim form",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Official receipt",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.12",
+      "name": "Flight",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Travel agency invoice",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "One-off",
+      "proofs": [
+        {
+          "doc": "Travel agency invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        },
+        {
+          "doc": "E-ticket / boarding pass",
+          "level": "Optional",
+          "granularity": "Per staff",
+          "provider": "Donna Marie Velo (Admin)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "E-ticket is a good substantiation"
+    },
+    {
+      "ref": "1.3.13",
+      "name": "Expenses Claim",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Approved expense claim form",
+      "depositedBy": "Donnarica Dela Paz (Account)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Approved expense claim form",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        },
+        {
+          "doc": "Supporting receipts",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Donnarica Dela Paz (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.14",
+      "name": "IT software",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "CDS invoice",
+      "depositedBy": "Khoa Nguyen (Cost Control)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "CDS invoice",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Khoa Nguyen (Cost Control)"
+        },
+        {
+          "doc": "Official receipt / proof of payment",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Khoa Nguyen (Cost Control)"
+        }
+      ],
+      "notarised": true,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "CDS is just issuing an Excel file without proper invoices."
+    },
+    {
+      "ref": "1.3.15",
+      "name": "Fringe Benefit Tax",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel working file from Tax Specialist",
+      "depositedBy": "Janelle Tumblod (Account)",
+      "frequency": "Quarterly",
+      "proofs": [
+        {
+          "doc": "BIR Form 1601-Q",
+          "level": "Required",
+          "granularity": "Per batch",
+          "provider": "Janelle Tumblod (Account)"
+        },
+        {
+          "doc": "BIR EFPS Payment System",
+          "level": "Optional",
+          "granularity": "Per batch",
+          "provider": "Janelle Tumblod (Account)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.16",
+      "name": "IT hardware",
+      "category": "1.3 Fringe Benefit",
+      "active": false,
+      "mode": null,
+      "comesFrom": null,
+      "depositedBy": null,
+      "frequency": null,
+      "proofs": [],
+      "notarised": null,
+      "appliesTo": "n/a",
+      "flags": [
+        "excluded"
+      ],
+      "note": null
+    },
+    {
+      "ref": "1.3.17",
+      "name": "Transport Taxi",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Extracted",
+      "comesFrom": "Excel working file from Admin",
+      "depositedBy": "Irish Apple Neulid (Admin)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Grab's Tax Invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Irish Apple Neulid (Admin)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": null
+    },
+    {
+      "ref": "1.3.18",
+      "name": "Training",
+      "category": "1.3 Fringe Benefit",
+      "active": true,
+      "mode": "Manual entry",
+      "comesFrom": "Training provider invoice",
+      "depositedBy": "Ella Baral (HR)",
+      "frequency": "Monthly",
+      "proofs": [
+        {
+          "doc": "Training provider invoice",
+          "level": "Required",
+          "granularity": "Per staff",
+          "provider": "Ella Baral (HR)"
+        }
+      ],
+      "notarised": false,
+      "appliesTo": "All origins",
+      "flags": [],
+      "note": "Training frequency is depending on the training plan from HR"
+    }
+  ]
+};
+
+/* derived lookups — computed from the config, never hand-maintained */
+var CFG_BY_REF={}, CFG_ACTIVE=[];
+VAULT_CONFIG.elements.forEach(function(el){ CFG_BY_REF[el.ref]=el; if(el.active) CFG_ACTIVE.push(el); });
+function cfgCat(cat){ return VAULT_CONFIG.elements.filter(function(e){ return e.category===cat; }); }
+function cfgReq(el){ return el.proofs.filter(function(p){ return p.level==='Required'; }); }
+function cfgOpt(el){ return el.proofs.filter(function(p){ return p.level!=='Required'; }); }
+function cfgFlag(el,f){ return el.flags&&el.flags.indexOf(f)>=0; }
+function cfgInitials(n){ var p=n.split(' '); return (p[0].charAt(0)+p[p.length-1].charAt(0)).toUpperCase(); }
+function cfgProvider(el){ var r=cfgReq(el); return (r.length&&r[0].provider)||el.depositedBy||''; }
+function cfgGapTotal(){ var t=0,k,m; for(k in MX_MISS){ for(m in MX_MISS[k]) t+=MX_MISS[k][m]; } return t; }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
+
+/* simulated seed (frozen demo amounts + period filing) — keyed on the validated refs;
+   missing counts clamped to each element's config Required set */
+var MX_CAT_TOTAL={'1.1':'370,224,245.88','1.2':'89,696,484.16','1.3':'85,650,503.83'};
+var MX_AMT={'1.1.1':'336,410,556.20','1.1.2':'19,700,879.68','1.1.4':'12,844,410.00','1.1.10':'1,268,400.00',
+ '1.2.1':'31,240,118.55','1.2.3':'6,412,850.25','1.2.5':'3,820,600.00','1.2.6':'48,222,915.36',
+ '1.3.1':'934,280.10','1.3.4':'21,264,545.12','1.3.6':'29,509,320.78','1.3.10':'5,610,000.00',
+ '1.3.12':'14,530,220.40','1.3.13':'7,481,006.44','1.3.14':'4,102,730.99','1.3.18':'2,218,400.00'};
+var MX_MISS={'1.3.13':{2:1,3:1,6:2},'1.3.6':{3:2,6:1},'1.2.6':{3:1},'1.3.1':{4:1},'1.3.10':{4:1,6:1},'1.1.4':{4:1},'1.3.12':{5:1,6:1},'1.3.4':{5:1,6:1},'1.2.3':{5:1},'1.3.14':{5:1},'1.1.10':{5:1},'1.1.1':{6:1},'1.2.1':{6:1},'1.2.5':{6:1},'1.3.18':{6:1}};
+var MX_CRIT={'1.3.6':3,'1.3.12':5};
+var GAP_META={'1.3.6':{id:'GAP-118',month:'2026-03',monthN:3,blocks:'4,918,220.13',age:'open 52 days'},
+              '1.3.14':{id:'GAP-121',month:'2026-05',monthN:5,blocks:'4,102,730.99',age:'open 34 days'}};
 
 /* claim lines (6) — sum reconciles to PHP 421,947,223.90 */
 var CLAIM_LINES=[
@@ -243,7 +1354,7 @@ var CLAIM_LINES=[
  ['1.2.1','SSS','2026-01 to 2026-06','statutory add-on','ok','31,240,118.55'],
  ['1.3.4','Medical Insurance','2026-01 to 2026-06','premiums extended by delay','ok','21,264,545.12'],
  ['1.3.6','Accomodation Rental','2026-03','lease continued through window','miss','4,918,220.13'],
- ['1.3.13','Flight','2026-02','rotation cycle extended','ok','8,412,904.22']
+ ['1.3.12','Flight','2026-02','rotation cycle extended','ok','8,412,904.22']
 ];
 
 /* ledger rows — real taxonomy; nominative "persons" column is HR-isolated */
@@ -252,7 +1363,7 @@ var LEDGER=[
  {ref:'ENT-2026-00613',code:'1.1.2',name:'13th Month',cat:'Salary',period:'2026-06',origin:'Local',cur:'PHP',amt:'1,268,400.00',persons:'58 staff',evi:3,st:'complete',claim:'EOT001'},
  {ref:'ENT-2026-00614',code:'1.2.1',name:'SSS',cat:'Contribution',period:'2026-06',origin:'Local',cur:'PHP',amt:'2,880,000.00',persons:'58 staff',evi:2,st:'complete',claim:null},
  {ref:'ENT-2026-00341',code:'1.3.6',name:'Accomodation Rental',cat:'Fringe Benefit',period:'2026-03',origin:'HBased',cur:'PHP',amt:'4,918,220.13',persons:'R. Santos +3',evi:0,st:'critical',claim:'EOT001'},
- {ref:'ENT-2026-00505',code:'1.3.13',name:'Flight',cat:'Fringe Benefit',period:'2026-05',origin:'COrigin',cur:'USD',amt:'8,412,904.22',persons:'12 staff',evi:2,st:'partial',claim:'EOT001',fx:{amt:'146,780.00',cur:'USD',rate:'57.32',src:'BSP · 15 Jun 2026',php:'8,412,904.22'}},
+ {ref:'ENT-2026-00505',code:'1.3.12',name:'Flight',cat:'Fringe Benefit',period:'2026-05',origin:'COrigin',cur:'USD',amt:'8,412,904.22',persons:'12 staff',evi:2,st:'partial',claim:'EOT001',fx:{amt:'146,780.00',cur:'USD',rate:'57.32',src:'BSP · 15 Jun 2026',php:'8,412,904.22'}},
  {ref:'ENT-2026-00448',code:'1.3.4',name:'Medical Insurance',cat:'Fringe Benefit',period:'2026-04',origin:'Local',cur:'PHP',amt:'21,264,545.12',persons:'58 staff',evi:5,st:'complete',claim:'EOT001'},
  {ref:'ENT-2026-00619',code:'1.3.10',name:'School Fees',cat:'Fringe Benefit',period:'2026-06',origin:'Mainby',cur:'EUR',amt:'5,610,000.00',persons:'M. Reyes',evi:0,st:'partial',claim:null},
  {ref:'ENT-2026-00620',code:'1.2.6',name:'Withholding Tax',cat:'Contribution',period:'2026-06',origin:'Local',cur:'PHP',amt:'48,222,915.36',persons:'58 staff',evi:2,st:'pending',claim:null},
@@ -278,12 +1389,12 @@ var USERS=[
 
 /* periods (S09) */
 var PERIODS=[
- {p:'2026-01',state:'sealed',note:'Sealed · 30 Jun 2026',ratio:'33/33'},
- {p:'2026-02',state:'complete',note:'32 / 33 filed',ratio:'32/33'},
- {p:'2026-03',state:'partial',note:'29 / 33 filed',ratio:'29/33'},
- {p:'2026-04',state:'complete',note:'30 / 33 filed',ratio:'30/33'},
- {p:'2026-05',state:'partial',note:'27 / 33 filed',ratio:'27/33'},
- {p:'2026-06',state:'open',note:'23 / 33 filed · open',ratio:'23/33'}
+ {p:'2026-01',state:'sealed',note:'Sealed · 30 Jun 2026',ratio:'39/39'},
+ {p:'2026-02',state:'complete',note:'38 / 39 filed',ratio:'38/39'},
+ {p:'2026-03',state:'partial',note:'35 / 39 filed',ratio:'35/39'},
+ {p:'2026-04',state:'complete',note:'36 / 39 filed',ratio:'36/39'},
+ {p:'2026-05',state:'partial',note:'33 / 39 filed',ratio:'33/39'},
+ {p:'2026-06',state:'open',note:'29 / 39 filed · open',ratio:'29/39'}
 ];
 
 /* ============================ topbar ============================ */
@@ -314,6 +1425,7 @@ function renderRail(){
     html+='<div class="rail-sep"></div><div class="rail-head">Admin</div>';
     html+='<div class="rail-item'+(cur==='#/admin/users'?' active':'')+'" data-act="nav" data-arg="#/admin/users"><span class="rail-bar"></span>'+ic('user')+'<span class="lbl">Users &amp; roles</span></div>';
     html+='<div class="rail-item'+(cur==='#/admin/config'?' active':'')+'" data-act="nav" data-arg="#/admin/config"><span class="rail-bar"></span>'+ic('admin')+'<span class="lbl">Config summary</span></div>';
+    html+='<div class="rail-item'+(cur==='#/admin/rules'?' active':'')+'" data-act="nav" data-arg="#/admin/rules"><span class="rail-bar"></span>'+ic('evidence')+'<span class="lbl">Substantiation</span></div>';
   }
   html+='</div>';
   /* footer: role switcher + theme + collapse */
@@ -365,6 +1477,7 @@ function viewFor(route){
     case '#/reports': return vReports();
     case '#/admin/users': return vUsers();
     case '#/admin/config': return vConfig();
+    case '#/admin/rules': return vRules();
     default: return '<div class="wrap"><span class="sub">Not found.</span></div>';
   }
 }
@@ -424,20 +1537,24 @@ function vProcess(){
 /* ============================ S01 cockpit + S17 gap ============================ */
 function buildMatrixRows(){
   var mono='var(--mono)', grid='display:grid;grid-template-columns:216px repeat(6,1fr) 136px;align-items:stretch;', cell='display:flex;align-items:center;justify-content:flex-end;gap:6px;padding:0 14px;', html='';
-  MX_G.forEach(function(g){
-    html+='<div style="'+grid+'border-top:1px solid var(--hair-strong);height:30px"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:500 11px '+mono+';color:var(--ink);width:46px;flex:none">'+g[0]+'</span><span style="font:600 12.5px var(--sans);color:var(--ink);white-space:nowrap">'+g[1]+'</span></div>';
+  VAULT_CONFIG.categories.forEach(function(cat){
+    var code=cat.split(' ')[0], name=cat.slice(code.length+1);
+    html+='<div style="'+grid+'border-top:1px solid var(--hair-strong);height:30px"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:500 11px '+mono+';color:var(--ink);width:46px;flex:none">'+code+'</span><span style="font:600 12.5px var(--sans);color:var(--ink);white-space:nowrap">'+name+'</span></div>';
     for(var gm=1;gm<=6;gm++) html+='<div style="'+cell+(gm===1?'background:var(--fill)':'')+'"></div>';
-    html+='<span style="font:500 11.5px '+mono+';color:var(--ink);display:flex;align-items:center;justify-content:flex-end">'+g[2]+'</span></div>';
-    g[3].forEach(function(el){
-      var code=el[0],name=el[1],req=el[2],total=el[3];
-      html+='<div style="'+grid+'border-top:1px solid var(--hair-soft);height:26px"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:400 10.5px '+mono+';color:var(--ink-3);width:46px;flex:none">'+code+'</span><span style="font:400 12px var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+name+'</span></div>';
+    html+='<span style="font:500 11.5px '+mono+';color:var(--ink);display:flex;align-items:center;justify-content:flex-end">'+MX_CAT_TOTAL[code]+'</span></div>';
+    cfgCat(cat).forEach(function(el){
+      if(!el.active) return; /* excluded element (1.3.16) stays out of the matrix and its gap counts */
+      var req=cfgReq(el).length, gapped=!!MX_MISS[el.ref];
+      var disc=cfgFlag(el,'to_discuss')?'<span class="tag" style="font-size:9px;padding:1px 6px;margin-left:6px;flex:none" title="'+esc(el.note||'')+'">to discuss</span>':'';
+      html+='<div style="'+grid+'border-top:1px solid var(--hair-soft);height:26px'+(gapped?';cursor:pointer':'')+'"'+(gapped?' data-act="gap" data-arg="'+el.ref+'"':'')+'><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:400 10.5px '+mono+';color:var(--ink-3);width:46px;flex:none">'+el.ref+'</span><span style="font:400 12px var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+el.name+'</span>'+disc+'</div>';
       for(var m=1;m<=6;m++){
-        var miss=(MX_MISS[code]&&MX_MISS[code][m])||0, filed=req-miss, crit=MX_CRIT[code]===m, txt, dot='';
-        if(miss===0){ txt='font:400 11.5px '+mono+';color:var(--ink-3)'; }
-        else { txt='font:500 11.5px '+mono+';color:var(--ink)'; dot='<span class="dot" style="width:5px;height:5px;background:var(--'+(crit?'critical':'partial')+')"></span>'; }
-        html+='<div style="'+cell+(m===1?'background:var(--fill)':'')+'"><span style="'+txt+'">'+filed+'/'+req+'</span>'+dot+'</div>';
+        var miss=(MX_MISS[el.ref]&&MX_MISS[el.ref][m])||0, filed=req-miss, crit=MX_CRIT[el.ref]===m, txt, dot='', val;
+        if(req===0){ val='—'; txt='font:400 11.5px '+mono+';color:var(--ink-3)'; }
+        else if(miss===0){ val=filed+'/'+req; txt='font:400 11.5px '+mono+';color:var(--ink-3)'; }
+        else { val=filed+'/'+req; txt='font:500 11.5px '+mono+';color:var(--ink)'; dot='<span class="dot" style="width:5px;height:5px;background:var(--'+(crit?'critical':'partial')+')"></span>'; }
+        html+='<div style="'+cell+(m===1?'background:var(--fill)':'')+'"><span style="'+txt+'">'+val+'</span>'+dot+'</div>';
       }
-      html+='<span style="font:400 11.5px '+mono+';color:var(--ink-2);display:flex;align-items:center;justify-content:flex-end;font-variant-numeric:tabular-nums">'+total+'</span></div>';
+      html+='<span style="font:400 11.5px '+mono+';color:var(--ink-2);display:flex;align-items:center;justify-content:flex-end;font-variant-numeric:tabular-nums">'+(MX_AMT[el.ref]||'—')+'</span></div>';
     });
   });
   return html;
@@ -448,12 +1565,12 @@ function kpi(label,val,ctx,accent){
 function vCockpit(){
   var mono='var(--mono)';
   var mxHeadCols='';
-  var months=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'], ratios=['Sealed · 30 Jun','32/33','29/33','30/33','27/33','23/33'];
+  var months=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'], ratios=['Sealed · 30 Jun','38/39','35/39','36/39','33/39','29/39'];
   months.forEach(function(mn,i){ mxHeadCols+='<div style="height:40px;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px;'+(i===0?'background:var(--fill);border-radius:10px 10px 0 0':'')+'"><span style="font:500 11.5px '+mono+';color:var(--ink)">'+mn+'</span><span style="font:400 9.5px '+(i===0?'var(--sans)':mono)+';color:var(--ink-'+(i===0?'2':'3')+')">'+ratios[i]+'</span></div>'; });
-  var gap=ui.gapOpen? gapPanel():'';
+  var gap=ui.gapOpen? gapPanel(ui.gapOpen):'';
   return '<div class="wrap" style="position:relative;padding-right:'+(ui.gapOpen?'452px':'40px')+'">'+
    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-bottom:20px">'+
-     kpi('Open gaps','24','PHP 38.2M blocked · oldest 52 days')+
+     kpi('Open gaps',String(cfgGapTotal()),'PHP 38.2M blocked · oldest 52 days')+
      kpi('Pending validations','14','PHP 18.9M awaiting countersign')+
      kpi('Periods sealed','1<span style="font-size:26px;color:var(--ink-3)"> / 6</span>','2026-01 · sealed 30 Jun 2026')+
      kpi('Nearest notice','14<span style="font-size:22px;color:var(--ink-2)"> days</span>','EOT001 · notice due 29 Jul',null)+
@@ -462,25 +1579,35 @@ function vCockpit(){
    '<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px"><div style="height:40px;display:flex;align-items:flex-end;padding-bottom:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">Element</span></div>'+mxHeadCols+'<div style="height:40px;display:flex;align-items:flex-end;justify-content:flex-end;padding-bottom:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">Total · PHP</span></div></div>'+
    '<div>'+buildMatrixRows()+'</div>'+
    '<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px;border-top:1px solid var(--hair-strong)"><div style="height:32px;display:flex;align-items:center"><span style="font:500 11px var(--sans);color:var(--ink-2)">Cost head total</span></div><div style="height:32px;background:var(--fill);border-radius:0 0 10px 10px"></div><div></div><div></div><div></div><div></div><div></div><span style="height:32px;display:flex;align-items:center;justify-content:flex-end;font:600 12px var(--mono);color:var(--ink)">545,571,233.87</span></div>'+
-   '<div style="margin-top:12px;display:flex;align-items:center;gap:12px"><span class="mono" style="color:var(--ink-3)">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span><span style="flex:1"></span>'+(ui.gapOpen?'':'<span class="qbtn" data-act="gap">Open critical gap &rarr;</span>')+'</div>'+
+   '<div style="margin-top:12px;display:flex;align-items:center;gap:12px"><span class="mono" style="color:var(--ink-3)">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span><span style="flex:1"></span>'+(ui.gapOpen?'':'<span class="qbtn" data-act="gap" data-arg="1.3.6">Open critical gap &rarr;</span>')+'</div>'+
    gap+
   '</div>';
 }
-function gapPanel(){
+function gapPanel(ref){
+  var el=CFG_BY_REF[ref]; if(!el) return '';
+  var meta=GAP_META[ref]||{id:'GAP · '+ref,month:'2026-06',monthN:6,blocks:MX_AMT[ref]||'—',age:'open this period'};
+  var missN=(MX_MISS[ref]&&MX_MISS[ref][meta.monthN])||0;
+  var rows='';
+  cfgReq(el).forEach(function(p,i){
+    var missing=i<missN;
+    rows+='<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:'+(missing?'var(--critical)':'var(--ink-3)')+'"></span><div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0"><span class="sub" style="color:var(--ink)">'+p.doc+'</span><span class="mono" style="color:var(--ink-3)">Required · '+p.granularity+(p.provider?' · '+p.provider:'')+(el.notarised?' · notarised':'')+'</span></div><span style="font:500 11.5px var(--sans);color:'+(missing?'var(--critical)':'var(--ink-2)')+';flex:none">'+(missing?'Missing':'On file')+'</span></div>';
+  });
+  cfgOpt(el).forEach(function(p){
+    rows+='<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair);opacity:.6"><span class="dot" style="background:var(--ink-3)"></span><div style="display:flex;flex-direction:column;gap:2px;flex:1;min-width:0"><span class="sub" style="color:var(--ink)">'+p.doc+'</span><span class="mono" style="color:var(--ink-3)">Optional · '+p.granularity+(p.provider?' · '+p.provider:'')+'</span></div><span style="font:400 11.5px var(--sans);color:var(--ink-3);flex:none">—</span></div>';
+  });
+  if(el.note) rows+='<div style="margin-top:10px"><span class="mono" style="color:var(--ink-3)">note · '+el.note+'</span></div>';
+  var prov=cfgProvider(el), provName=prov.replace(/\s*\([^)]*\)$/,''), provDept=(prov.match(/\(([^)]*)\)$/)||['',''])[1];
+  var missingDocs=cfgReq(el).slice(0,missN).map(function(p){return p.doc;}).join(', ');
   var body= ui.requestSent
-    ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:24px;padding:14px 16px;border:1px solid var(--hair-strong);border-radius:12px"><span class="eyebrow" style="color:var(--ink-3)">Request sent</span><span class="sub" style="color:var(--ink)">Document request sent to R. Dizon · Admin.</span><span class="mono" style="color:var(--ink-3)">Lease Agreement, Proof of payment · due 22 Jul 2026</span></div>'
-    : '<div style="display:flex;flex-direction:column;margin-top:24px">'+
-       '<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:var(--critical)"></span><span class="sub" style="color:var(--ink);flex:1">Lease Agreement</span><span style="font:500 11.5px var(--sans);color:var(--critical)">Missing</span></div>'+
-       '<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:var(--critical)"></span><span class="sub" style="color:var(--ink);flex:1">Proof of payment</span><span style="font:500 11.5px var(--sans);color:var(--critical)">Missing</span></div>'+
-       '<div style="display:flex;align-items:center;gap:10px;padding:11px 0;border-top:1px solid var(--hair)"><span class="dot" style="background:var(--ink-3)"></span><span class="sub" style="color:var(--ink);flex:1">Invoice INV-7741</span><span style="font:500 11.5px var(--sans);color:var(--ink-2)">On file</span></div>'+
-      '</div>';
-  return '<div style="position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);padding:26px 30px;display:flex;flex-direction:column">'+
-   '<div style="display:flex;align-items:center;gap:10px"><span class="chip crit">Critical</span><span class="mono" style="color:var(--ink-3)">GAP-118</span><span style="flex:1"></span><span class="sub">open 52 days</span><span class="qbtn" data-act="gapClose" style="padding:2px 6px">✕</span></div>'+
-   '<span style="font:600 18px var(--sans);letter-spacing:-.01em;margin-top:16px">1.3.6 Accomodation Rental <span style="font:400 15px var(--sans);color:var(--ink-2)">· 2026-03</span></span>'+
+    ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:24px;padding:14px 16px;border:1px solid var(--hair-strong);border-radius:12px"><span class="eyebrow" style="color:var(--ink-3)">Request sent</span><span class="sub" style="color:var(--ink)">Document request sent to '+provName+' · '+provDept+'.</span><span class="mono" style="color:var(--ink-3)">'+missingDocs+' · due 22 Jul 2026</span></div>'
+    : '<div style="display:flex;flex-direction:column;margin-top:24px">'+rows+'</div>';
+  return '<div style="position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);padding:26px 30px;display:flex;flex-direction:column;overflow-y:auto">'+
+   '<div style="display:flex;align-items:center;gap:10px"><span class="chip crit">Critical</span><span class="mono" style="color:var(--ink-3)">'+meta.id+'</span><span style="flex:1"></span><span class="sub">'+meta.age+'</span><span class="qbtn" data-act="gapClose" style="padding:2px 6px">✕</span></div>'+
+   '<span style="font:600 18px var(--sans);letter-spacing:-.01em;margin-top:16px">'+ref+' '+el.name+' <span style="font:400 15px var(--sans);color:var(--ink-2)">· '+meta.month+'</span></span>'+
    '<span class="eyebrow" style="color:var(--ink-3);margin-top:22px">Blocks</span>'+
-   '<span style="font:200 32px/1 var(--sans);letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums">PHP 4,918,220.13</span>'+
+   '<span style="font:200 32px/1 var(--sans);letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums">PHP '+meta.blocks+'</span>'+
    body+
-   '<div style="display:flex;align-items:center;gap:10px;padding:12px 0 18px;border-top:1px solid var(--hair);margin-top:8px"><div class="avatar">RD</div><span class="sub" style="color:var(--ink)">R. Dizon <span style="color:var(--ink-2)">· Admin</span></span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">since 12 May 2026</span></div>'+
+   '<div style="display:flex;align-items:center;gap:10px;padding:12px 0 18px;border-top:1px solid var(--hair);margin-top:8px"><div class="avatar">'+cfgInitials(provName)+'</div><span class="sub" style="color:var(--ink)">'+provName+' <span style="color:var(--ink-2)">· '+provDept+'</span></span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">since 12 May 2026</span></div>'+
    '<span style="flex:1"></span>'+
    (ui.requestSent?'':'<div style="display:flex;align-items:center;gap:14px"><button class="pill" style="flex:1" data-act="request">Request documents</button><span class="qbtn">Escalate</span></div>')+
   '</div>';
@@ -490,6 +1617,17 @@ function gapPanel(){
 function catRow(code,label,detail,amt,statusHtml,box){
   return '<div class="trow"><span style="width:22px;height:22px;border-radius:6px;flex:none;display:flex;align-items:center;justify-content:center;'+box+'"></span><div style="display:flex;flex-direction:column;gap:3px;flex:1;min-width:0"><span style="font:500 14px var(--sans)">'+label+'</span><span style="font:400 11.5px var(--mono);color:var(--ink-3)">'+detail+'</span></div><span style="width:190px;flex:none;text-align:right" class="amt">'+amt+'</span><span style="width:230px;flex:none;display:flex;align-items:center;justify-content:flex-end;gap:8px">'+statusHtml+'</span></div>';
 }
+function homeCats(){
+  /* the contributor persona sits in Account: owed = active elements deposited by Account staff */
+  var out=[];
+  VAULT_CONFIG.categories.forEach(function(cat){
+    var els=cfgCat(cat).filter(function(e){ return e.active&&e.depositedBy&&e.depositedBy.indexOf('(Account)')>=0; });
+    if(!els.length) return;
+    var deps=[]; els.forEach(function(e){ var d=e.depositedBy.replace(' (Account)',''); if(deps.indexOf(d)<0) deps.push(d); });
+    out.push({code:cat.split(' ')[0],label:cat,count:els.length,deps:deps.join(' · ')});
+  });
+  return out;
+}
 function vHome(){
   var stage=ui.homeStage;
   var owedStatus='<span class="dot" style="background:var(--partial)"></span><span style="font:400 12.5px var(--sans);color:var(--partial)">owed</span>';
@@ -498,16 +1636,21 @@ function vHome(){
   var owedBox='background:transparent;border:1.5px solid var(--partial)';
   var quietBox='background:transparent;border:1px solid var(--hair-strong)';
   var doneBox='background:var(--fill-2);border:1px solid var(--hair)';
+  var cats=homeCats();
+  function det(c,p){ return c.count+' elements · '+c.deps+' (Account) · '+p; }
   var rows;
   if(stage==='filed'){
-    rows=catRow('1.1','1.1 Salary','audited payroll file · 2026-06','PHP 9,988,140.62',extractedStatus,quietBox)+
-         catRow('1.2','1.2 Contribution','SSS · PHIC · HDMF · Withholding Tax · 2026-06','PHP 1,854,159.52',extractedStatus,quietBox);
+    rows=catRow(cats[0].code,cats[0].label,det(cats[0],'2026-06'),'PHP 9,988,140.62',extractedStatus,quietBox)+
+         catRow(cats[1].code,cats[1].label,det(cats[1],'2026-06'),'PHP 1,854,159.52',extractedStatus,quietBox)+
+         catRow(cats[2].code,cats[2].label,det(cats[2],'2026-06'),'',owedStatus,owedBox);
   } else {
-    rows=catRow('1.1','1.1 Salary','audited payroll file · 2026-06','',owedStatus,owedBox)+
-         catRow('1.2','1.2 Contribution','SSS · PHIC · HDMF · Withholding Tax · 2026-06','',owedStatus,owedBox);
+    rows=catRow(cats[0].code,cats[0].label,det(cats[0],'2026-06'),'',owedStatus,owedBox)+
+         catRow(cats[1].code,cats[1].label,det(cats[1],'2026-06'),'',owedStatus,owedBox)+
+         catRow(cats[2].code,cats[2].label,det(cats[2],'2026-06'),'',owedStatus,owedBox);
   }
-  rows+=catRow('1.1','1.1 Salary','audited payroll file · 2026-05','PHP 9,912,884.10',completeStatus,doneBox)+
-        catRow('1.2','1.2 Contribution','SSS · PHIC · HDMF · Withholding Tax · 2026-05','PHP 1,833,092.71',completeStatus,doneBox);
+  rows+=catRow(cats[0].code,cats[0].label,det(cats[0],'2026-05'),'PHP 9,912,884.10',completeStatus,doneBox)+
+        catRow(cats[1].code,cats[1].label,det(cats[1],'2026-05'),'PHP 1,833,092.71',completeStatus,doneBox)+
+        catRow(cats[2].code,cats[2].label,det(cats[2],'2026-05'),'PHP 1,102,450.36',completeStatus,doneBox);
 
   var right='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span style="font:200 50px/1 var(--sans);letter-spacing:-.03em">3</span><span style="font:500 11px var(--sans);color:var(--ink-2)">days before close</span><span style="font:400 11px var(--mono);color:var(--ink-3)">closes 08 Jul 2026</span></div>';
 
@@ -527,7 +1670,7 @@ function vHome(){
   var hint = stage==='owed'?'Colour marks what is owed. Drop the payroll file to file this period.':(stage==='loading'?'Registering and extracting — no shimmer, just counts.':'Filed and quiet. Nothing celebratory; the calm is the point.');
   return '<div class="wrap" style="max-width:940px;margin:0 auto">'+
     head('My monthly close','Period 2026-06','A. Cruz · Account · open and in progress',right)+
-    '<div style="margin-top:14px;display:flex;align-items:center;gap:14px"><div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:'+(stage==='owed'?'50%':(stage==='loading'?'60%':'100%'))+';height:100%;background:var(--ink-3)"></div></div><span class="sub">'+(stage==='filed'?'4 of 4 items filed':'2 of 4 items complete')+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+(stage==='owed'?'<span style="color:var(--partial)">2 owed this period</span>':'2 extracted · awaiting validation')+'</span></div>'+
+    '<div style="margin-top:14px;display:flex;align-items:center;gap:14px"><div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:'+(stage==='owed'?'50%':(stage==='loading'?'60%':'83%'))+';height:100%;background:var(--ink-3)"></div></div><span class="sub">'+(stage==='filed'?'5 of 6 items filed':'3 of 6 items complete')+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+(stage==='owed'?'<span style="color:var(--partial)">3 owed this period</span>':'2 extracted · awaiting validation')+'</span></div>'+
     '<div style="margin-top:20px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:14px"><span class="h2">Your categories</span><span style="flex:1"></span><span style="font:400 11px var(--sans);color:var(--ink-3)">'+hint+'</span></div>'+
     rows+dropArea+
     '<div style="margin-top:18px;display:flex;align-items:center;gap:14px"><span class="qbtn" data-act="nav" data-arg="#/home/manual">Add a manual element &rarr;</span></div>'+
@@ -540,6 +1683,11 @@ function vManual(){
   var stage=ui.manualStage;
   var attached = stage!=='form';
   var submitted = stage==='submitted';
+  var elM=CFG_BY_REF['1.3.10'], plines='';
+  elM.proofs.forEach(function(p){
+    plines+='<div style="display:flex;align-items:baseline;gap:10px;padding:4px 0"><span style="font:500 11px var(--mono);color:'+(p.level==='Required'?'var(--ink)':'var(--ink-3)')+';width:64px;flex:none">'+p.level+'</span><span style="font:400 12px var(--sans);color:var(--ink);flex:1">'+p.doc+'</span><span style="font:400 10.5px var(--mono);color:var(--ink-3)">'+p.granularity+(p.provider?' · '+p.provider:'')+'</span></div>';
+  });
+  var proofBox='<div style="margin-top:20px;padding:12px 16px;background:var(--fill);border-radius:10px"><span class="mono" style="color:var(--ink-2)">Proofs for '+elM.ref+' '+elM.name+' · from config</span><div style="margin-top:8px">'+plines+'</div><span class="mono" style="color:var(--ink-3)">'+(elM.notarised?'Notarization required.':'Notarization not required.')+'</span></div>';
   return '<div class="wrap" style="max-width:820px;margin:0 auto">'+
    head('Manual element','1.3.10 School Fees','Invoice-mode element · manual with evidence','')+
    '<div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
@@ -548,7 +1696,7 @@ function vManual(){
      '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Origin</span><select class="inp"><option>Mainby</option><option>Local</option><option>HBased</option><option>COrigin</option></select></label>'+
      '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Amount · EUR</span><input class="inp" style="font-family:var(--mono)" value="94,500.00"></label>'+
    '</div>'+
-   '<div style="margin-top:20px;padding:12px 16px;background:var(--fill);border-radius:10px"><span class="mono" style="color:var(--ink-2)">Accepted source · tuition invoice from an accredited school, per config. Notarization not required.</span></div>'+
+   proofBox+
    (attached
      ? '<div class="card" style="margin-top:16px;display:flex;align-items:center;gap:14px;background:var(--fill);border:none"><div style="width:30px;height:38px;border:1px solid var(--hair-strong);border-radius:4px;background:var(--base);flex:none"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13px var(--sans)">invoice_schoolfees_2026-06.pdf</span><span style="font:400 11px var(--mono);color:var(--ink-2)">sha256 · a91c…44f0 · attached</span></div><span class="mono" style="color:var(--ink-2)">hashed</span></div>'
      : '<div class="card" data-act="attach" style="margin-top:16px;display:flex;align-items:center;gap:14px;border:1.5px dashed var(--hair-strong);cursor:pointer"><div style="width:36px;height:36px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13.5px var(--sans)">Attach evidence</span><span style="font:400 11px var(--mono);color:var(--ink-2)">the invoice, registered and hashed</span></div></div>')+
@@ -581,6 +1729,11 @@ function vQueue(){
 }
 function vQueueItem(){
   var validated=ui.validated;
+  var elQ=CFG_BY_REF['1.1.1'], plist='';
+  elQ.proofs.forEach(function(p,i){
+    plist+='<div style="display:flex;align-items:flex-start;gap:8px;padding:5px 0"><span class="dot" style="background:'+(p.level==='Required'?'var(--ink-2)':'var(--ink-3)')+';margin-top:4px;flex:none"></span><span style="flex:1;font:400 11px var(--sans);color:var(--ink)">'+p.doc+'</span><span style="font:400 10px var(--mono);color:var(--ink-3);flex:none">'+p.level+(i===0?' · on file':'')+'</span></div>';
+  });
+  var checklist='<div style="width:100%;margin-top:12px;border-top:1px solid var(--hair);padding-top:10px"><span class="eyebrow" style="font-size:9.5px;color:var(--ink-3)">Substantiation · from config</span><div style="margin-top:6px">'+plist+'</div></div>';
   var pillOrCheck = validated
     ? '<span style="display:flex;align-items:center;gap:10px;height:40px;padding:0 20px;border-radius:999px;background:var(--fill);color:var(--ink)"><svg width="16" height="16" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span style="font:500 13px var(--sans)">Validated · locked to proof</span></span>'
     : '<button class="pill" data-act="validate">Validate against evidence</button>';
@@ -594,7 +1747,7 @@ function vQueueItem(){
      '<div class="card" style="flex:1;display:flex;flex-direction:column"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Extracted cost</span><span style="font:600 19px var(--sans);margin-top:12px">1.1.1 Basic Salary</span><span style="font:200 40px/1 var(--sans);letter-spacing:-.02em;margin-top:14px;font-variant-numeric:tabular-nums">PHP 84,120.00</span>'+
        '<div style="margin-top:18px">'+kv('Staff','E. Ramos')+kv('Origin','Local')+kv('Period','2026-06')+kv('Source','CRPH_Payroll_Local_2026-06.xlsx · line 214')+kv('Fingerprint','8f3a…c41d')+'</div>'+
        '<span style="flex:1"></span><div style="display:flex;align-items:center;gap:14px;padding-top:18px">'+pillOrCheck+(validated?'':'<span class="sub" style="color:var(--ink-3)">countersign locks this line to its proof</span>')+'</div></div>'+
-     '<div class="card" style="width:430px;flex:none;background:var(--fill);display:flex;flex-direction:column"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Evidence</span><div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px 0 10px"><div style="width:230px;height:280px;background:var(--base);border:1px solid var(--hair-strong);border-radius:4px;padding:20px 18px;display:flex;flex-direction:column;gap:9px"><span class="skel" style="height:7px;width:44%"></span><span class="skel" style="height:4px;width:70%"></span><span class="skel" style="height:4px;width:58%"></span><span style="height:1px;background:var(--hair);margin-top:8px"></span><span class="skel" style="height:4px;width:40%"></span><span class="skel" style="height:4px;width:52%"></span><span style="flex:1"></span><span style="height:1px;background:var(--hair)"></span><div style="display:flex;justify-content:space-between;align-items:center"><span class="skel" style="height:4px;width:30%"></span><span style="font:500 11px var(--mono)">84,120.00</span></div></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span style="font:500 12px var(--mono)">payslip_ramos_2026-06.pdf</span><span class="mono" style="color:var(--ink-3)">sha256 · d41c…9e2b · registered 05 Jul 2026</span></div></div>'+
+     '<div class="card" style="width:430px;flex:none;background:var(--fill);display:flex;flex-direction:column"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Evidence</span><div style="flex:1;display:flex;align-items:center;justify-content:center;padding:16px 0 10px"><div style="width:230px;height:280px;background:var(--base);border:1px solid var(--hair-strong);border-radius:4px;padding:20px 18px;display:flex;flex-direction:column;gap:9px"><span class="skel" style="height:7px;width:44%"></span><span class="skel" style="height:4px;width:70%"></span><span class="skel" style="height:4px;width:58%"></span><span style="height:1px;background:var(--hair);margin-top:8px"></span><span class="skel" style="height:4px;width:40%"></span><span class="skel" style="height:4px;width:52%"></span><span style="flex:1"></span><span style="height:1px;background:var(--hair)"></span><div style="display:flex;justify-content:space-between;align-items:center"><span class="skel" style="height:4px;width:30%"></span><span style="font:500 11px var(--mono)">84,120.00</span></div></div></div><div style="display:flex;flex-direction:column;gap:4px;align-items:center"><span style="font:500 12px var(--mono)">payslip_ramos_2026-06.pdf</span><span class="mono" style="color:var(--ink-3)">sha256 · d41c…9e2b · registered 05 Jul 2026</span></div>'+checklist+'</div>'+
    '</div>'+
    '<div style="margin-top:22px"><span class="eyebrow" style="color:var(--ink-3);font-size:10px">Validated today</span>'+(validated?trace:'<div class="trow"><span class="mono" style="color:var(--ink-3)">nothing yet in this session</span></div>')+'</div>'+
   '</div>';
@@ -669,7 +1822,7 @@ function vPeriods(){
   return '<div class="wrap">'+head('Periods','2026-01 to 2026-06','Six periods · one sealed · 2026-06 open for close','')+
    '<div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">'+cards+'</div>'+
    '<div style="margin-top:24px;border-top:1px solid var(--hair);padding-top:18px"><span class="h2">Close checklist · 2026-06</span>'+
-     checkRow('All owed categories filed','23 / 33 elements','part')+
+     checkRow('All owed categories filed','29 / 39 elements','part')+
      checkRow('Pending validations cleared','14 awaiting countersign','part')+
      checkRow('No critical gaps open','1 critical · GAP-118','crit')+
      '<div style="margin-top:16px"><span class="sub" style="color:var(--ink-3)">Seal is available once the checklist is quiet.</span></div>'+
@@ -693,7 +1846,7 @@ function vSeal(){
      '</div>'+
      '<div style="width:620px;margin-top:24px"><span class="eyebrow" style="font-size:10px;color:var(--ink-3)">Period history</span>'+
        histRow('Deposit','CRPH_Payroll_Local_2026-06.xlsx · registered','05 Jul 2026 · 10:12')+
-       histRow('Validation','33 of 33 evidence sets countersigned','—')+
+       histRow('Validation','39 of 39 evidence sets countersigned','—')+
        histRow('Seal','Period locked · fingerprint issued','just now')+
      '</div>'+
     '</div>';
@@ -703,7 +1856,7 @@ function vSeal(){
    '<div class="card" style="width:620px;margin-top:36px;border:1px solid var(--hair-strong)">'+
      '<div style="display:flex;align-items:center;gap:12px"><span class="h2">Period 2026-06</span><span style="flex:1"></span><span class="chip" style="color:var(--ink-2);background:var(--fill)">Ready to seal</span></div>'+
      '<span class="sub" style="display:block;margin-top:14px">Sealing issues a fingerprint and makes the period write-once. Later corrections create a new version, never an overwrite.</span>'+
-     '<div style="margin-top:20px">'+kv('Elements filed','33 / 33')+kv('Validations','all countersigned')+kv('Countersign','M. Reyes · Consolidator')+'</div>'+
+     '<div style="margin-top:20px">'+kv('Elements filed','39 / 39')+kv('Validations','all countersigned')+kv('Countersign','M. Reyes · Consolidator')+'</div>'+
      '<div style="margin-top:20px;display:flex;align-items:center;gap:14px"><button class="pill" data-act="seal">Seal period</button><span class="sub" style="color:var(--ink-3)">this cannot be undone silently</span></div>'+
    '</div>'+
   '</div>';
@@ -766,7 +1919,7 @@ function vBuild(){
   });
   var footer = resolved
     ? '<div style="margin-top:18px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--hair);padding-top:18px"><button class="pill" data-act="nav" data-arg="#/claims/eot001/submit">Continue to submission</button><span class="sub" style="color:var(--ink)">Hole resolved · every line carries proof.</span></div>'
-    : '<div style="margin-top:18px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--hair);padding-top:18px"><button class="pill disabled">Export dossier</button><span style="font:400 12.5px var(--sans);color:var(--critical)"><span style="font-weight:600">Export blocked · 1 line without proof.</span> A claim cannot ship with a hole.</span><span style="flex:1"></span><span class="qbtn" data-act="resolve">Attach the missing lease &rarr;</span></div>';
+    : '<div style="margin-top:18px;display:flex;align-items:center;gap:16px;border-top:1px solid var(--hair);padding-top:18px"><button class="pill disabled">Export dossier</button><span style="font:400 12.5px var(--sans);color:var(--critical)"><span style="font-weight:600">Export blocked · 1 line without proof.</span> 1.3.6 requires '+cfgReq(CFG_BY_REF['1.3.6']).map(function(p){return p.doc;}).join(' · ')+'. A claim cannot ship with a hole.</span><span style="flex:1"></span><span class="qbtn" data-act="resolve">Attach the missing lease &rarr;</span></div>';
   var right='<div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px"><span class="eyebrow" style="font-size:10px;color:var(--ink-2)">Assembled total</span><span style="font:200 34px/1 var(--sans);letter-spacing:-.02em;font-variant-numeric:tabular-nums">PHP 421,947,223.90</span><span class="mono" style="color:var(--ink-3)">6 selected lines · A - Staff Cost</span></div>';
   return '<div class="wrap">'+
    '<span class="qbtn" data-act="nav" data-arg="#/claims/eot001">&larr; Event</span>'+
@@ -808,7 +1961,7 @@ function diffRows(){
   return '<div style="margin-top:10px">'+
    diffRow('changed','1.3.6 Accomodation Rental · 2026-03','evidence missing &rarr; lease attached','var(--partial)')+
    diffRow('added','1.3.18 Training · 2026-05','new eligible line · proof on file','var(--success)')+
-   diffRow('removed','1.3.13 Flight · 2026-02','withdrawn — outside revised basis','var(--critical)')+
+   diffRow('removed','1.3.12 Flight · 2026-02','withdrawn — outside revised basis','var(--critical)')+
   '</div>';
 }
 function diffRow(kind,label,detail,c){
@@ -863,16 +2016,53 @@ function vUsers(){
 /* ============================ config summary (S19 stub) ============================ */
 function vConfig(){
   function cCard(label,val,ctx){ return '<div class="card" style="display:flex;flex-direction:column;gap:6px"><span style="font:500 11.5px var(--sans);color:var(--ink-2)">'+label+'</span><span style="font:200 40px/1 var(--sans);letter-spacing:-.03em;font-variant-numeric:tabular-nums">'+val+'</span><span class="sub" style="color:var(--ink-3)">'+ctx+'</span></div>'; }
-  return '<div class="wrap">'+head('Config summary','MMSP EOT001','Read-only. The taxonomy and rule editors arrive after the pilot.','')+
+  var modes=[]; CFG_ACTIVE.forEach(function(e){ if(e.mode&&modes.indexOf(e.mode)<0) modes.push(e.mode); });
+  return '<div class="wrap">'+head('Config summary',VAULT_CONFIG.project,'Read-only · validated by '+VAULT_CONFIG.validatedBy+' on '+VAULT_CONFIG.validatedOn+' · the taxonomy and rule editors arrive after the pilot.','')+
    '<div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">'+
-     cCard('Categories','3','1.1 Salary · 1.2 Contribution · 1.3 Fringe Benefit')+
-     cCard('Cost elements','40','mapped on the real price file')+
+     cCard('Categories',String(VAULT_CONFIG.categories.length),VAULT_CONFIG.categories.join(' · '))+
+     cCard('Cost elements',String(VAULT_CONFIG.mappedElements),VAULT_CONFIG.activeElements+' active · 1 excluded · mapped on the real price file')+
      cCard('Roles','6','contributor to admin')+
      cCard('Notice period','28<span style="font-size:20px;color:var(--ink-2)"> days</span>','default contractual notice window')+
      cCard('FX source','pending','rate provider not yet configured')+
-     cCard('Acquisition modes','3','extracted · computed · manual with evidence')+
+     cCard('Acquisition modes',String(modes.length),modes.join(' · ').toLowerCase())+
    '</div>'+
-   '<div style="margin-top:20px"><span class="sub" style="color:var(--ink-3)">One glance, no editing controls in this build.</span></div>'+
+   '<div style="margin-top:20px;display:flex;align-items:center;gap:14px"><span class="qbtn" data-act="nav" data-arg="#/admin/rules">Open the substantiation matrix &rarr;</span><span class="sub" style="color:var(--ink-3)">One glance, no editing controls in this build.</span></div>'+
+  '</div>';
+}
+
+/* ============================ S20 substantiation matrix (read-only) ============================ */
+function vRules(){
+  var html='';
+  VAULT_CONFIG.categories.forEach(function(cat){
+    var els=cfgCat(cat), act=els.filter(function(e){ return e.active; }).length;
+    html+='<div style="margin-top:26px;display:flex;align-items:baseline;gap:12px;padding-bottom:8px;border-bottom:1px solid var(--hair-strong)"><span class="h2">'+cat+'</span><span class="mono" style="color:var(--ink-3)">'+els.length+' elements'+(act<els.length?' · '+act+' active':'')+'</span></div>';
+    els.forEach(function(el){
+      var excluded=cfgFlag(el,'excluded'), disc=cfgFlag(el,'to_discuss');
+      var tags='<span class="tag" style="font-size:9.5px;padding:2px 8px">'+(el.mode||'—')+'</span>';
+      if(el.notarised) tags+='<span class="tag" style="font-size:9.5px;padding:2px 8px;margin-left:6px">notarised</span>';
+      if(excluded) tags+='<span class="tag" style="font-size:9.5px;padding:2px 8px;margin-left:6px">excluded</span>';
+      if(disc) tags+='<span class="tag" style="font-size:9.5px;padding:2px 8px;margin-left:6px" title="'+esc(el.note||'')+'">to discuss</span>';
+      var proofs='';
+      el.proofs.forEach(function(p){
+        proofs+='<div style="display:flex;align-items:baseline;gap:10px;padding:3px 0"><span style="font:500 10px var(--mono);letter-spacing:.04em;color:'+(p.level==='Required'?'var(--ink)':'var(--ink-3)')+';width:60px;flex:none">'+p.level+'</span><span style="font:400 12px var(--sans);color:var(--ink)">'+p.doc+'</span><span class="mono" style="color:var(--ink-3);font-size:10.5px">'+p.granularity+(p.provider?' · '+p.provider:'')+'</span></div>';
+      });
+      html+='<div class="trow" style="align-items:flex-start;gap:14px'+(excluded?';opacity:.42':'')+'">'+
+        '<span style="width:46px;flex:none;font:400 11px var(--mono);color:var(--ink-3);padding-top:2px">'+el.ref+'</span>'+
+        '<div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:5px">'+
+          '<div style="display:flex;align-items:center;flex-wrap:wrap"><span style="font:500 13.5px var(--sans);margin-right:10px"'+(el.note&&!disc?' title="'+esc(el.note)+'"':'')+'>'+el.name+'</span>'+tags+'</div>'+
+          (excluded?'':'<span style="font:400 11px var(--mono);color:var(--ink-3)">'+(el.comesFrom||'')+'</span>'+
+            '<span style="font:400 11px var(--mono);color:var(--ink-2)">deposited by '+(el.depositedBy||'—')+' · '+(el.frequency||'—')+'</span>'+
+            (proofs?'<div style="margin-top:2px">'+proofs+'</div>':''))+
+        '</div>'+
+        '<span style="width:150px;flex:none;text-align:right;font:400 11px var(--sans);color:var(--ink-2);padding-top:2px">'+(el.appliesTo||'')+'</span>'+
+      '</div>';
+    });
+  });
+  return '<div class="wrap" style="max-width:1120px;margin:0 auto">'+
+   head('Substantiation matrix','A - Staff Cost','What makes a cost complete · validated by '+VAULT_CONFIG.validatedBy+' on '+VAULT_CONFIG.validatedOn+' · read-only, the editor arrives after the pilot',
+    '<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px"><span class="num">'+VAULT_CONFIG.activeElements+'</span><span style="font:500 11px var(--sans);color:var(--ink-2)">active elements</span><span class="mono" style="color:var(--ink-3)">'+VAULT_CONFIG.mappedElements+' mapped · 1 excluded</span></div>')+
+   html+
+   '<div style="margin-top:20px"><span class="sub" style="color:var(--ink-3)">Every owed list, attach form, validator checklist, gap panel and export rule reads from this matrix.</span></div>'+
   '</div>';
 }
 
@@ -917,7 +2107,7 @@ function vReaderDash(){
   return '<div class="wrap">'+head('Dashboard','Aggregates','Read-only overview · no nominative detail','')+
    '<div style="margin-top:22px;display:grid;grid-template-columns:repeat(3,1fr);gap:20px">'+
      kpi('Assembled','PHP 421.9M','EOT001 · 6 lines')+
-     kpi('Open gaps','24','PHP 38.2M blocked')+
+     kpi('Open gaps',String(cfgGapTotal()),'PHP 38.2M blocked')+
      kpi('Periods sealed','1<span style="font-size:26px;color:var(--ink-3)"> / 6</span>','2026-01')+
    '</div>'+
    '<div style="margin-top:24px;border-top:1px solid var(--hair);padding-top:18px"><span class="h2">Cost head · A - Staff Cost</span>'+
@@ -958,7 +2148,7 @@ var HANDLERS={
   nav:function(a){ nav(a); },
   role:function(a){ setRole(a); },
   theme:function(a){ setTheme(a); },
-  gap:function(){ ui.gapOpen=true; render(); },
+  gap:function(a){ var r=a||'1.3.6'; if(ui.gapOpen!==r) ui.requestSent=false; ui.gapOpen=r; render(); },
   gapClose:function(){ ui.gapOpen=false; render(); },
   request:function(){ ui.requestSent=true; render(); },
   drop:function(){ ui.homeStage = ui.homeStage==='owed'?'loading':(ui.homeStage==='loading'?'filed':'owed'); render(); },
