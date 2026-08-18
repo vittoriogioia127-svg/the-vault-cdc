@@ -2,6 +2,24 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-17 - the-vault-pitch.html delivered (commit 85bc455): the deck is presentable
+Phase B of the pitch build completed on main, one additive file, 626 insertions, tree clean. All eight
+acceptance items PASS: navigation with clamping and click zones, 78 i18n keys at exact three-way parity
+(markup, EN, FR) so no string can fall back, exactly two black pills in slide content (05, 12), full mono
+discipline including inline spans in prose, dark theme value-identical to the frozen tokens with observed
+persistence, ASK_VARIANT single-reference, offline file:// with silent font fallback, reduced-motion cuts.
+Build quality: four-agent adversarial verification (EN copy, FR copy, mechanics, hygiene) plus headless
+renders; one visual defect caught and fixed pre-commit (slide 11 amber dot breaking numeral alignment,
+now hanging in the margin) and three hardenings shipped (stage overflow clip, modifier-key guard on
+navigation, dead CSS removed). Honest caveat carried: live keyboard and click interaction verified by
+code review only; Vittorio's five-gesture physical pass is the closing verification before push via
+GitHub Desktop. Two advisories adjudicated with no action: the tokens header comment and the variant-B
+ask string are visible in source (contract-sanctioned, no stack or method exposure, the deck is presented
+on screen, not distributed as source); LF to CRLF on checkout is cosmetic.
+Repo note for traceability: the private internal repository was renamed from eot-7f3a9c to the-vault by
+Vittorio; GitHub redirects the old remote, first push to confirm the remote points at the new name.
+Awaiting: the physical pass and push, the P3.0 Phase A report, the Sharizal call outcome.
+
 ## 2026-08-17 - Pitch deck delivered and validated (12 pages, bilingual); portable build chartered to Code
 Design completed the 12-page deck with the v1.1 amendment applied. Audit against the contract: the three
 checkpoint fixes verified (slide 10 mandatory closing line verbatim, slide 05 pill whole inside the frame,
