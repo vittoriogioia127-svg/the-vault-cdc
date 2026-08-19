@@ -2,6 +2,68 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-19 - D-25 staff registry, D-26 ledger information architecture; P3.0.3 chartered
+Two architecture decisions born from Vittorio's continued audit of the app, one micro-corrective.
+D-25 staff registry: the eligibility roster stops being an Excel sheet and becomes a first-class versioned
+reference object. Keyed on Colasway ID (H2), carrying name, position and origin package (feeding D-18
+applicability), with dated eligibility windows (eligibility is claim-contextual), append-only with
+supersede and mandatory reason (the seal philosophy applied to reference data), the single reference for
+D-22 coverage checks and the D-24 per-staff dropdown, seeded from the price file sheet then maintained
+in-app. New open point for Sharizal: who maintains the registry, HR (Donna Dalida) or Cost Control. Spec
+and build phase; the mockup does not need it for the demo.
+D-26 ledger information architecture: Vittorio's proposal adopted as the default reading. The register
+grain stays one line = one person x one element x one month, the audit atom, non negotiable. The ledger
+groups by cost element with expandable per-staff sub-rows (amount, origin, currency, gate status), a
+quiet flat toggle preserves the flat table for audit and export, and clicking an element NAME in the
+cockpit matrix (not a gap dot) will open the element detail with its per-staff breakdown, converging with
+D-23. Rationale: it mirrors how the Cost Controller already reads his price file, element first, people
+under. D-24 confirmed by Vittorio; D-24 and D-26 will share one mockup sprint after P3.1 and P3.2.
+P3.0.3 micro-corrective chartered, two items: the gap panel becomes its own scroll container with
+reset-to-top on every gap swap (composing with gapMount, nothing else changes), and S23 contrast
+rebalanced (role dimming currently ghosts even highlighted nodes; non-role readable muted, active role
+full ink with accent chip, legible in both themes). Sequence: push P3.0.2, land P3.0.3, then P3.1
+unchanged.
+
+## 2026-08-19 - Contributor walkthrough: three product decisions born from Vittorio's audit questions
+While closing the P3.0.2 physical pass, Vittorio's questions on the contributor flow surfaced real spec
+gaps, formalized as decisions.
+D-22 coverage gaps: completeness gains a second storey. Beyond document-level (filed vs required), the
+engine compares the staff set extracted from a source file against the eligibility roster (Staff Eligible)
+for that element-month; a person missing from the file raises a coverage gap naming them. Build-phase
+engine capability, not simulated yet.
+D-23 source file dossier: the reverse audit door. From any deposited file: fingerprint, depositor,
+timestamp, and the full list of cost lines it produced. All data already exists in the model; spec note
+now, mockup view later.
+D-24 per-staff manual capture: manual entry must follow the register's per-staff principle. Staff plus
+amount lines (roster-driven dropdown), computed total, replacing the single global amount. Demo-visible,
+deserves a mockup sprint after P3.1.
+Also ruled: the ledger drawer spec grows (source file and fingerprint, proof list with statuses, validator
+and timestamp, origin, original currency, PHP conversion with the FX rate and its source, H3 made
+visible); sealed periods must open read-only with the seal banner, write-once never meant invisible,
+current lock is a mockup defect for P3.2. Role switcher glyphs specced and parked as P3.2 item 1: six
+16px 1.5px-stroke glyphs in the rail icon language (tray-arrow, framed check, 2x2 grid, magnifier, eye,
+sliders), VIEW AS as a vertical list, active in medium.
+The clarification that needed no change: the owed list's element counts are the cost element types whose
+source the department owes for the period (29 for Account: 14 Salary excluding the two computed, 6
+Contribution, 9 Fringe).
+
+## 2026-08-18 - P3.0.2 delivered (commit a5da14c): render doctrine established
+The micro-corrective landed as one additive commit on the app file, on top of the two docs commits
+carrying the log. Structural outcome beyond the fix: the app now has a stated render doctrine, three
+primitives with the rule in a code comment at the helper. patch(id, html) replaces one region in place,
+gapMount(anim) owns the persistent gap host, ddSetOpen(id) owns dropdown DOM; render() is reserved for
+route, role and theme changes; full-pane re-renders on interaction are forbidden app-wide. Dropdowns never
+leave their own DOM, element selection patches head, proofs and flow individually, the gap panel is a
+persistent shell whose body alone changes, with 150ms fade-in, gap-to-gap crossfade (two stacked bodies at
+swap time settling to one), fade-out on close, instant under reduced-motion.
+Acceptance 4/4 PASS, verified two ways: a Node harness counting per-region innerHTML writes through real
+handlers, and self-asserting wrapper pages driving the app in real Chrome (16/16 dropdown assertions,
+preserved element references and scroll at 300 across gap-to-gap, 15/15 reduced-motion). Honest gap
+carried: virtual-time-budget cannot advance the CSS transition clock, so visual completion of the 150ms
+fades is the one point left to Vittorio's eye in the physical pass. Console clean across six roles closes
+check 6 of P3.0.1.
+Next: physical pass, push, then P3.1 with the targeted-update pattern binding for the journey.
+
 ## 2026-08-18 - P3.0.1 green and pushed; render architecture defect isolated, P3.0.2 chartered
 Vittorio's physical pass on P3.0.1: green on all items, pushed. Two refinements surfaced on check 4, both
 symptoms of one cause: the app re-renders the full pane on state change. Opening a dropdown flashes and
