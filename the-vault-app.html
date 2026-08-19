@@ -105,6 +105,10 @@ input::placeholder,textarea::placeholder{color:var(--ink-3)}
 .jfadein{animation:vfade .15s ease}
 .jbar{height:2px;border-radius:999px;background:var(--fill-2);overflow:hidden}
 .jbar-fill{height:100%;width:0;background:var(--ink);transition:width .9s linear}
+.qrow{cursor:pointer}
+.qrow:focus-visible{outline:1px solid var(--ink-2);outline-offset:-1px}
+.qchev{width:24px;text-align:right;flex:none;font:400 13px var(--mono);color:var(--ink-3);opacity:0;transition:opacity .15s ease}
+.qrow:hover .qchev,.qrow:focus-visible .qchev{opacity:1}
 .modal-scrim{position:absolute;inset:0;background:rgba(0,0,0,.18);z-index:30;display:flex;align-items:center;justify-content:center}
 .modal{width:520px;background:var(--base);border:1px solid var(--hair-strong);border-radius:18px;padding:26px 28px}
 .inp{width:100%;background:var(--fill);border:1px solid var(--hair-strong);border-radius:8px;color:var(--ink);font:400 13px var(--sans);padding:10px 12px}
@@ -1370,7 +1374,6 @@ var J_ROWS=[
  ['T.M.','1.1.1 Basic Salary','Local','58,240.00','extracted']
 ];
 function jFiled(){ return ui.journey.stage==='filed'; }
-function jFlipPending(){ return ui.journey.validated&&!ui.journey.flip&&!reducedMotion(); }
 /* one derived pending count — seeded 14, journey batch adds then clears, legacy validate clears */
 function pendCount(){ return 14+(jFiled()?1:0)-(ui.journey.validated?1:0)-(ui.validated?1:0); }
 function pendAmtM(){ return (jFiled()&&!ui.journey.validated)?'28.9M':'18.9M'; }
@@ -1632,9 +1635,10 @@ function buildMatrixRows(){
       var disc=cfgFlag(el,'to_discuss')?'<span class="tag" style="font-size:9px;padding:1px 6px;margin-left:6px;flex:none" title="'+esc(el.note||'')+'">to discuss</span>':'';
       html+='<div style="'+grid+'border-top:1px solid var(--hair-soft);height:26px'+(gapped?';cursor:pointer':'')+'"'+(gapped?' data-act="gap" data-arg="'+el.ref+'"':'')+'><div style="display:flex;align-items:center;gap:8px;min-width:0;padding-right:10px"><span style="font:400 10.5px '+mono+';color:var(--ink-3);width:46px;flex:none">'+el.ref+'</span><span style="font:400 12px var(--sans);color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+el.name+'</span>'+disc+'</div>';
       for(var m=1;m<=6;m++){
-        if(el.ref==='1.1.1'&&m===6&&jFlipPending()){
-          /* pre-flip state — runGateFlip() completes this cell on screen with a one-shot targeted patch */
-          html+='<div id="j-cell" style="'+cell+'"><span style="font:500 11.5px '+mono+';color:var(--ink)">1/2</span><span class="dot" style="width:5px;height:5px;background:var(--partial)"></span></div>';
+        if(el.ref==='1.1.1'&&m===6&&ui.journey.validated&&!ui.journey.flip){
+          /* content is the data-final state; the id only lets runGateFlip() replay the
+             completion once as decoration — every render reflects the mutation */
+          html+='<div id="j-cell" style="'+cell+'"><span style="font:400 11.5px '+mono+';color:var(--ink-3)">2/2</span></div>';
           continue;
         }
         var miss=(MX_MISS[el.ref]&&MX_MISS[el.ref][m])||0, filed=req-miss, crit=MX_CRIT[el.ref]===m, txt, dot='', val;
@@ -1659,7 +1663,7 @@ function vCockpit(){
   var gap=ui.gapOpen?'<div class="gap-shell on"><div class="gap-body">'+gapPanel(ui.gapOpen)+'</div></div>':'';
   return '<div class="wrap" id="ck-wrap" style="position:relative;padding-right:'+(ui.gapOpen?'452px':'40px')+'">'+
    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-bottom:20px">'+
-     kpi('Open gaps','<span id="j-gapnum">'+(cfgGapTotal()+(jFlipPending()?1:0))+'</span>','PHP 38.2M blocked · oldest 52 days')+
+     kpi('Open gaps','<span id="j-gapnum">'+cfgGapTotal()+'</span>','PHP 38.2M blocked · oldest 52 days')+
      kpi('Pending validations',String(pendCount()),'PHP '+pendAmtM()+' awaiting countersign')+
      kpi('Periods sealed','1<span style="font-size:26px;color:var(--ink-3)"> / 6</span>','2026-01 · sealed 30 Jun 2026')+
      kpi('Nearest notice','14<span style="font-size:22px;color:var(--ink-2)"> days</span>','EOT001 · notice due 29 Jul',null)+
@@ -1728,7 +1732,7 @@ function vHome(){
     '<div style="margin-top:20px;display:flex;align-items:baseline;gap:12px;border-top:1px solid var(--hair);padding-top:14px"><span class="h2">Your categories</span><span style="flex:1"></span><span id="home-hint" style="font:400 11px var(--sans);color:var(--ink-3)">'+homeHintHtml()+'</span></div>'+
     '<div id="home-rows">'+homeRowsHtml()+'</div>'+
     '<div id="home-flow">'+jFlowHtml()+'</div>'+
-    '<div style="margin-top:18px;display:flex;align-items:center;gap:14px"><span class="qbtn" data-act="nav" data-arg="#/home/manual">Add a manual element &rarr;</span></div>'+
+    '<div style="margin-top:18px;display:flex;align-items:center;gap:14px">'+(ui.sealed?'<span class="mono" style="color:var(--ink-3)">Period sealed · manual entry closed</span>':'<span class="qbtn" data-act="nav" data-arg="#/home/manual">Add a manual element &rarr;</span>')+'</div>'+
   '</div>';
 }
 function homeRowsHtml(){
@@ -1756,8 +1760,8 @@ function homeRowsHtml(){
   return rows;
 }
 function homeProgressHtml(){
-  var filed=jFiled();
-  return '<div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:'+(filed?'83%':'50%')+';height:100%;background:var(--ink-3)"></div></div><span class="sub">'+(filed?'5 of 6 items filed':'3 of 6 items complete')+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+(filed?'2 extracted · awaiting validation':'<span style="color:var(--partial)">3 owed this period</span>')+'</span>';
+  var filed=jFiled(), pct=filed?'83%':'50%';
+  return '<div style="flex:1;height:4px;border-radius:999px;background:var(--fill-2);overflow:hidden"><div style="width:'+pct+';height:100%;background:var(--ink-3)"></div></div><span class="mono" style="color:var(--ink-2)">'+pct+'</span><span class="sub">'+(filed?'5 of 6 items filed':'3 of 6 items complete')+'</span><span class="dot" style="background:var(--ink-3)"></span><span class="sub">'+(filed?'2 extracted · awaiting validation':'<span style="color:var(--partial)">3 owed this period</span>')+'</span>';
 }
 function homeHintHtml(){
   var st=ui.journey.stage;
@@ -1900,6 +1904,14 @@ function manFlowHtml(){
    '</div>';
 }
 function vManual(){
+  /* sealed-period guard — same doctrine as the S02 drop zone */
+  if(ui.sealed){
+    return '<div class="wrap">'+
+     '<div style="display:flex;align-items:center;gap:12px"><span class="qbtn" data-act="nav" data-arg="#/home">&larr; My close</span></div>'+
+     head('Manual element','Period 2026-06 is sealed','Write-once · deposits are closed for this period','')+
+     '<div class="card" style="margin-top:22px;display:flex;align-items:center;gap:14px;background:var(--fill);border:none;opacity:.72"><span style="color:var(--ink-2)">'+ic('lock')+'</span><div style="display:flex;flex-direction:column;gap:3px;flex:1"><span style="font:500 13.5px var(--sans)">Manual entry is closed</span><span style="font:400 11px var(--mono);color:var(--ink-2)">write-once · corrections open a new version, never an overwrite</span></div><span class="chip seal">Sealed</span></div>'+
+    '</div>';
+  }
   return '<div class="wrap">'+
    '<div id="man-head">'+manHeadHtml()+'</div>'+
    '<div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
@@ -1916,31 +1928,42 @@ function vManual(){
 /* ============================ S06 queue / S07 validate ============================ */
 function vQueue(){
   var n=pendCount();
-  var jrow='';
-  if(jFiled()){
-    var jv=ui.journey.validated;
-    jrow='<div class="trow" data-act="nav" data-arg="#/queue/item" style="cursor:pointer">'+
-      '<span style="width:22px;height:22px;border-radius:6px;flex:none;'+(jv?'background:var(--fill-2);border:1px solid var(--hair)':'border:1.5px solid var(--partial)')+'"></span>'+
-      '<div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font:500 13.5px var(--sans)">1.1.1 Basic Salary · payroll batch</span><span class="mono" style="color:var(--ink-3)">'+J_STAFF+' staff · Local · 2026-06 · '+J_FILE+'</span></div>'+
-      '<span class="amt" style="width:150px">9,988,140.62</span>'+
-      (jv?'<span style="width:120px;text-align:right"><span style="font:400 12px var(--sans);color:var(--ink-3)">validated</span></span>'
-         :'<span style="width:120px;text-align:right"><span class="dot" style="background:var(--partial);display:inline-block;margin-right:6px"></span><span style="font:400 12px var(--sans);color:var(--partial)">pending</span></span>')+
-      (jv?'<span style="width:56px"></span>':'<span class="qbtn">Open &rarr;</span>')+'</div>';
+  /* whole row opens the side-by-side; the chevron is a hover/focus affordance only */
+  function qrowHtml(name,sub,amt,done){
+    return '<div class="trow qrow" tabindex="0" data-act="nav" data-arg="#/queue/item">'+
+      '<span style="width:22px;height:22px;border-radius:6px;flex:none;'+(done?'background:var(--fill-2);border:1px solid var(--hair)':'border:1.5px solid var(--partial)')+'"></span>'+
+      '<div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font:500 13.5px var(--sans)">'+name+'</span><span class="mono" style="color:var(--ink-3)">'+sub+'</span></div>'+
+      '<span class="amt" style="width:150px">'+amt+'</span>'+
+      (done?'<span style="width:120px;text-align:right"><span style="font:400 12px var(--sans);color:var(--ink-3)">validated</span></span>'
+           :'<span style="width:120px;text-align:right"><span class="dot" style="background:var(--partial);display:inline-block;margin-right:6px"></span><span style="font:400 12px var(--sans);color:var(--partial)">pending</span></span>')+
+      '<span class="qchev">›</span></div>';
   }
+  var jrow=jFiled()?qrowHtml('1.1.1 Basic Salary · payroll batch',J_STAFF+' staff · Local · 2026-06 · '+J_FILE,'9,988,140.62',ui.journey.validated):'';
+  /* the full pending list — the fourteen amounts total PHP 18,900,000.00 */
+  var items=[
+   ['1.1.1 Basic Salary','E. Ramos','Local','2026-06','84,120.00'],
+   ['1.1.1 Basic Salary','J. Dela','Local','2026-06','61,480.00'],
+   ['1.1.2 13th Month','M. Tan','Local','2026-06','7,010.00'],
+   ['1.2.1 SSS','S. Lim','Local','2026-06','2,880.00'],
+   ['1.1.4 Per Diem Allowance','K. Bautista','Local','2026-06','18,400.00'],
+   ['1.2.6 Withholding Tax','batch','Local','2026-06','4,822,291.54'],
+   ['1.3.4 Medical Insurance','batch','Local','2026-06','5,316,136.28'],
+   ['1.3.15 Fringe Benefit Tax','batch','Local','2026-06','5,951,141.56'],
+   ['1.3.13 Expenses Claim','batch','Local','2026-06','2,459,110.07'],
+   ['1.1.10 Phone Allowance','R. Ocampo','Local','2026-06','4,200.00'],
+   ['1.1.11 Accommodation Allowance','A. Velasco','Local','2026-06','36,000.00'],
+   ['1.1.12 Transport Allowance','N. Garcia','Local','2026-06','6,500.00'],
+   ['1.3.2 Pension Scheme','T. Mendoza','HBased','2026-06','88,420.00'],
+   ['1.3.17 Transport Taxi','batch','Local','2026-06','42,310.55']
+  ];
   var rows='';
-  var items=[['1.1.1 Basic Salary','E. Ramos','Local','2026-06','84,120.00'],['1.1.1 Basic Salary','J. Dela','Local','2026-06','61,480.00'],['1.1.2 13th Month','M. Tan','Local','2026-06','7,010.00'],['1.2.1 SSS','S. Lim','Local','2026-06','2,880.00'],['1.1.4 Per Diem Allowance','K. Bautista','Local','2026-06','18,400.00']];
   items.forEach(function(it,i){
-    rows+='<div class="trow" data-act="nav" data-arg="#/queue/item" style="cursor:pointer">'+
-      '<span style="width:22px;height:22px;border-radius:6px;border:1.5px solid var(--partial);flex:none"></span>'+
-      '<div style="flex:1;display:flex;flex-direction:column;gap:2px"><span style="font:500 13.5px var(--sans)">'+it[0]+'</span><span class="mono" style="color:var(--ink-3)">'+it[1]+' · '+it[2]+' · '+it[3]+'</span></div>'+
-      '<span class="amt" style="width:150px">'+it[4]+'</span>'+
-      '<span style="width:120px;text-align:right"><span class="dot" style="background:var(--partial);display:inline-block;margin-right:6px"></span><span style="font:400 12px var(--sans);color:var(--partial)">pending</span></span>'+
-      (i===0&&!jFiled()?'<span class="qbtn">Open &rarr;</span>':'<span style="width:56px"></span>')+'</div>';
+    rows+=qrowHtml(it[0],it[1]+' · '+it[2]+' · '+it[3],it[4],i===0&&ui.validated);
   });
   var right='<div style="display:flex;align-items:flex-start;gap:14px"><span class="num">'+n+'</span><div style="display:flex;flex-direction:column;gap:3px;padding-top:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">pending</span><span class="mono" style="color:var(--ink-3)">PHP '+pendAmtM()+' awaiting countersign</span></div></div>';
   var body= n===0
     ? '<div style="margin-top:40px;display:flex;flex-direction:column;align-items:center;gap:16px;padding:40px"><span class="sub" style="max-width:720px;text-align:center">Queue clear. Nothing awaits validation.</span></div>'
-    : '<div style="margin-top:22px"><div class="thead"><span style="width:22px"></span><span style="flex:1" class="th">Element / staff</span><span style="width:150px;text-align:right" class="th">Amount · PHP</span><span style="width:120px;text-align:right" class="th">Status</span><span style="width:56px"></span></div>'+jrow+rows+'<div style="padding:12px 4px"><span class="mono" style="color:var(--ink-3)">…9 more pending</span></div></div>';
+    : '<div style="margin-top:22px"><div class="thead"><span style="width:22px"></span><span style="flex:1" class="th">Element / staff</span><span style="width:150px;text-align:right" class="th">Amount · PHP</span><span style="width:120px;text-align:right" class="th">Status</span><span style="width:24px"></span></div>'+jrow+rows+'</div>';
   return '<div class="wrap">'+head('Validation queue','A - Staff Cost','Every extracted cost faces its source before it counts.',right)+body+'</div>';
 }
 /* S07 shows the journey batch once the extraction has filed; the seeded E. Ramos line before.
@@ -2368,17 +2391,22 @@ function runKpiCountup(){
   });
 }
 
-/* one-shot gate flip — after validation the 1.1.1 · 2026-06 cell completes on screen
-   via a targeted patch; reduced motion renders the final state directly */
+/* one-shot gate flip — decoration only. The matrix and KPI above always render the
+   mutated data (2/2 muted, gaps 22); on the first cockpit render after validation this
+   replays the completion: pre-look for 600ms, then a 150ms crossfade to the final state.
+   Consumed at schedule time, so any interleaved render simply shows the data. */
 function runGateFlip(){
   if(!ui.journey.validated||ui.journey.flip) return;
-  if(reducedMotion()){ ui.journey.flip=true; return; }
+  ui.journey.flip=true;
+  if(reducedMotion()) return;
+  var c=document.getElementById('j-cell'); if(!c) return;
+  c.innerHTML='<span style="font:500 11.5px var(--mono);color:var(--ink)">1/2</span><span class="dot" style="width:5px;height:5px;background:var(--partial)"></span>';
+  patch('j-gapnum',String(cfgGapTotal()+1));
   setTimeout(function(){
-    ui.journey.flip=true;
-    var c=document.getElementById('j-cell');
-    if(c){
-      c.innerHTML='<span style="font:400 11.5px var(--mono);color:var(--ink-3);opacity:0;transition:opacity .15s ease">2/2</span>';
-      var s=c.firstChild; if(s&&s.style){ void c.offsetWidth; s.style.opacity='1'; }
+    var cc=document.getElementById('j-cell');
+    if(cc){
+      cc.innerHTML='<span style="font:400 11.5px var(--mono);color:var(--ink-3);opacity:0;transition:opacity .15s ease">2/2</span>';
+      var s=cc.firstChild; if(s&&s.style){ void cc.offsetWidth; s.style.opacity='1'; }
     }
     patch('j-gapnum',String(cfgGapTotal()));
   },600);
@@ -2481,6 +2509,7 @@ document.addEventListener('keydown',function(e){
   } else {
     var ae=document.activeElement;
     if(ae&&ae.classList&&ae.classList.contains('ddb')&&(k==='Enter'||k===' ')){ e.preventDefault(); HANDLERS.ddToggle(ae.getAttribute('data-arg')); }
+    else if(ae&&ae.classList&&ae.classList.contains('qrow')&&k==='Enter'){ e.preventDefault(); HANDLERS.nav(ae.getAttribute('data-arg')); }
   }
 });
 
