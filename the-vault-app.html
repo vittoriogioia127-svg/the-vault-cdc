@@ -112,7 +112,7 @@ textarea.inp{resize:vertical}
 .ddi{display:flex;align-items:center;padding:8px 10px;border-radius:6px;font:400 13px var(--sans);color:var(--ink);cursor:pointer}
 .ddi:hover,.ddi.hi{background:var(--fill)}
 .ddi.sel,.ddi.sel span{font-weight:500}
-.gap-shell{position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);opacity:0;transition:opacity .15s ease}
+.gap-shell{position:fixed;top:52px;right:0;bottom:0;width:412px;z-index:20;background:var(--base);border-left:1px solid var(--hair-strong);opacity:0;transition:opacity .15s ease}
 .gap-shell.on{opacity:1}
 .gap-body{position:absolute;top:0;left:0;right:0;bottom:0;padding:26px 30px;display:flex;flex-direction:column;overflow-y:auto;opacity:1;transition:opacity .15s ease}
 .gap-body.fade{opacity:0}
@@ -1498,11 +1498,11 @@ function gapMount(anim){
     if(!vis){ var ns=host.querySelector('.gap-shell'); if(ns){ void ns.offsetWidth; ns.classList.add('on'); } }
     return true;
   }
-  if(reduced){ sh.innerHTML='<div class="gap-body">'+inner+'</div>'; return true; }
+  if(reduced){ sh.innerHTML='<div class="gap-body">'+inner+'</div>'; var rb=sh.querySelector('.gap-body'); if(rb) rb.scrollTop=0; return true; }
   var old=sh.querySelector('.gap-body');
   sh.insertAdjacentHTML('beforeend','<div class="gap-body fade">'+inner+'</div>');
   var bodies=sh.querySelectorAll('.gap-body'), nb=bodies[bodies.length-1];
-  if(nb){ void nb.offsetWidth; nb.classList.remove('fade'); }
+  if(nb){ void nb.offsetWidth; nb.classList.remove('fade'); nb.scrollTop=0; }
   if(old){ old.classList.add('fade'); setTimeout(function(){ if(old.parentNode) old.parentNode.removeChild(old); },180); }
   return true;
 }
@@ -1549,14 +1549,20 @@ function statusMeta(st){
 
 /* ============================ S23 process map ============================ */
 function node(id,label,roles,gate){
+  /* contrast rebalance: no whole-node opacity — muted parts stay legible, the
+     current role's nodes carry full ink and the accent chip */
   var active=roles.indexOf(role)>=0;
-  var dim=active?'':'opacity:.28';
-  var ring=gate?'border:1px solid var(--ink)':'border:1px solid var(--hair-strong)';
-  var chip=roles.length===1?ROLE_SHORT[roles[0]]:'shared';
-  return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:118px;'+dim+'">'+
-   '<span style="width:40px;height:40px;border-radius:999px;'+ring+';display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:'+(gate?'var(--ink)':'var(--ink-3)')+'"></span></span>'+
-   '<span style="font:500 10.5px var(--mono);letter-spacing:.1em;color:var(--ink-2);text-align:center">'+label+'</span>'+
-   (gate?'<span style="font:500 10px var(--mono);letter-spacing:.1em;background:var(--pill-bg);color:var(--pill-ink);padding:3px 10px;border-radius:999px">gate</span>':'<span class="tag" style="font-size:9.5px;padding:2px 8px">'+chip+'</span>')+
+  var ring=active?'border:1px solid var(--ink)':'border:1px solid var(--hair-strong)';
+  var dot=active?'var(--ink)':'var(--ink-3)';
+  var lbl=active?'var(--ink)':'var(--ink-2)';
+  var chipTxt=gate?'gate':(roles.length===1?ROLE_SHORT[roles[0]]:'shared');
+  var chipHtml=active
+    ? '<span style="font:500 10px var(--mono);letter-spacing:.1em;background:var(--pill-bg);color:var(--pill-ink);padding:3px 10px;border-radius:999px">'+chipTxt+'</span>'
+    : '<span class="tag" style="font-size:9.5px;padding:2px 8px">'+chipTxt+'</span>';
+  return '<div style="display:flex;flex-direction:column;align-items:center;gap:8px;width:118px">'+
+   '<span style="width:40px;height:40px;border-radius:999px;'+ring+';display:flex;align-items:center;justify-content:center"><span style="width:8px;height:8px;border-radius:999px;background:'+dot+'"></span></span>'+
+   '<span style="font:500 10.5px var(--mono);letter-spacing:.1em;color:'+lbl+';text-align:center">'+label+'</span>'+
+   chipHtml+
    '</div>';
 }
 function conn(){ return '<div style="flex:1;max-width:46px;height:1px;background:var(--hair-strong);margin-top:20px"></div>'; }
@@ -1567,17 +1573,17 @@ function vProcess(){
   return '<div class="wrap" id="view-process" style="height:calc(100vh - 52px);overflow:hidden;padding:22px 40px">'+
    head('Process map','The Vault, end to end','Every department sees its brick in the edifice. Switch a role to light its gestures.','')+
    '<div style="margin-top:26px;display:flex;flex-direction:column;gap:6px">'+
-     '<span class="eyebrow" style="color:var(--ink-3)">Register pipeline &rarr; completeness &rarr; seal</span>'+
+     '<span class="eyebrow">Register pipeline &rarr; completeness &rarr; seal</span>'+
      '<div style="display:flex;align-items:flex-start;justify-content:space-between;padding:14px 0">'+reg+'</div>'+
    '</div>'+
    '<div style="height:1px;background:var(--hair);margin:14px 0"></div>'+
    '<div style="display:flex;flex-direction:column;gap:6px">'+
-     '<span class="eyebrow" style="color:var(--ink-3)">Claim lifecycle</span>'+
+     '<span class="eyebrow">Claim lifecycle</span>'+
      '<div style="display:flex;align-items:flex-start;gap:0;padding:14px 0">'+claim+'</div>'+
    '</div>'+
    '<div style="height:1px;background:var(--hair);margin:14px 0"></div>'+
    '<div style="display:flex;flex-direction:column;gap:10px">'+
-     '<span class="eyebrow" style="color:var(--ink-3)">Cross-cutting</span>'+
+     '<span class="eyebrow">Cross-cutting</span>'+
      '<div style="display:flex;align-items:flex-start;padding:6px 0">'+cross+'</div>'+
    '</div>'+
    '<div style="margin-top:20px"><span class="mono" style="color:var(--ink-3)">Viewing as '+ROLES[role].sub+' &middot; highlighted nodes are '+ROLE_SHORT[role]+' gestures</span></div>'+
