@@ -2,6 +2,61 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-19 - P3.1 smoke: five-item corrective P3.1.1, D-27 extraction lifecycle, role-switch smoothness to P3.2
+Vittorio's physical pass on the living journey surfaced one real guard hole, one probable misfire, and
+three finish items. The hole: sealing a period stopped drop and pick but not manual entry, the screenshot
+shows the sealed banner with the Add link active; P3.1.1 item 1 extends the guard to the link and the
+route. The misfire: the muted flip was not seen while the cockpit screenshot shows the exact seeded state
+with the queue at 15, most plausibly the legacy E. Ramos row was validated instead of the batch row (15
+to 14 with no flip matches the screen exactly); retest instruction issued and the mechanism hardened
+anyway, the flip becomes a data mutation at batch validation time reflected by any later cockpit render,
+the crossfade a first-render decoration only. Finish items: the progress percentage becomes a visible
+mono numeral (the bar moved but no figure rendered), the queue drops its 9-more placeholder and renders
+all rows, and the Open button gives way to whole-row click with a hover chevron and Enter support.
+D-27 extraction lifecycle: extracted lines are editable until validated, every edit traced (original
+value, corrected value, author, timestamp, reason) and any correction returns the line to pending, the
+gate never cheats; an unvalidated batch can be discarded and redropped; after validation, changes happen
+only through traced amendments, supersede applied to extraction. Demo of one traced edit planned in a
+mockup sprint after P3.2; real in build. Column resizing noted to the build backlog.
+Role-switch smoothness ruled to P3.2 top of list: the rail stays stable, views crossfade on role change,
+S23 patches only its chips. Confirmed to Vittorio: the journey content is fully scripted, the honest
+phasing doctrine unchanged.
+
+## 2026-08-19 - P3.1 delivered (commit 709b403): the extraction journey is alive
+Phase B landed as one additive commit on the app file. The thread runs end to end: drop or pick, hairline
+upload, parsing counters ticking to 612 lines and 58 staff, ten persona rows staggering at 50ms, the
+result strip, owed rows flipping to the two category amounts that sum to the batch, queue 14 to 15,
+validation flipping the gate, the 1.1.1 June cell crossfading 1/2 to 2/2 muted on first cockpit visit,
+gaps 23 to 22, ratios to 30/39, pending back to 14. Acceptance 7/7 through a CDP harness over four
+fresh-profile runs, 24 checks. The proof that will matter in the room: a real file named
+REAL_SECRET_BUDGET.xlsx with real content was handed to both the picker and a drop event; the page
+rendered only the scripted filename, no FileReader or read API exists in the source, dataTransfer is
+never inspected, and window-level preventDefault stops stray drops from navigating. Deterministic across
+runs (byte-identical checkpoint tuples), reload resets fully, nothing journey-related persists,
+reduced-motion renders every step instant, the sealed guard replaces the drop zone with a disabled card,
+and the legacy validate path was converted to targeted patches closing the last render() call inside the
+thread. Implementation note endorsed: seeded queue rows and footer kept verbatim so the visible
+arithmetic holds at every stage. Awaiting Vittorio's physical pass, which doubles as the first demo
+rehearsal, then push and the P3.2 polish charter.
+
+## 2026-08-19 - P3.1 Phase A adjudicated: delta map approved, GO issued
+The extraction journey's read-only audit delivered a delta map reconciling to the centavo (the two
+category amounts sum exactly to the batch total, gaps 23 to 22, header ratio 29/39 to 30/39, pending 14
+to 15 to 14) with every surface transition tabled seeded, post-extraction, post-validation. Two findings
+worth the sprint on their own: the sealed guard collision (a sealed 2026-06 did not stop contributor
+filing; S02 gains a disabled sealed state, journey unreachable on sealed periods) and the MX_MISS
+subtlety (the key must be deleted entirely or a completed element would open an empty gap panel).
+Rulings: the 1.1.2 computed line inside the extraction endorsed, the Computed mode made visible in demo;
+the either-or evidence fiction on 1.1.1 endorsed, grounded in the Cost Controller's own config note
+(payroll record or payslip), to revisit only if the client rules payslips-only under H7; the S10 seal
+history filename left as a known seam for the P3.2 consistency pass; the pre-existing seeded wrinkles
+(ledger and queue already carrying the June batch in separate rooms) left as inherited; legacy and
+journey validation counters merged into one derived function; drop and validate handlers retire their
+full render() calls; window-level dragover and drop preventDefault mandated so a stray drop never
+navigates, with the never-read guarantee absolute. Motion script fixed and deterministic: 900ms hairline,
+ticking counters in 60ms steps, 50ms stagger with 150ms fades, one-shot gate-flip crossfade on first
+cockpit visit, reduced-motion all instant, journey state in memory only. GO issued for Phase B.
+
 ## 2026-08-19 - P3.0.3 delivered (commit 6d68f25): panel scroll autonomy, process map legible
 Two-item micro-corrective landed, one file, tree clean over the docs commit. The gap shell moved to
 position:fixed below the topbar, its own viewport-height scroll container; gapMount resets the incoming
