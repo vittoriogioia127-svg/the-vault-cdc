@@ -2,6 +2,37 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-18 - P3.0.1 green and pushed; render architecture defect isolated, P3.0.2 chartered
+Vittorio's physical pass on P3.0.1: green on all items, pushed. Two refinements surfaced on check 4, both
+symptoms of one cause: the app re-renders the full pane on state change. Opening a dropdown flashes and
+resets the view; clicking gap to gap remounts the whole body instead of updating the side panel. Ruled as
+micro-corrective P3.0.2 before P3.1, because the extraction journey is architecturally impossible on
+full-pane re-renders (ticking counters and staggered rows need surgical DOM updates). P3.0.2, two items,
+one commit: dropdowns operate on their own DOM only with targeted dependent-region updates (proofs box);
+the gap panel becomes a targeted region with a 150ms fade-in on first open, content crossfade on gap-to-gap
+with the central DOM and scroll verifiably preserved, fade-out on close, instant under reduced-motion. The
+targeted-update pattern becomes binding app-wide: full-pane re-renders on interaction are now forbidden.
+P3.1 prompt amended with one line making the pattern binding for the journey. Check 6 of the P3.0.1 pass
+(console across six roles) rides along in the P3.0.2 smoke.
+
+## 2026-08-18 - P3.0.1 delivered (commit bbff1fb); P3.1 extraction journey chartered
+The four-item corrective landed as one additive commit on the app file: full-width shell (pane max-widths
+removed, reading measure kept on seven prose spans only), contained matrix month headers (40px, 10px mono
+secondaries, ellipsis), the period-scoped gap panel (month cells pass ref:month, the panel renders and
+derives from the clicked month, non-month contexts default to the current period, amount logic untouched),
+and DA dropdowns replacing both native selects (token popover, keyboard complete with wrap-around, refs
+and dates in mono). Sanctioned beyond-scope improvement: the attach form's proofs box now follows the
+element selection, the config-over-spec principle made visible. Five-item acceptance PASS through the
+real-listener harness; the one visually unverifiable point (hover and focus states on the popover) is in
+Vittorio's physical pass. Working-tree note from the build: the repo copy of this log sat uncommitted;
+rule going forward, the log ships as a separate docs commit alongside each code push, KB and repo carry
+the same version.
+P3.1 chartered without waiting: VAULT_P3_1_EXTRACTION_JOURNEY.md issued. One thread, drop to muted: the
+scripted deterministic scenario (2606_CRPH_Payroll_Local.xlsx, the real file never read), S03 progress and
+S04 staggered per-staff filing as states of Home, gate reaction through the validator, the matrix cell
+turning complete, gaps 23 to 22. Memory-only journey state, reload resets, sealed periods guarded,
+reduced-motion instant. Phase A must propose the exact delta map with every moving tally.
+
 ## 2026-08-18 - P3.0 closed green and pushed; four smoke defects triaged into corrective sprint P3.0.1
 P3.0 Phase B landed as commit 1d99df0 (one file, +1257/-67): VAULT_CONFIG embedded verbatim with derived
 lookups, S20 read-only at #/admin/rules, every ref renumbered to the validated taxonomy, the cockpit
