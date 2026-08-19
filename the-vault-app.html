@@ -112,6 +112,10 @@ textarea.inp{resize:vertical}
 .ddi{display:flex;align-items:center;padding:8px 10px;border-radius:6px;font:400 13px var(--sans);color:var(--ink);cursor:pointer}
 .ddi:hover,.ddi.hi{background:var(--fill)}
 .ddi.sel,.ddi.sel span{font-weight:500}
+.gap-shell{position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);opacity:0;transition:opacity .15s ease}
+.gap-shell.on{opacity:1}
+.gap-body{position:absolute;top:0;left:0;right:0;bottom:0;padding:26px 30px;display:flex;flex-direction:column;overflow-y:auto;opacity:1;transition:opacity .15s ease}
+.gap-body.fade{opacity:0}
 @media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
 </style>
 </head>
@@ -1466,6 +1470,43 @@ function render(){
   if(route==='#/cockpit') runKpiCountup();
 }
 
+/* ============================ targeted updates ============================ */
+/* Interactions patch a region in place; render() is reserved for route, role and
+   theme changes. Full-pane re-renders during interactions are forbidden. */
+function patch(id,html){ var el=document.getElementById(id); if(el) el.innerHTML=html; }
+function reducedMotion(){ return !!(window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)').matches); }
+
+/* mounts/updates the gap panel inside #gap-host only — the central body's DOM is never touched.
+   anim: 'in' first open (150ms fade), 'swap'/false content change (150ms crossfade), close fades out.
+   Returns false when the host is not on screen (caller falls back to render()). */
+function gapMount(anim){
+  var host=document.getElementById('gap-host'); if(!host) return false;
+  var wrapEl=document.getElementById('ck-wrap'); if(wrapEl&&wrapEl.style) wrapEl.style.paddingRight=ui.gapOpen?'452px':'40px';
+  var qb=document.getElementById('ck-gapbtn'); if(qb&&qb.style) qb.style.display=ui.gapOpen?'none':'';
+  var reduced=reducedMotion();
+  var sh=host.querySelector?host.querySelector('.gap-shell'):null;
+  if(!ui.gapOpen){
+    if(!sh||reduced){ host.innerHTML=''; return true; }
+    sh.classList.remove('on');
+    setTimeout(function(){ if(!ui.gapOpen) host.innerHTML=''; },180);
+    return true;
+  }
+  var inner=gapPanel(ui.gapOpen);
+  if(!sh||anim==='in'){
+    var vis=(reduced||anim!=='in')?' on':'';
+    host.innerHTML='<div class="gap-shell'+vis+'"><div class="gap-body">'+inner+'</div></div>';
+    if(!vis){ var ns=host.querySelector('.gap-shell'); if(ns){ void ns.offsetWidth; ns.classList.add('on'); } }
+    return true;
+  }
+  if(reduced){ sh.innerHTML='<div class="gap-body">'+inner+'</div>'; return true; }
+  var old=sh.querySelector('.gap-body');
+  sh.insertAdjacentHTML('beforeend','<div class="gap-body fade">'+inner+'</div>');
+  var bodies=sh.querySelectorAll('.gap-body'), nb=bodies[bodies.length-1];
+  if(nb){ void nb.offsetWidth; nb.classList.remove('fade'); }
+  if(old){ old.classList.add('fade'); setTimeout(function(){ if(old.parentNode) old.parentNode.removeChild(old); },180); }
+  return true;
+}
+
 function viewFor(route){
   switch(route){
     case '#/process': return vProcess();
@@ -1576,8 +1617,8 @@ function vCockpit(){
   var mxHeadCols='';
   var months=['2026-01','2026-02','2026-03','2026-04','2026-05','2026-06'], ratios=['Sealed · 30 Jun','38/39','35/39','36/39','33/39','29/39'];
   months.forEach(function(mn,i){ mxHeadCols+='<div style="height:40px;min-width:0;overflow:hidden;display:flex;flex-direction:column;align-items:flex-end;justify-content:flex-end;gap:1px;padding:6px 14px;'+(i===0?'background:var(--fill);border-radius:10px 10px 0 0':'')+'"><span style="font:500 11.5px '+mono+';color:var(--ink)">'+mn+'</span><span style="font:400 10px '+mono+';color:var(--ink-'+(i===0?'2':'3')+');max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+ratios[i]+'</span></div>'; });
-  var gap=ui.gapOpen? gapPanel(ui.gapOpen):'';
-  return '<div class="wrap" style="position:relative;padding-right:'+(ui.gapOpen?'452px':'40px')+'">'+
+  var gap=ui.gapOpen?'<div class="gap-shell on"><div class="gap-body">'+gapPanel(ui.gapOpen)+'</div></div>':'';
+  return '<div class="wrap" id="ck-wrap" style="position:relative;padding-right:'+(ui.gapOpen?'452px':'40px')+'">'+
    '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:20px;padding-bottom:20px">'+
      kpi('Open gaps',String(cfgGapTotal()),'PHP 38.2M blocked · oldest 52 days')+
      kpi('Pending validations','14','PHP 18.9M awaiting countersign')+
@@ -1588,8 +1629,8 @@ function vCockpit(){
    '<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px"><div style="height:40px;display:flex;align-items:flex-end;padding-bottom:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">Element</span></div>'+mxHeadCols+'<div style="height:40px;display:flex;align-items:flex-end;justify-content:flex-end;padding-bottom:6px"><span style="font:500 11px var(--sans);color:var(--ink-2)">Total · PHP</span></div></div>'+
    '<div>'+buildMatrixRows()+'</div>'+
    '<div style="display:grid;grid-template-columns:216px repeat(6,1fr) 136px;border-top:1px solid var(--hair-strong)"><div style="height:32px;display:flex;align-items:center"><span style="font:500 11px var(--sans);color:var(--ink-2)">Cost head total</span></div><div style="height:32px;background:var(--fill);border-radius:0 0 10px 10px"></div><div></div><div></div><div></div><div></div><div></div><span style="height:32px;display:flex;align-items:center;justify-content:flex-end;font:600 12px var(--mono);color:var(--ink)">545,571,233.87</span></div>'+
-   '<div style="margin-top:12px;display:flex;align-items:center;gap:12px"><span class="mono" style="color:var(--ink-3)">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span><span style="flex:1"></span>'+(ui.gapOpen?'':'<span class="qbtn" data-act="gap" data-arg="1.3.6">Open critical gap &rarr;</span>')+'</div>'+
-   gap+
+   '<div style="margin-top:12px;display:flex;align-items:center;gap:12px"><span class="mono" style="color:var(--ink-3)">Last ledger sync 14:32 · 31,204 entries · entered once, never copied</span><span style="flex:1"></span>'+'<span class="qbtn" id="ck-gapbtn" data-act="gap" data-arg="1.3.6"'+(ui.gapOpen?' style="display:none"':'')+'>Open critical gap &rarr;</span></div>'+
+   '<div id="gap-host">'+gap+'</div>'+
   '</div>';
 }
 function gapPanel(key){
@@ -1614,16 +1655,15 @@ function gapPanel(key){
   var body= ui.requestSent
     ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:24px;padding:14px 16px;border:1px solid var(--hair-strong);border-radius:12px"><span class="eyebrow" style="color:var(--ink-3)">Request sent</span><span class="sub" style="color:var(--ink)">Document request sent to '+provName+' · '+provDept+'.</span><span class="mono" style="color:var(--ink-3)">'+missingDocs+' · due 22 Jul 2026</span></div>'
     : '<div style="display:flex;flex-direction:column;margin-top:24px">'+rows+'</div>';
-  return '<div style="position:absolute;top:0;right:0;bottom:0;width:412px;background:var(--base);border-left:1px solid var(--hair-strong);padding:26px 30px;display:flex;flex-direction:column;overflow-y:auto">'+
-   '<div style="display:flex;align-items:center;gap:10px"><span class="chip crit">Critical</span><span class="mono" style="color:var(--ink-3)">'+meta.id+'</span><span style="flex:1"></span><span class="sub">'+meta.age+'</span><span class="qbtn" data-act="gapClose" style="padding:2px 6px">✕</span></div>'+
+  /* content only — the positioned .gap-shell/.gap-body containers are owned by gapMount()/vCockpit */
+  return '<div style="display:flex;align-items:center;gap:10px"><span class="chip crit">Critical</span><span class="mono" style="color:var(--ink-3)">'+meta.id+'</span><span style="flex:1"></span><span class="sub">'+meta.age+'</span><span class="qbtn" data-act="gapClose" style="padding:2px 6px">✕</span></div>'+
    '<span style="font:600 18px var(--sans);letter-spacing:-.01em;margin-top:16px">'+ref+' '+el.name+' <span style="font:400 15px var(--sans);color:var(--ink-2)">· '+month+'</span></span>'+
    '<span class="eyebrow" style="color:var(--ink-3);margin-top:22px">Blocks</span>'+
    '<span style="font:200 32px/1 var(--sans);letter-spacing:-.02em;margin-top:8px;font-variant-numeric:tabular-nums">PHP '+meta.blocks+'</span>'+
    body+
    '<div style="display:flex;align-items:center;gap:10px;padding:12px 0 18px;border-top:1px solid var(--hair);margin-top:8px"><div class="avatar">'+cfgInitials(provName)+'</div><span class="sub" style="color:var(--ink)">'+provName+' <span style="color:var(--ink-2)">· '+provDept+'</span></span><span style="flex:1"></span><span class="mono" style="color:var(--ink-3)">since 12 May 2026</span></div>'+
    '<span style="flex:1"></span>'+
-   (ui.requestSent?'':'<div style="display:flex;align-items:center;gap:14px"><button class="pill" style="flex:1" data-act="request">Request documents</button><span class="qbtn">Escalate</span></div>')+
-  '</div>';
+   (ui.requestSent?'':'<div style="display:flex;align-items:center;gap:14px"><button class="pill" style="flex:1" data-act="request">Request documents</button><span class="qbtn">Escalate</span></div>');
 }
 
 /* ============================ S02/S03/S04 contributor home ============================ */
@@ -1695,6 +1735,7 @@ function previewRow(s,e,o,a){ return '<div style="display:flex;align-items:cente
 var DD_DEFS={
   mel:{ get:function(){ return ui.manualEl; },
         set:function(v){ ui.manualEl=v; ui.manualStage='form'; },
+        patches:function(){ patch('man-head',manHeadHtml()); patch('man-proofs',manProofsHtml()); patch('man-flow',manFlowHtml()); },
         options:function(){ return CFG_ACTIVE.filter(function(e){ return e.mode==='Manual entry'; }).map(function(e){
           return {v:e.ref, html:'<span style="font:400 12px var(--mono);color:var(--ink-2);margin-right:8px">'+e.ref+'</span>'+e.name}; }); } },
   mper:{ get:function(){ return ui.manualPeriod; },
@@ -1705,43 +1746,73 @@ var DD_DEFS={
          set:function(v){ ui.manualOrigin=v; },
          options:function(){ return ['Mainby','Local','HBased','COrigin'].map(function(o){ return {v:o, html:o}; }); } }
 };
+function ddPopHtml(id){
+  var d=DD_DEFS[id], val=d.get(), list='';
+  d.options().forEach(function(o,i){ list+='<div class="ddi'+(i===ui.dd.hi?' hi':'')+(o.v===val?' sel':'')+'" role="option" data-act="ddPick" data-arg="'+id+':'+i+'">'+o.html+'</div>'; });
+  return '<div class="ddp" role="listbox">'+list+'</div>';
+}
 function ddField(id){
-  var d=DD_DEFS[id], val=d.get(), opts=d.options(), open=ui.dd.open===id, selHtml='', list='';
-  opts.forEach(function(o){ if(o.v===val) selHtml=o.html; });
-  if(open){
-    opts.forEach(function(o,i){ list+='<div class="ddi'+(i===ui.dd.hi?' hi':'')+(o.v===val?' sel':'')+'" role="option" data-act="ddPick" data-arg="'+id+':'+i+'">'+o.html+'</div>'; });
-    list='<div class="ddp" role="listbox">'+list+'</div>';
+  var d=DD_DEFS[id], val=d.get(), open=ui.dd.open===id, selHtml='';
+  d.options().forEach(function(o){ if(o.v===val) selHtml=o.html; });
+  return '<div class="dd"><div class="inp ddb" id="dd-'+id+'" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="'+(open?'true':'false')+'" data-act="ddToggle" data-arg="'+id+'"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+selHtml+'</span><span style="font-size:9px;color:var(--ink-3)">▾</span></div>'+(open?ddPopHtml(id):'')+'</div>';
+}
+/* open/close operate on the dropdown's own DOM only — never a pane render */
+function ddSetOpen(id){
+  var prev=ui.dd.open;
+  if(prev){
+    var pb=document.getElementById('dd-'+prev);
+    if(pb){
+      if(pb.setAttribute) pb.setAttribute('aria-expanded','false');
+      var pp=(pb.parentNode&&pb.parentNode.querySelector)?pb.parentNode.querySelector('.ddp'):null;
+      if(pp&&pp.parentNode) pp.parentNode.removeChild(pp);
+    }
+    ui.dd.open=null; ui.dd.focus=null;
   }
-  return '<div class="dd"><div class="inp ddb" id="dd-'+id+'" tabindex="0" role="button" aria-haspopup="listbox" aria-expanded="'+(open?'true':'false')+'" data-act="ddToggle" data-arg="'+id+'"><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+selHtml+'</span><span style="font-size:9px;color:var(--ink-3)">▾</span></div>'+list+'</div>';
+  if(id&&id!==prev){
+    var d=DD_DEFS[id]; if(!d) return;
+    var val=d.get(), idx=0; d.options().forEach(function(o,i){ if(o.v===val) idx=i; });
+    ui.dd.open=id; ui.dd.hi=idx; ui.dd.focus=id;
+    var b=document.getElementById('dd-'+id);
+    if(b&&b.insertAdjacentHTML){ if(b.setAttribute) b.setAttribute('aria-expanded','true'); b.insertAdjacentHTML('afterend',ddPopHtml(id)); }
+  }
 }
 
 /* ============================ S05 manual entry ============================ */
-function vManual(){
-  var stage=ui.manualStage;
-  var attached = stage!=='form';
-  var submitted = stage==='submitted';
+function manHeadHtml(){
+  var e=CFG_BY_REF[ui.manualEl];
+  return head('Manual element',e.ref+' '+e.name,'Invoice-mode element · manual with evidence','');
+}
+function manProofsHtml(){
   var elM=CFG_BY_REF[ui.manualEl], plines='';
   elM.proofs.forEach(function(p){
     plines+='<div style="display:flex;align-items:baseline;gap:10px;padding:4px 0"><span style="font:500 11px var(--mono);color:'+(p.level==='Required'?'var(--ink)':'var(--ink-3)')+';width:64px;flex:none">'+p.level+'</span><span style="font:400 12px var(--sans);color:var(--ink);flex:1">'+p.doc+'</span><span style="font:400 10.5px var(--mono);color:var(--ink-3)">'+p.granularity+(p.provider?' · '+p.provider:'')+'</span></div>';
   });
-  var proofBox='<div style="margin-top:20px;padding:12px 16px;background:var(--fill);border-radius:10px"><span class="mono" style="color:var(--ink-2)">Proofs for '+elM.ref+' '+elM.name+' · from config</span><div style="margin-top:8px">'+plines+'</div><span class="mono" style="color:var(--ink-3)">'+(elM.notarised?'Notarization required.':'Notarization not required.')+'</span></div>';
-  return '<div class="wrap">'+
-   head('Manual element',elM.ref+' '+elM.name,'Invoice-mode element · manual with evidence','')+
-   '<div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
-     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Element</span>'+ddField('mel')+'</div>'+
-     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Period</span>'+ddField('mper')+'</div>'+
-     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Origin</span>'+ddField('mori')+'</div>'+
-     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Amount · EUR</span><input class="inp" style="font-family:var(--mono)" value="94,500.00"></label>'+
-   '</div>'+
-   proofBox+
-   (attached
+  return '<div style="margin-top:20px;padding:12px 16px;background:var(--fill);border-radius:10px"><span class="mono" style="color:var(--ink-2)">Proofs for '+elM.ref+' '+elM.name+' · from config</span><div style="margin-top:8px">'+plines+'</div><span class="mono" style="color:var(--ink-3)">'+(elM.notarised?'Notarization required.':'Notarization not required.')+'</span></div>';
+}
+function manFlowHtml(){
+  var stage=ui.manualStage;
+  var attached = stage!=='form';
+  var submitted = stage==='submitted';
+  return (attached
      ? '<div class="card" style="margin-top:16px;display:flex;align-items:center;gap:14px;background:var(--fill);border:none"><div style="width:30px;height:38px;border:1px solid var(--hair-strong);border-radius:4px;background:var(--base);flex:none"></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13px var(--sans)">invoice_schoolfees_2026-06.pdf</span><span style="font:400 11px var(--mono);color:var(--ink-2)">sha256 · a91c…44f0 · attached</span></div><span class="mono" style="color:var(--ink-2)">hashed</span></div>'
      : '<div class="card" data-act="attach" style="margin-top:16px;display:flex;align-items:center;gap:14px;border:1.5px dashed var(--hair-strong);cursor:pointer"><div style="width:36px;height:36px;border-radius:10px;background:var(--fill);display:flex;align-items:center;justify-content:center;flex:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M12 3 V15 M7 11 L12 16 L17 11" stroke="var(--ink-2)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"></path></svg></div><div style="flex:1;display:flex;flex-direction:column;gap:3px"><span style="font:500 13.5px var(--sans)">Attach evidence</span><span style="font:400 11px var(--mono);color:var(--ink-2)">the invoice, registered and hashed</span></div></div>')+
    '<div style="margin-top:22px;display:flex;align-items:center;gap:14px">'+
      (submitted
        ? '<span style="display:flex;align-items:center;gap:8px"><svg width="14" height="14" viewBox="0 0 12 12"><path d="M2 6.3 L5 9 L10 3.2" fill="none" stroke="var(--success)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"></path></svg><span class="sub" style="color:var(--ink)">Filed · awaiting validation</span></span>'
        : '<button class="pill'+(attached?'':' disabled')+'" '+(attached?'data-act="manualSubmit"':'')+'>Submit element</button><span class="sub" style="color:var(--ink-3)">'+(attached?'evidence attached, ready to file':'attach evidence to enable')+'</span>')+
+   '</div>';
+}
+function vManual(){
+  return '<div class="wrap">'+
+   '<div id="man-head">'+manHeadHtml()+'</div>'+
+   '<div style="margin-top:22px;display:grid;grid-template-columns:1fr 1fr;gap:16px">'+
+     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Element</span>'+ddField('mel')+'</div>'+
+     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Period</span>'+ddField('mper')+'</div>'+
+     '<div style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Origin</span>'+ddField('mori')+'</div>'+
+     '<label style="display:flex;flex-direction:column;gap:7px"><span style="font:500 12px var(--sans);color:var(--ink-2)">Amount · EUR</span><input class="inp" style="font-family:var(--mono)" value="94,500.00"></label>'+
    '</div>'+
+   '<div id="man-proofs">'+manProofsHtml()+'</div>'+
+   '<div id="man-flow">'+manFlowHtml()+'</div>'+
   '</div>';
 }
 
@@ -2185,12 +2256,18 @@ var HANDLERS={
   nav:function(a){ nav(a); },
   role:function(a){ setRole(a); },
   theme:function(a){ setTheme(a); },
-  gap:function(a){ var p=String(a||'1.3.6').split(':'), key=p[0]+':'+(p[1]||'6'); if(ui.gapOpen!==key) ui.requestSent=false; ui.gapOpen=key; render(); },
-  gapClose:function(){ ui.gapOpen=false; render(); },
-  request:function(){ ui.requestSent=true; render(); },
+  gap:function(a){
+    var p=String(a||'1.3.6').split(':'), key=p[0]+':'+(p[1]||'6');
+    if(ui.gapOpen===key) return;
+    var was=!!ui.gapOpen;
+    ui.requestSent=false; ui.gapOpen=key;
+    if(!gapMount(was?'swap':'in')) render();
+  },
+  gapClose:function(){ ui.gapOpen=false; if(!gapMount('out')) render(); },
+  request:function(){ ui.requestSent=true; if(!ui.gapOpen||!gapMount(false)) render(); },
   drop:function(){ ui.homeStage = ui.homeStage==='owed'?'loading':(ui.homeStage==='loading'?'filed':'owed'); render(); },
-  attach:function(){ if(curRoute()==='#/home/manual'){ ui.manualStage='attached'; } render(); },
-  manualSubmit:function(){ ui.manualStage='submitted'; render(); },
+  attach:function(){ if(curRoute()==='#/home/manual'){ ui.manualStage='attached'; patch('man-flow',manFlowHtml()); return; } render(); },
+  manualSubmit:function(){ ui.manualStage='submitted'; patch('man-flow',manFlowHtml()); },
   validate:function(){ ui.validated=true; render(); },
   drawer:function(a){ ui.drawer=a; render(); },
   drawerClose:function(){ ui.drawer=null; render(); },
@@ -2199,16 +2276,18 @@ var HANDLERS={
   notify:function(){ ui.notified=true; render(); },
   profile:function(a){ ui.profile=a; render(); },
   export:function(){ ui.exported=true; render(); },
-  ddToggle:function(a){
-    if(ui.dd.open===a){ ui.dd.open=null; }
-    else { var d=DD_DEFS[a]; if(!d) return; var val=d.get(), idx=0; d.options().forEach(function(o,i){ if(o.v===val) idx=i; }); ui.dd.open=a; ui.dd.hi=idx; }
-    ui.dd.focus=a; render();
-  },
+  ddToggle:function(a){ ddSetOpen(ui.dd.open===a?null:a); },
   ddPick:function(a){
     var i=String(a).indexOf(':'), id=String(a).slice(0,i), n=parseInt(String(a).slice(i+1),10);
     var d=DD_DEFS[id]; if(!d) return;
-    var o=d.options()[n]; if(o) d.set(o.v);
-    ui.dd.open=null; ui.dd.focus=id; render();
+    var o=d.options()[n];
+    if(o){
+      d.set(o.v);
+      var b=document.getElementById('dd-'+id);
+      if(b&&b.querySelector){ var vs=b.querySelector('span'); if(vs) vs.innerHTML=o.html; }
+    }
+    ddSetOpen(null);
+    if(o&&d.patches) d.patches();
   },
   unsealOpen:function(){ ui.unsealed='modal'; render(); },
   unsealCancel:function(){ ui.unsealed=false; render(); },
@@ -2222,8 +2301,8 @@ var HANDLERS={
 document.getElementById('app').addEventListener('click',function(e){
   var t=e.target.closest('[data-act]');
   var a=t?t.getAttribute('data-act'):null, arg=t?t.getAttribute('data-arg'):null;
-  /* click outside an open dropdown closes it; a data-act click still runs after */
-  if(ui.dd.open && a!=='ddToggle' && a!=='ddPick'){ ui.dd.open=null; ui.dd.focus=null; render(); }
+  /* click outside an open dropdown closes it (dropdown DOM only); a data-act click still runs after */
+  if(ui.dd.open && a!=='ddToggle' && a!=='ddPick'){ ddSetOpen(null); }
   if(!t||!HANDLERS[a]) return;
   e.stopPropagation(); HANDLERS[a](arg);
 });
@@ -2238,7 +2317,7 @@ document.addEventListener('keydown',function(e){
       for(var i=0;i<items.length;i++){ items[i].classList.toggle('hi',i===ui.dd.hi); }
       if(items[ui.dd.hi]&&items[ui.dd.hi].scrollIntoView) items[ui.dd.hi].scrollIntoView({block:'nearest'});
     } else if(k==='Enter'){ e.preventDefault(); HANDLERS.ddPick(ui.dd.open+':'+ui.dd.hi); }
-    else if(k==='Escape'){ e.preventDefault(); ui.dd.open=null; render(); }
+    else if(k==='Escape'){ e.preventDefault(); ddSetOpen(null); }
     else if(k===' '){ e.preventDefault(); }
   } else {
     var ae=document.activeElement;
