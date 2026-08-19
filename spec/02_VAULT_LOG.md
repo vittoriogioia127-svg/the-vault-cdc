@@ -2,6 +2,16 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-19 - P3.0.3 delivered (commit 6d68f25): panel scroll autonomy, process map legible
+Two-item micro-corrective landed, one file, tree clean over the docs commit. The gap shell moved to
+position:fixed below the topbar, its own viewport-height scroll container; gapMount resets the incoming
+body's scrollTop on both the crossfade and reduced-motion paths, crossfade mechanics untouched. S23
+dropped the whole-node opacity dimming for per-part muted colors (ink-2 labels, hairline rings, ink-3
+dots, quiet chips), the active role at full ink with the accent pill inverting correctly in dark, the
+gate node following the same rule, kickers restored to eyebrow strength. Acceptance 3/3 through
+real-Chrome wrappers (12/12 scroll assertions, zero residual opacity overrides, one accent chip per
+single-node role). Awaiting Vittorio's three-gesture pass, push, then P3.1 launches.
+
 ## 2026-08-19 - D-25 staff registry, D-26 ledger information architecture; P3.0.3 chartered
 Two architecture decisions born from Vittorio's continued audit of the app, one micro-corrective.
 D-25 staff registry: the eligibility roster stops being an Excel sheet and becomes a first-class versioned
