@@ -2,6 +2,69 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-20 - P3.2 Phase A adjudicated: doctrine refined, a second role-blind case found, GO issued
+The polish Phase A mapped all eight items and the affordance sweep paid for itself: beyond the diagnosed
+S09 phantom, S12 carries a role-blind Build the claim affordance and a state-changing notify composer
+rendered for the read-only auditor; both get gated to consolidator. Rulings: theme flips become a pure
+attribute patch (a theme render would destroy a mid-run journey; the doctrine comment narrows to render
+reserved for route and role); unauthorized routes render a quiet owned state with one pill to the role's
+landing, silent redirects die; the crossfade mechanism approved as proposed, mirroring the gap-body swap
+with ids and data-kpi stripped from the outgoing view, overlays removed from the dying clone (fixed
+elements would jump under an opacity ancestor), a negative-top scroll hold, 180ms cleanup, and the KPI
+count-up scoped to the incoming view; S23 role changes toggle a single .on class over nodes emitted once;
+persona topbar fields patch as targeted text; same-route render() calls stay untouched this sprint, the
+tension logged as a future hygiene pass candidate. Item 6 extended to the ledger description and persons
+spans; the dropdown value stays bare. The sealed sheet ships as a read-wide route with invented stable
+2026-01 literals under an explicit coherence acceptance (no visible number may contradict them); the
+seal history renders the J_FILE constant so the seam can never reopen; the favicon embeds
+prefers-color-scheme; seven states added including the unauthorized state; the inline check dissolve
+gains its 150ms fade, the one non-compliant timing; the screen-map 200ms check draw stays unbuilt, a
+conscious deviation, polish finishes what exists. GO issued as VAULT_P3_2_GO.md.
+
+## 2026-08-20 - Periods phantom elucidated; a design rule extracted; root serves the CDC
+The read-only diagnostic run confirmed HEAD at P3.1.1 byte-identical to the working tree, re-passed the
+17-check harness, and cracked the phantom: sealed cards are inert; the culprit is the Close checklist
+affordance on the open 2026-06 card, rendered for every role that can view Periods while its destination
+route is consolidator-only, the route guard silently redirecting everyone else to their landing
+(contributor to Home with nothing, the exact report). Aggravation: vPeriods reads static state and
+ignores ui.sealed, so a sealed 2026-06 still presents as Open with the live link. Fix folded into P3.2
+item 3 with the diagnosis pre-fed: role-scoped rendering of the affordance, card state derived from
+ui.sealed. Design rule logged for the app: an affordance must never render for a role that cannot reach
+its destination, and no route guard may redirect silently; P3.2 Phase A sweeps every data-act nav
+affordance against ROUTE_ROLES to kill the whole class.
+Operational finding for the demo checklist: the repo root index.html is a byte-identical duplicate of the
+shareable CDC, so a browser at the site root gets the CDC, never the app; demos always open
+/the-vault-app.html explicitly, and any this-does-not-work triage starts by checking the URL.
+
+## 2026-08-20 - False alarm resolved (browser cache); demo runway set
+The P3.1.1 regression report from the physical pass traced to a stale cached file: HEAD confirmed at
+P3.1.1, hard refresh restored every behavior, journey and batch validation verified working by Vittorio.
+Ritual added to the demo prep checklist: hard refresh before any session. The S09 phantom click (a period
+card landing on Home) stays open and is folded into P3.2 Phase A item 3, one line added to the prompt.
+Demo runway locked, four layers (it works, it is beautiful, it explains itself, it tells a story):
+1 P3.2 polish (ready, launching), 2 P3.3 guided assist (contract written), 3 P3.4 substance (D-24
+per-staff manual capture plus D-26 grouped ledger, contract to write during P3.3), 4 the calendar-shift
+micro-sprint gated on the demo date, 5 the demo script (mine, after P3.2), 6 a Sharizal preview session
+doubling as the H1-H8 and D-25 closing call, 7 the Nicolas room with the deck (ask variant A or B, one
+constant). Explicitly out of demo v1: D-22, D-23, D-27, column resize, T2 screens, all logged for after.
+
+## 2026-08-19 - P3.1.1 delivered 5/5 with P3.1 regression green; P3.2 polish chartered
+The corrective landed: sealed guard extended to manual entry (link replaced by the quiet closed line,
+direct route renders the sealed notice, drop and pick already covered), the gate flip hardened into a
+pure data mutation at batch validation reflected by any later render with the crossfade consumed at
+schedule time (interleaved renders can never resurrect it), the progress percentage rendered as a mono
+numeral driven by the same variable as the bar, the queue placeholder removed with all rows on screen,
+and whole-row open with hover and focus chevron plus Enter. Two beyond-scope additions endorsed on the
+visible-arithmetic principle: nine reconciled pending rows so the on-screen amounts sum exactly to the
+18.9M caption (28.9M mid-journey), and the validated legacy row staying visible as muted so derived
+counts always match visible rows. Verified by CDP harness plus the full P3.1 suite as regression.
+P3.2 chartered (VAULT_P3_2_POLISH.md), eight items: persistent rail and topbar with 150ms view
+crossfades on role and route change (S23 patching chips only), the six role glyphs and vertical VIEW AS,
+sealed periods consultable through a read-only sealed sheet, the M4 favicon, the S10 filename seam
+closed, matrix name title attributes, the states-doctrine completion sweep, and a motion audit with a
+final timing table including the gate-flip schedule. Awaiting the physical pass on P3.1.1, push, then
+P3.2 launches.
+
 ## 2026-08-19 - P3.1 smoke: five-item corrective P3.1.1, D-27 extraction lifecycle, role-switch smoothness to P3.2
 Vittorio's physical pass on the living journey surfaced one real guard hole, one probable misfire, and
 three finish items. The hole: sealing a period stopped drop and pick but not manual entry, the screenshot
