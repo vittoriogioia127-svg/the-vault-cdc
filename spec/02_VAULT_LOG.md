@@ -2,6 +2,23 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-20 - P3.2 delivered 8/8 (commit 71a2032): the app is demo-grade; P3.3 handoff issued
+The polish pass landed: chrome built once at boot with role and route changes toggling classes and
+persona text only (a probe attribute survived the full six-role session), 150ms crossfades everywhere
+with the outgoing view stripped of ids and overlays, S23 patching a single .on class with no view swap,
+mid-journey navigation composing cleanly, the six role glyphs in the vertical switcher, the sealed sheet
+read-only with its coherence-proven invented totals (each bounded by visible minima and window totals,
+fingerprints collision-free), the S09 phantom and the S12 role-blind composer both dead with the quiet
+unauthorized state replacing silent redirects, the M4 favicon with prefers-color-scheme, the seal history
+rendering J_FILE, title attributes on truncating spans, seven defensive states added, and the final
+motion table fully within rule with the check dissolve tuned and the screen-map check draw left unbuilt
+as the conscious deviation. 56/56 assertions, zero errors across six roles, a full reduced-motion second
+run. Awaiting the physical pass (procedure issued, doubling as chrome and journey regression), then push.
+P3.3 handoff issued per the two-file rule: VAULT_P3_3_PROMPT.md alongside the existing
+VAULT_GUIDED_ASSIST.md contract, with a drift clause since the contract predates P3.1 and P3.2 (anchors
+verified against the current file, guide entries proposed for the sealed sheet, tours never firing
+mid-journey, assist as targeted DOM only).
+
 ## 2026-08-20 - P3.2 Phase A adjudicated: doctrine refined, a second role-blind case found, GO issued
 The polish Phase A mapped all eight items and the affordance sweep paid for itself: beyond the diagnosed
 S09 phantom, S12 carries a role-blind Build the claim affordance and a state-changing notify composer
