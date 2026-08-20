@@ -2,6 +2,23 @@
 
 Newest at top. Log every structuring decision. Template at bottom.
 
+## 2026-08-20 - P3.3 Phase A adjudicated: anchors approved, guide honesty rule set, GO issued
+The assist layer's read-only audit delivered the full data-guide anchor map (no structural DOM change,
+two anchors in the persistent topbar), the four first-run tours derived mechanically from the seeded
+copy, a persistence design where a blocked tour writes nothing and retries (plays once, never uninvited,
+both hold), and the journey collision fully handled: no tour starts during upload or parse, the scrim
+blocks everything beneath, any render or role change tears down and persists the step as skip.
+Rulings, three overrides on the proposed defaults: S07 trims its reject line and S17 adjusts its Shows,
+establishing the guide honesty rule (the guide describes the screen in front of the user, never an
+affordance that does not exist, the same principle that killed the phantom); the queue tour anchors
+whichever pending row renders first, a spotlight on the second visible row reads as a bug; the evidence
+register entry is approved and ships, coverage beats the narrow reading of T1. Everything else as
+proposed: skip-missing-anchor rule, S24 sealed-sheet entry, role-scoped Do fill lines, the question mark
+hidden on entry-less screens, the last step spotlighting it without opening, screen-level next with
+per-role override, Esc priority chain, z-order, tour keys short-circuiting, data-guide joining the
+mountView strip list, the box-shadow-cutout scrim on rgba-of-token values. GO issued as
+VAULT_P3_3_GO.md.
+
 ## 2026-08-20 - P3.2 delivered 8/8 (commit 71a2032): the app is demo-grade; P3.3 handoff issued
 The polish pass landed: chrome built once at boot with role and route changes toggling classes and
 persona text only (a probe attribute survived the full six-role session), 150ms crossfades everywhere
